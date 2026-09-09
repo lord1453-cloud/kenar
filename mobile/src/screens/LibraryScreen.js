@@ -3,6 +3,7 @@ import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Image, Modal, Tex
 import { Ionicons } from '@expo/vector-icons';
 import { useMobile } from '../context/MobileContext';
 import { colors } from '../theme/colors';
+import { BookCover } from '../components/common/BookCover';
 
 export const LibraryScreen = () => {
   const { books, userBooks, updateBookProgress, setActiveTab, setActiveTimerBook, setTimerStartPage } = useMobile();
@@ -74,7 +75,12 @@ export const LibraryScreen = () => {
 
             return (
               <View key={ub.id} style={styles.bookCard}>
-                <Image source={{ uri: book.coverUrl }} style={styles.coverImage} />
+                <BookCover 
+                  uri={book.coverUrl} 
+                  title={book.title} 
+                  author={book.author} 
+                  style={styles.coverImage} 
+                />
 
                 <View style={styles.bookMeta}>
                   <Text style={styles.bookTitle}>{book.title}</Text>

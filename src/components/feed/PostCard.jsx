@@ -97,7 +97,12 @@ export const PostCard = ({ post }) => {
       {/* Header: Author info & Badges */}
       <div className="post-header">
         <div className="post-author-info" onClick={handleAuthorClick}>
-          <img src={author.avatar} alt={author.fullName} className="post-avatar" />
+          <img 
+            src={author.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&h=200&q=80'} 
+            alt={author.fullName} 
+            className="post-avatar" 
+            onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&h=200&q=80'; }}
+          />
           <div className="post-author-names">
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
               <span className="post-author-name">{author.fullName}</span>

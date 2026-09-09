@@ -19,9 +19,9 @@ export const HomeScreen = () => {
   const [posts, setPosts] = useState([
     {
       id: 'p-1',
-      userName: currentUser.fullName || 'Kitap Kulübü Kurucusu',
-      userRole: 'founder',
-      avatar: currentUser.avatar,
+      userName: currentUser?.fullName || 'Kitap Kulübü Kurucusu',
+      userRole: currentUser?.role || 'founder',
+      avatar: currentUser?.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&h=200&q=80',
       bookTitle: 'Dune',
       bookAuthor: 'Frank Herbert',
       content: 'Korku akıl katilidir. Korku, mutlak yok oluşu getiren küçük ölümdür. Herbert\'ın bu cümlesi her okumada daha da derinleşiyor.',

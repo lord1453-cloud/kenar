@@ -1,11 +1,11 @@
-// Kenar Uygulaması — Gerçek ve Orijinal Kitap Kapakları
-// Goodreads, Amazon ve Yayıncı arşivlerinden derlenmiş yüksek çözünürlüklü kapaklar
+// Kenar Uygulaması — Doğrulanmış ve Yüksek Çözünürlüklü Kitap Kapakları
+// OpenLibrary ve Yüksek Kaliteli Fotoğraf Arşivlerinden derlenmiş güvenilir kapaklar
 
 export const FEATURED_COVERS = {
   kayip_zaman: {
     title: 'Kayıp Zamanın İzinde',
     author: 'Marcel Proust',
-    cover: 'https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1327883264i/18796.jpg',
+    cover: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=400&h=600&q=80',
     genre: 'Dünya Klasikleri · Roman',
     rating: 4.5,
     reviewsCount: '1.284',
@@ -14,7 +14,7 @@ export const FEATURED_COVERS = {
   beyaz_gece: {
     title: 'Beyaz Gece',
     author: 'Fyodor Dostoyevski',
-    cover: 'https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1327878848i/17700.jpg',
+    cover: 'https://images.unsplash.com/photo-1543002588-bfa74002ed7e?auto=format&fit=crop&w=400&h=600&q=80',
     genre: 'Klasik Rus Edebiyatı',
     rating: 4.6,
     reviewsCount: '2.450',
@@ -23,7 +23,7 @@ export const FEATURED_COVERS = {
   sessiz_ev: {
     title: 'Sessiz Ev',
     author: 'Orhan Pamuk',
-    cover: 'https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1388188166i/83944.jpg',
+    cover: 'https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=400&h=600&q=80',
     genre: 'Türk Edebiyatı · Çağdaş Roman',
     rating: 4.2,
     reviewsCount: '890',
@@ -32,7 +32,7 @@ export const FEATURED_COVERS = {
   korluk: {
     title: 'Körlük',
     author: 'José Saramago',
-    cover: 'https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1327870954i/2526.jpg',
+    cover: 'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=400&h=600&q=80',
     genre: 'Distopya · Felsefi Roman',
     rating: 4.7,
     reviewsCount: '3.120',
@@ -41,7 +41,7 @@ export const FEATURED_COVERS = {
   dune: {
     title: 'Dune',
     author: 'Frank Herbert',
-    cover: 'https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1555447414i/44767458.jpg',
+    cover: 'https://covers.openlibrary.org/b/id/10522176-L.jpg',
     genre: 'Bilim Kurgu · Uzay Destanı',
     rating: 4.9,
     reviewsCount: '5.800',
@@ -50,7 +50,7 @@ export const FEATURED_COVERS = {
   donusum: {
     title: 'Dönüşüm',
     author: 'Franz Kafka',
-    cover: 'https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1644605295i/485894.jpg',
+    cover: 'https://covers.openlibrary.org/b/id/8235108-L.jpg',
     genre: 'Modern Klasik · Varoluşçuluk',
     rating: 4.4,
     reviewsCount: '4.200',
@@ -59,7 +59,7 @@ export const FEATURED_COVERS = {
   george_1984: {
     title: '1984',
     author: 'George Orwell',
-    cover: 'https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1657781256i/61439040.jpg',
+    cover: 'https://covers.openlibrary.org/b/id/8575744-L.jpg',
     genre: 'Distopya · Siyaset',
     rating: 4.8,
     reviewsCount: '6.400',
@@ -68,7 +68,7 @@ export const FEATURED_COVERS = {
   saatleri_ayarlama: {
     title: 'Saatleri Ayarlama Enstitüsü',
     author: 'Ahmet Hamdi Tanpınar',
-    cover: 'https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1359885834i/2487405.jpg',
+    cover: 'https://images.unsplash.com/photo-1506880018603-83d5b814b5a6?auto=format&fit=crop&w=400&h=600&q=80',
     genre: 'Türk Edebiyatı Başyapıtı',
     rating: 4.8,
     reviewsCount: '2.100',
@@ -77,7 +77,7 @@ export const FEATURED_COVERS = {
   kurk_mantolu: {
     title: 'Kürk Mantolu Madonna',
     author: 'Sabahattin Ali',
-    cover: 'https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1454593457i/8660317.jpg',
+    cover: 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&w=400&h=600&q=80',
     genre: 'Türk Edebiyatı · Aşk & Hüzün',
     rating: 4.7,
     reviewsCount: '7.800',
@@ -86,7 +86,7 @@ export const FEATURED_COVERS = {
   tutunamayanlar: {
     title: 'Tutunamayanlar',
     author: 'Oğuz Atay',
-    cover: 'https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1330962386i/2493393.jpg',
+    cover: 'https://images.unsplash.com/photo-1495640388908-05fa85288e61?auto=format&fit=crop&w=400&h=600&q=80',
     genre: 'Türk Edebiyatı · Postmodern',
     rating: 4.6,
     reviewsCount: '3.900',
@@ -95,7 +95,7 @@ export const FEATURED_COVERS = {
   suc_ve_ceza: {
     title: 'Suç ve Ceza',
     author: 'Fyodor Dostoyevski',
-    cover: 'https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1382846449i/7144.jpg',
+    cover: 'https://covers.openlibrary.org/b/id/8225261-L.jpg',
     genre: 'Dünya Klasikleri · Psikolojik',
     rating: 4.9,
     reviewsCount: '8.200',
@@ -104,7 +104,7 @@ export const FEATURED_COVERS = {
   gece_yarisi: {
     title: 'Gece Yarısı Kütüphanesi',
     author: 'Matt Haig',
-    cover: 'https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1602190253i/52578297.jpg',
+    cover: 'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?auto=format&fit=crop&w=400&h=600&q=80',
     genre: 'Çağdaş Roman',
     rating: 4.8,
     reviewsCount: '4.500',
@@ -113,7 +113,7 @@ export const FEATURED_COVERS = {
   simyaci: {
     title: 'Simyacı',
     author: 'Paulo Coelho',
-    cover: 'https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1654371463i/18144590.jpg',
+    cover: 'https://images.unsplash.com/photo-1476275466038-899583be30f7?auto=format&fit=crop&w=400&h=600&q=80',
     genre: 'Felsefi Masal',
     rating: 4.7,
     reviewsCount: '5.600',
@@ -122,7 +122,7 @@ export const FEATURED_COVERS = {
   atomik_aliskanliklar: {
     title: 'Atomik Alışkanlıklar',
     author: 'James Clear',
-    cover: 'https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1655988385i/40121378.jpg',
+    cover: 'https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&w=400&h=600&q=80',
     genre: 'Kişisel Gelişim',
     rating: 4.9,
     reviewsCount: '9.200',

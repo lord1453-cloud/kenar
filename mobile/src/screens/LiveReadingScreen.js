@@ -48,10 +48,10 @@ export const LiveReadingScreen = () => {
 
       {/* Kitap Bilgisi */}
       <View style={styles.bookInfoCard}>
-        <Text style={styles.bookTitle}>{activeTimerBook.title}</Text>
-        <Text style={styles.bookAuthor}>{activeTimerBook.author}</Text>
+        <Text style={styles.bookTitle}>{activeTimerBook?.title || 'Kitap Seçilmedi'}</Text>
+        <Text style={styles.bookAuthor}>{activeTimerBook?.author || 'Aktif okuma seçin'}</Text>
         <View style={styles.startPageBadge}>
-          <Text style={styles.startPageText}>Başlangıç Sayfası: {timerStartPage}</Text>
+          <Text style={styles.startPageText}>Başlangıç Sayfası: {timerStartPage || 0}</Text>
         </View>
       </View>
 

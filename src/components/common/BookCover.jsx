@@ -38,21 +38,51 @@ export const BookCover = ({
   loading = 'lazy'
 }) => {
   const [hasError, setHasError] = useState(false);
+  const [triedFallback, setTriedFallback] = useState(false);
+  const [activeUrl, setActiveUrl] = useState('');
 
-  // Eğer mevcut src unsplash gibi jenerik ise veya yoksa, veritabanımızdaki 1:1 orijinal kapağı dene
-  const effectiveSrc = React.useMemo(() => {
-    if (src && !src.includes('images.unsplash.com')) {
-      return src;
+  // En iyi görsel kaynağını belirle
+  React.useEffect(() => {
+    setHasError(false);
+    setTriedFallback(false);
+
+    // 1. Önce doğrudan gelen src geçerliyse ve bozuk goodreads linki değilse
+    if (src && !src.includes('compressed.photo.goodreads.com')) {
+      setActiveUrl(src);
+      return;
     }
+
+    // 2. Real cover tablosunda doğrulanmış görsel ara
     const real = getRealBookCover(title);
-    if (real) return real;
-    return src;
+    if (real && !real.includes('compressed.photo.goodreads.com')) {
+      setActiveUrl(real);
+      return;
+    }
+
+    // 3. Varsa orijinal src'yi dene
+    if (src) {
+      setActiveUrl(src);
+    } else {
+      setHasError(true);
+    }
   }, [src, title]);
 
   const palette = React.useMemo(() => getPaletteForTitle(title), [title]);
 
-  // Görsel yoksa veya hata verdiyse: Kitap Mockup'ı + Sadece Kitap İsmi
-  if (!effectiveSrc || hasError) {
+  const handleImgError = () => {
+    if (!triedFallback) {
+      setTriedFallback(true);
+      const real = getRealBookCover(title);
+      if (real && real !== activeUrl && !real.includes('compressed.photo.goodreads.com')) {
+        setActiveUrl(real);
+        return;
+      }
+    }
+    setHasError(true);
+  };
+
+  // Görsel yoksa veya hata verdiyse: Lüks Kitap Mockup'ı + Sadece Kitap İsmi
+  if (!activeUrl || hasError) {
     return (
       <div
         className={`book-fallback-cover ${className}`}
@@ -85,7 +115,7 @@ export const BookCover = ({
           </svg>
         </div>
 
-        {/* SADECE KİTAP İSMİ (Kullanıcı Talebi: "kitap resmi olsun üstünde ismi olsun sadece") */}
+        {/* SADECE KİTAP İSMİ */}
         <span className="book-fallback-title">
           {title || 'Kitap'}
         </span>
@@ -95,11 +125,11 @@ export const BookCover = ({
 
   return (
     <img
-      src={effectiveSrc}
+      src={activeUrl}
       alt={alt || title || 'Kitap Kapağı'}
       className={className}
       style={{ objectFit: 'cover', ...style }}
-      onError={() => setHasError(true)}
+      onError={handleImgError}
       onClick={onClick}
       loading={loading}
       referrerPolicy="no-referrer"

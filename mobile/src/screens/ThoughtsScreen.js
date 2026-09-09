@@ -43,9 +43,9 @@ export const ThoughtsScreen = () => {
     const item = {
       id: `q-${Date.now()}`,
       text: newThought.trim(),
-      author: selectedBook.author,
-      book: `${selectedBook.title} (s. ${pageNumber || '1'})`,
-      sharedBy: currentUser.fullName,
+      author: selectedBook?.author || 'Bilinmeyen Yazar',
+      book: `${selectedBook?.title || 'Kitap'} (s. ${pageNumber || '1'})`,
+      sharedBy: currentUser?.fullName || 'Okur',
       likes: 1
     };
     setQuotes([item, ...quotes]);
@@ -76,7 +76,7 @@ export const ThoughtsScreen = () => {
           <View style={styles.bookSelector}>
             <Ionicons name="book-outline" size={13} color={colors.textMuted} />
             <Text style={styles.bookSelectorText} numberOfLines={1}>
-              {selectedBook.title} (s. {pageNumber})
+              {selectedBook?.title || 'Kitap Seçin'} (s. {pageNumber})
             </Text>
           </View>
 
