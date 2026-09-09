@@ -589,8 +589,8 @@ const styles = StyleSheet.create({
   },
   blurredText: {
     fontSize: 14,
-    color: 'rgba(60,60,67,0.2)',
-    filter: 'blur(5px)'
+    color: 'rgba(60,60,67,0.4)',
+    opacity: 0.2
   },
   spoilerOverlay: {
     ...StyleSheet.absoluteFillObject,
