@@ -7,10 +7,9 @@ import { colors } from '../../theme/colors';
 export const Header = ({ topInset = 28 }) => {
   const { 
     currentUser, 
-    setIsFeedbackOpen, 
     setIsAdminOpen, 
-    setIsRoomsOpen,
-    setIsLoginOpen 
+    setIsCreateThoughtOpen,
+    setActiveTab
   } = useMobile();
 
   const isPrivileged = currentUser?.role === 'founder' || currentUser?.role === 'admin';
@@ -30,16 +29,6 @@ export const Header = ({ topInset = 28 }) => {
 
       {/* Right Action Icons */}
       <View style={styles.actionsRow}>
-        {/* Rooms Shortcut */}
-        <TouchableOpacity
-          style={styles.iconButton}
-          onPress={() => setIsRoomsOpen(true)}
-          activeOpacity={0.7}
-          hitSlop={{ top: 10, bottom: 10, left: 8, right: 8 }}
-        >
-          <Ionicons name="chatbubbles-outline" size={20} color={colors.textMain} />
-        </TouchableOpacity>
-
         {/* Founder / Admin Panel Shortcut */}
         {isPrivileged && (
           <TouchableOpacity
@@ -52,12 +41,24 @@ export const Header = ({ topInset = 28 }) => {
           </TouchableOpacity>
         )}
 
-        {/* Active User Avatar */}
+        {/* Düşünce Paylaş Butonu (Odalar yerine, Profilin Yanında - Prototipteki Mavi Plus) */}
         <TouchableOpacity
-          style={styles.userButton}
-          onPress={() => setIsLoginOpen(true)}
+          style={styles.plusButton}
+          onPress={() => setIsCreateThoughtOpen(true)}
           activeOpacity={0.8}
           hitSlop={{ top: 10, bottom: 10, left: 8, right: 8 }}
+          accessibilityLabel="Düşünce Paylaş"
+        >
+          <Ionicons name="add" size={24} color="#FFFFFF" />
+        </TouchableOpacity>
+
+        {/* Profil Avatar Butonu (Tıklanınca Profile Gider) */}
+        <TouchableOpacity
+          style={styles.userButton}
+          onPress={() => setActiveTab('profile')}
+          activeOpacity={0.8}
+          hitSlop={{ top: 10, bottom: 10, left: 8, right: 8 }}
+          accessibilityLabel="Profilim"
         >
           <Text style={styles.userInitial}>
             {currentUser?.fullName ? currentUser.fullName[0].toUpperCase() : 'U'}
@@ -149,6 +150,19 @@ const styles = StyleSheet.create({
   adminButton: {
     borderColor: 'rgba(245, 158, 11, 0.35)',
     backgroundColor: 'rgba(245, 158, 11, 0.12)'
+  },
+  plusButton: {
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    backgroundColor: '#007AFF', // Apple iOS System Blue
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#007AFF',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.35,
+    shadowRadius: 4,
+    elevation: 3
   },
   userButton: {
     width: 38,

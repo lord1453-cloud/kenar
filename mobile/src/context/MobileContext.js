@@ -84,6 +84,30 @@ const INITIAL_LOCAL_BOOKS = [
     pages: 1024,
     coverUrl: 'https://images.unsplash.com/photo-1476275466078-4007374efbbe?auto=format&fit=crop&w=300&h=450&q=80',
     genre: 'Fantastik'
+  },
+  {
+    id: 'book-5',
+    title: 'Kayıp Zamanın İzinde',
+    author: 'Elif Demir',
+    pages: 480,
+    coverUrl: 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&w=300&h=450&q=80',
+    genre: 'Klasik'
+  },
+  {
+    id: 'book-6',
+    title: 'Beyaz Gece',
+    author: 'Fyodor Dostoyevski',
+    pages: 112,
+    coverUrl: 'https://images.unsplash.com/photo-1543002588-bfa74002ed7e?auto=format&fit=crop&w=300&h=450&q=80',
+    genre: 'Dünya Klasikleri'
+  },
+  {
+    id: 'book-7',
+    title: 'Sessiz Ev',
+    author: 'Orhan Pamuk',
+    pages: 356,
+    coverUrl: 'https://images.unsplash.com/photo-1532012164546-f432f2e3777f?auto=format&fit=crop&w=300&h=450&q=80',
+    genre: 'Türk Edebiyatı'
   }
 ];
 
@@ -93,12 +117,101 @@ export const MobileProvider = ({ children }) => {
   const [activeTab, setActiveTab] = useState('home'); // 'home' | 'thoughts' | 'live' | 'library' | 'profile'
   
   // Modallar
+  const [isCreateThoughtOpen, setIsCreateThoughtOpen] = useState(false);
   const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
   const [isAdminOpen, setIsAdminOpen] = useState(false);
   const [isRoomsOpen, setIsRoomsOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isProgressOpen, setIsProgressOpen] = useState(false);
   const [selectedBookForProgress, setSelectedBookForProgress] = useState(null);
+
+  // Akış Gönderileri (Üstteki Düşünce Paylaş Modalı ve HomeScreen ortak verisi)
+  const [posts, setPosts] = useState([
+    {
+      id: 'post-pinned',
+      isPinned: true,
+      userName: 'Ayşe Yılmaz',
+      userRole: 'founder',
+      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&h=200&q=80',
+      timeAgo: 'Dün',
+      title: 'Topluluk Kuralları ve Canlı Okuma Saatleri',
+      content: 'Kulübümüzde her akşam 21:00-22:00 arası Canlı Okuma Odasında sessiz odaklanma seansı düzenlenmektedir. Alıntı ve kenar notu paylaşırken lütfen sürprizbozan (spoiler) etiketini kullanınız.',
+      bookTitle: 'Kenar Okur Rehberi',
+      bookAuthor: 'Kitap Kulübü',
+      bookCover: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=300&h=450&q=80',
+      likes: 42,
+      isLiked: false,
+      comments: 7
+    },
+    {
+      id: 'post-1',
+      userName: currentUser?.fullName || 'Kitap Kulübü Kurucusu',
+      userRole: currentUser?.role || 'founder',
+      avatar: currentUser?.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&h=200&q=80',
+      timeAgo: '15 dk önce',
+      content: 'Korku akıl katilidir. Korku, mutlak yok oluşu getiren küçük ölümdür. Herbert\'ın bu cümlesi her okumada daha da derinleşiyor.',
+      bookTitle: 'Dune',
+      bookAuthor: 'Frank Herbert',
+      bookCover: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=300&h=450&q=80',
+      page: 342,
+      likes: 12,
+      isLiked: false,
+      comments: 3
+    },
+    {
+      id: 'post-2',
+      userName: 'Zeynep Demir',
+      userRole: 'admin',
+      avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&h=200&q=80',
+      timeAgo: '1 saat önce',
+      content: 'Bilinçleninceye kadar asla başkaldıramayacaklar, başkaldırmadıkça da bilinçlenemezler.',
+      bookTitle: '1984',
+      bookAuthor: 'George Orwell',
+      bookCover: 'https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=300&h=450&q=80',
+      page: 120,
+      likes: 238,
+      isLiked: false,
+      comments: 18
+    },
+    {
+      id: 'post-3',
+      userName: 'Can Kaya',
+      userRole: 'user',
+      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&h=200&q=80',
+      timeAgo: '3 saat önce',
+      content: 'Noktalama işaretlerinin olmaması ilk 30 sayfada zorluyor ama sonra akış müthiş bir ritim kazanıyor. José Saramago\'nun dili insanı adeta büyülüyor.',
+      bookTitle: 'Körlük',
+      bookAuthor: 'José Saramago',
+      bookCover: 'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=300&h=450&q=80',
+      page: 85,
+      likes: 512,
+      isLiked: false,
+      comments: 42,
+      isSpoiler: true
+    }
+  ]);
+
+  const addPost = ({ content, bookTitle, bookAuthor, bookCover, page, isSpoiler }) => {
+    if (!content || !content.trim()) return;
+    const newPost = {
+      id: `p-${Date.now()}`,
+      userName: currentUser?.fullName || 'Kitap Kulübü Okuru',
+      userRole: currentUser?.role || 'user',
+      avatar: currentUser?.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&h=200&q=80',
+      bookTitle: bookTitle || 'Okuma Notu',
+      bookAuthor: bookAuthor || '',
+      bookCover: bookCover || 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=300&h=450&q=80',
+      content: content.trim(),
+      likes: 0,
+      isLiked: false,
+      comments: 0,
+      page: page ? parseInt(page, 10) : null,
+      isSpoiler: !!isSpoiler,
+      timeAgo: 'Az önce'
+    };
+    setPosts(prev => [newPost, ...prev]);
+    showToast('Kenar notunuz akışta paylaşıldı!');
+  };
 
   // Beta Durumu & Yetkilendirme (Varsayılan olarak açık başlar, kullanıcıyı kilitlemez)
   const [betaAuthorized, setBetaAuthorized] = useState(true);
@@ -276,6 +389,12 @@ export const MobileProvider = ({ children }) => {
         books: INITIAL_LOCAL_BOOKS,
         userBooks,
         updateBookProgress,
+        // Akış Gönderileri & Düşünce Paylaş
+        posts,
+        setPosts,
+        addPost,
+        isCreateThoughtOpen,
+        setIsCreateThoughtOpen,
         // Modallar
         isFeedbackOpen,
         setIsFeedbackOpen,

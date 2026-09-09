@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Image, TextInput } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useMobile } from '../context/MobileContext';
 import { colors } from '../theme/colors';
@@ -7,83 +7,14 @@ import { colors } from '../theme/colors';
 export const HomeScreen = () => {
   const { 
     currentUser, 
-    books,
+    posts,
+    setPosts,
     showToast,
-    setActiveTab
+    setActiveTab,
+    setIsCreateThoughtOpen
   } = useMobile();
 
-  // Düşünce Paylaş Form State'leri
-  const [newThought, setNewThought] = useState('');
-  const [selectedBook, setSelectedBook] = useState(books ? books[0] : { title: 'Dune', author: 'Frank Herbert' });
-  const [thoughtPage, setThoughtPage] = useState('');
-  const [isSpoiler, setIsSpoiler] = useState(false);
   const [revealedSpoilers, setRevealedSpoilers] = useState({});
-
-  // Akış Gönderileri (Prototip ile birebir eşleşen veriler)
-  const [posts, setPosts] = useState([
-    {
-      id: 'post-pinned',
-      isPinned: true,
-      userName: 'Ayşe Yılmaz',
-      userRole: 'founder',
-      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&h=200&q=80',
-      timeAgo: 'Dün',
-      title: 'Topluluk Kuralları ve Canlı Okuma Saatleri',
-      content: 'Kulübümüzde her akşam 21:00-22:00 arası Canlı Okuma Odasında sessiz odaklanma seansı düzenlenmektedir. Alıntı ve kenar notu paylaşırken lütfen sürprizbozan (spoiler) etiketini kullanınız.',
-      bookTitle: 'Kenar Okur Rehberi',
-      bookAuthor: 'Kitap Kulübü',
-      bookCover: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=300&h=450&q=80',
-      likes: 42,
-      isLiked: false,
-      comments: 7
-    },
-    {
-      id: 'post-1',
-      userName: currentUser?.fullName || 'Kitap Kulübü Kurucusu',
-      userRole: currentUser?.role || 'founder',
-      avatar: currentUser?.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&h=200&q=80',
-      timeAgo: '15 dk önce',
-      content: 'Korku akıl katilidir. Korku, mutlak yok oluşu getiren küçük ölümdür. Herbert\'ın bu cümlesi her okumada daha da derinleşiyor.',
-      bookTitle: 'Dune',
-      bookAuthor: 'Frank Herbert',
-      bookCover: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=300&h=450&q=80',
-      page: 342,
-      likes: 12,
-      isLiked: false,
-      comments: 3
-    },
-    {
-      id: 'post-2',
-      userName: 'Zeynep Demir',
-      userRole: 'admin',
-      avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&h=200&q=80',
-      timeAgo: '1 saat önce',
-      content: 'Bilinçleninceye kadar asla başkaldıramayacaklar, başkaldırmadıkça da bilinçlenemezler.',
-      bookTitle: '1984',
-      bookAuthor: 'George Orwell',
-      bookCover: 'https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=300&h=450&q=80',
-      page: 120,
-      likes: 238,
-      isLiked: false,
-      comments: 18
-    },
-    {
-      id: 'post-3',
-      userName: 'Can Kaya',
-      userRole: 'user',
-      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&h=200&q=80',
-      timeAgo: '3 saat önce',
-      content: 'Noktalama işaretlerinin olmaması ilk 30 sayfada zorluyor ama sonra akış müthiş bir ritim kazanıyor. José Saramago\'nun dili insanı adeta büyülüyor.',
-      bookTitle: 'Körlük',
-      bookAuthor: 'José Saramago',
-      bookCover: 'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=300&h=450&q=80',
-      page: 85,
-      likes: 512,
-      isLiked: false,
-      comments: 42,
-      isSpoiler: true
-    }
-  ]);
 
   const toggleLike = (id) => {
     setPosts(prev => prev.map(p => {
@@ -103,103 +34,10 @@ export const HomeScreen = () => {
     setRevealedSpoilers(prev => ({ ...prev, [id]: true }));
   };
 
-  const handleShareThought = () => {
-    if (!newThought || !newThought.trim()) return;
-    const newPost = {
-      id: `p-${Date.now()}`,
-      userName: currentUser?.fullName || 'Kitap Kulübü Okuru',
-      userRole: currentUser?.role || 'user',
-      avatar: currentUser?.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&h=200&q=80',
-      bookTitle: selectedBook?.title || 'Okuma Notu',
-      bookAuthor: selectedBook?.author || '',
-      bookCover: selectedBook?.coverUrl || 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=300&h=450&q=80',
-      content: newThought.trim(),
-      likes: 0,
-      isLiked: false,
-      comments: 0,
-      page: thoughtPage ? parseInt(thoughtPage, 10) : null,
-      isSpoiler,
-      timeAgo: 'Az önce'
-    };
-    setPosts(prev => [newPost, ...prev]);
-    setNewThought('');
-    setThoughtPage('');
-    setIsSpoiler(false);
-    showToast('Kenar notunuz akışta paylaşıldı!');
-  };
-
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      {/* 1. ÜSTTE SABİT DÜŞÜNCE PAYLAŞMA KARTI (Kullanıcı İsteği) */}
-      <View style={styles.composerCard}>
-        <View style={styles.composerHeader}>
-          <Image 
-            source={{ uri: currentUser?.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&h=200&q=80' }} 
-            style={styles.composerAvatar} 
-          />
-          <View style={styles.composerMeta}>
-            <Text style={styles.composerTitle}>Kenar Notu veya Düşünce Paylaş</Text>
-            <Text style={styles.composerSubtitle}>{currentUser?.fullName || 'Okur'}</Text>
-          </View>
-        </View>
-
-        <TextInput
-          style={styles.composerInput}
-          placeholder="Bu satırlarda zihninizde ne belirdi? Okuma notunuzu paylaşın..."
-          placeholderTextColor="rgba(60,60,67,0.4)"
-          value={newThought}
-          onChangeText={setNewThought}
-          multiline
-          numberOfLines={3}
-        />
-
-        {/* Seçenekler & Gönder Çubuğu */}
-        <View style={styles.composerFooter}>
-          <View style={styles.composerOptions}>
-            {/* Kitap ve Sayfa */}
-            <View style={styles.composerBookTag}>
-              <Ionicons name="book" size={13} color="#007AFF" />
-              <Text style={styles.composerBookTagText} numberOfLines={1}>
-                {selectedBook?.title || 'Dune'}
-              </Text>
-            </View>
-
-            <TextInput
-              style={styles.composerPageInput}
-              placeholder="s. no"
-              placeholderTextColor="rgba(60,60,67,0.4)"
-              value={thoughtPage}
-              onChangeText={setThoughtPage}
-              keyboardType="number-pad"
-            />
-
-            {/* Sürprizbozan Butonu */}
-            <TouchableOpacity 
-              style={[styles.spoilerToggle, isSpoiler && styles.spoilerToggleActive]}
-              onPress={() => setIsSpoiler(!isSpoiler)}
-              activeOpacity={0.7}
-            >
-              <Ionicons name={isSpoiler ? "alert-circle" : "eye-outline"} size={13} color={isSpoiler ? "#FF3B30" : "rgba(60,60,67,0.6)"} />
-              <Text style={[styles.spoilerToggleText, isSpoiler && styles.spoilerToggleTextActive]}>
-                {isSpoiler ? 'Spoiler' : 'Uyarı'}
-              </Text>
-            </TouchableOpacity>
-          </View>
-
-          <TouchableOpacity
-            style={[styles.composerShareBtn, (!newThought || !newThought.trim()) && styles.composerShareBtnDisabled]}
-            onPress={handleShareThought}
-            disabled={!newThought || !newThought.trim()}
-            activeOpacity={0.8}
-          >
-            <Ionicons name="arrow-up" size={15} color="#fff" />
-            <Text style={styles.composerShareBtnText}>Paylaş</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-
-      {/* 2. GÖNDERİ LİSTESİ */}
-      {posts.map(post => {
+      {/* GÖNDERİ LİSTESİ */}
+      {posts && posts.map(post => {
         const isRevealed = revealedSpoilers[post.id];
         const shouldBlur = post.isSpoiler && !isRevealed;
 

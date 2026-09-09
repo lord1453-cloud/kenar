@@ -14,6 +14,7 @@ import { ProfileScreen } from './src/screens/ProfileScreen';
 import { FeedbackModal } from './src/screens/FeedbackModal';
 import { MobileAdminScreen } from './src/screens/MobileAdminScreen';
 import { RoomsModal } from './src/screens/RoomsModal';
+import { CreateThoughtModal } from './src/screens/CreateThoughtModal';
 import { LoginModal } from './src/screens/LoginModal';
 import { BetaGateScreen } from './src/screens/BetaGateScreen';
 import { colors } from './src/theme/colors';
@@ -71,6 +72,7 @@ const MainNavigator = () => {
       <FeedbackModal />
       <MobileAdminScreen />
       <RoomsModal />
+      <CreateThoughtModal />
       <LoginModal />
     </View>
   );
