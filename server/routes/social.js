@@ -1,6 +1,6 @@
 import express from 'express';
 import { db } from '../db/database.js';
-import { requireAuth } from '../middleware/authAndPlatform.js';
+import { requireAuth, sanitizeInput } from '../middleware/authAndPlatform.js';
 
 const router = express.Router();
 
@@ -18,10 +18,12 @@ router.post('/posts', requireAuth, (req, res) => {
     return res.status(400).json({ error: 'Düşünce içeriği boş olamaz.' });
   }
 
+  const cleanContent = sanitizeInput(content);
+
   const newPost = {
     id: `post-${Date.now()}`,
     userId: req.user.id,
-    content: content.trim(),
+    content: cleanContent,
     type: type || 'thought', // 'thought' | 'quote' | 'review' | 'progress_update'
     bookId: bookId || null,
     pageNumber: pageNumber ? parseInt(pageNumber, 10) : null,
@@ -87,11 +89,13 @@ router.post('/rooms', requireAuth, (req, res) => {
   res.status(201).json({ success: true, room: newRoom });
 });
 
-router.get('/rooms/:id/messages', (req, res) => {
+// Oda Mesajlarını Getir (Yalnızca giriş yapmış kullanıcılar)
+router.get('/rooms/:id/messages', requireAuth, (req, res) => {
   const messages = db.get('messages').filter(m => m.roomId === req.params.id);
   res.json(messages);
 });
 
+// Odaya Mesaj Gönder
 router.post('/rooms/:id/messages', requireAuth, (req, res) => {
   const { content } = req.body;
   const { id } = req.params;
@@ -100,11 +104,13 @@ router.post('/rooms/:id/messages', requireAuth, (req, res) => {
     return res.status(400).json({ error: 'Mesaj içeriği boş olamaz.' });
   }
 
+  const cleanContent = sanitizeInput(content);
+
   const newMessage = {
     id: `msg-${Date.now()}`,
     roomId: id,
     userId: req.user.id,
-    content: content.trim(),
+    content: cleanContent,
     platform: req.clientPlatform,
     timestamp: new Date().toISOString()
   };

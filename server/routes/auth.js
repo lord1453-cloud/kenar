@@ -1,14 +1,28 @@
 import express from 'express';
 import { db } from '../db/database.js';
+import { 
+  generateSessionToken, 
+  requireAuth, 
+  requireFounder, 
+  createRateLimiter, 
+  sanitizeInput 
+} from '../middleware/authAndPlatform.js';
 
 const router = express.Router();
+
+// Giriş ve kayıt işlemleri için Brute-force koruması (15 dakikada en fazla 25 istek)
+const authLimiter = createRateLimiter({
+  windowMs: 15 * 60 * 1000,
+  max: 25,
+  message: 'Güvenlik uyarısı: Çok fazla deneme yapıldı. Lütfen 15 dakika sonra tekrar deneyiniz.'
+});
 
 function simpleHash(password) {
   return `hash_${Buffer.from(password).toString('base64').slice(0, 16)}`;
 }
 
 // Giriş Yap (Web, iOS ve Android için ortak)
-router.post('/login', (req, res) => {
+router.post('/login', authLimiter, (req, res) => {
   const { email, password } = req.body;
   const platform = req.clientPlatform;
 
@@ -17,7 +31,8 @@ router.post('/login', (req, res) => {
   }
 
   const users = db.get('users');
-  const user = users.find(u => u.email.toLowerCase() === email.toLowerCase().trim());
+  const cleanEmail = sanitizeInput(email).toLowerCase().trim();
+  const user = users.find(u => u.email.toLowerCase() === cleanEmail);
 
   if (!user) {
     return res.status(401).json({ error: 'Bu e-posta adresine ait bir hesap bulunamadı.' });
@@ -25,7 +40,7 @@ router.post('/login', (req, res) => {
 
   // Basit şifre doğrulaması (veya demo hash kontrolü)
   const incomingHash = simpleHash(password);
-  if (user.passwordHash && user.passwordHash !== incomingHash && !user.passwordHash.includes(email.split('@')[0])) {
+  if (user.passwordHash && user.passwordHash !== incomingHash && !user.passwordHash.includes(cleanEmail.split('@')[0])) {
     // Demo kolaylığı için şifre "123456" veya kullanıcı adını da kabul eder
     if (password !== '123456' && password !== 'admin123' && password !== 'founder123') {
       return res.status(401).json({ error: 'Girdiğiniz şifre hatalı.' });
@@ -43,6 +58,9 @@ router.post('/login', (req, res) => {
     lastLoginAt: new Date().toISOString()
   }));
 
+  // Kriptografik Oturum Tokenı Üret
+  const token = generateSessionToken(user.id, user.role);
+
   // Beta durumu kontrolü
   const beta = db.getBetaSettings();
   const testers = db.get('betaTesters');
@@ -53,6 +71,7 @@ router.post('/login', (req, res) => {
 
   return res.json({
     success: true,
+    token, // İstemcinin Authorization: Bearer <token> ile göndereceği oturum anahtarı
     user: {
       id: user.id,
       username: user.username,
@@ -72,7 +91,7 @@ router.post('/login', (req, res) => {
 });
 
 // Yeni Okur Kaydı (18+ kontrolü & Kapalı Beta Davet Kodu Doğrulaması)
-router.post('/register', (req, res) => {
+router.post('/register', authLimiter, (req, res) => {
   const { firstName, lastName, age, email, password, inviteCode } = req.body;
   const platform = req.clientPlatform;
 
@@ -168,18 +187,19 @@ router.post('/register', (req, res) => {
     });
   }
 
+  // Kriptografik Oturum Tokenı Üret
+  const token = generateSessionToken(newUser.id, newUser.role);
+
   return res.json({
     success: true,
+    token, // İstemcinin Authorization başlığında kullanacağı oturum tokenı
     user: newUser,
     message: 'Kapalı Beta kaydınız başarıyla oluşturuldu! Hoş geldiniz.'
   });
 });
 
 // Oturumdaki kullanıcıyı al
-router.get('/me', (req, res) => {
-  if (!req.user) {
-    return res.status(401).json({ error: 'Oturum açılmamış.' });
-  }
+router.get('/me', requireAuth, (req, res) => {
   const beta = db.getBetaSettings();
   const testers = db.get('betaTesters');
   const isBetaTester = req.user.role === 'founder' || 
@@ -196,31 +216,46 @@ router.get('/me', (req, res) => {
   });
 });
 
-// Tüm kullanıcılar (arkadaş bulma, admin listeleme için)
-router.get('/users', (req, res) => {
-  const users = db.get('users').map(u => {
-    const { passwordHash, ...safeUser } = u;
-    return safeUser;
-  });
+// Tüm kullanıcılar (arkadaş bulma ve listeleme için — Yalnızca giriş yapmış kullanıcılara açık, hassas veriler gizli)
+router.get('/users', requireAuth, (req, res) => {
+  const users = db.get('users').map(u => ({
+    id: u.id,
+    username: u.username,
+    fullName: u.fullName,
+    role: u.role,
+    avatar: u.avatar,
+    bio: u.bio,
+    isStarUser: u.isStarUser,
+    favoriteGenre: u.favoriteGenre,
+    readingGoal: u.readingGoal,
+    joinedDate: u.joinedDate
+  }));
   res.json(users);
 });
 
-// Kurucu Hesabı Bilgilerini Güncelle (E-posta, İsim, Şifre)
-router.patch('/founder-profile', (req, res) => {
+// Kurucu Hesabı Bilgilerini Güncelle (E-posta, İsim, Şifre) — Yalnızca Giriş Yapmış Kurucu (Founder)
+router.patch('/founder-profile', requireAuth, requireFounder, (req, res) => {
   const { fullName, email, password } = req.body;
-  const users = db.get('users');
-  const founder = users.find(u => u.role === 'founder') || users[0];
+  const founder = req.user;
 
   const updates = {};
   if (fullName && fullName.trim()) {
-    updates.fullName = fullName.trim();
-    updates.firstName = fullName.trim().split(' ')[0];
-    updates.lastName = fullName.trim().split(' ').slice(1).join(' ') || 'Kurucu';
+    const cleanName = sanitizeInput(fullName);
+    updates.fullName = cleanName;
+    updates.firstName = cleanName.split(' ')[0];
+    updates.lastName = cleanName.split(' ').slice(1).join(' ') || 'Kurucu';
   }
   if (email && email.trim()) {
-    updates.email = email.toLowerCase().trim();
+    const cleanEmail = sanitizeInput(email).toLowerCase().trim();
+    if (!cleanEmail.includes('@')) {
+      return res.status(400).json({ error: 'Geçersiz e-posta formatı.' });
+    }
+    updates.email = cleanEmail;
   }
   if (password && password.trim()) {
+    if (password.trim().length < 6) {
+      return res.status(400).json({ error: 'Şifre güvenliği için en az 6 karakter gereklidir.' });
+    }
     updates.passwordHash = simpleHash(password.trim());
   }
 

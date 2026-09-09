@@ -16,7 +16,8 @@
     "build:mobile:android": "npm --prefix mobile run build:android",
     "build:mobile:android:apk": "npm --prefix mobile run build:android:apk",
     "build:mobile:ios": "npm --prefix mobile run build:ios",
-    "test:api": "node scripts/test-api.js"
+    "test:api": "node scripts/test-api.js",
+    "security:audit": "node scripts/security-audit.js"
   },
   "dependencies": {
     "canvas-confetti": "^1.9.4",

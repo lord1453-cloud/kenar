@@ -49,6 +49,7 @@ async function runTests() {
 
   // 3. Tek Hesap Girişi (Founder & Admin)
   let founderUser = null;
+  let founderToken = null;
   await test('3. Kurucu (Founder) Girişi ve Yetki Doğrulaması', async () => {
     const res = await fetch(`${BASE_URL}/api/auth/login`, {
       method: 'POST',
@@ -58,7 +59,9 @@ async function runTests() {
     const data = await res.json();
     if (!data.success) throw new Error(data.error);
     if (data.user.role !== 'founder') throw new Error('Founder rolü tanınmadı');
+    if (!data.token) throw new Error('Oturum tokenı döndürülmedi');
     founderUser = data.user;
+    founderToken = data.token;
   });
 
   // 4. Tek Kişiye Özel Beta Doğrulaması
@@ -99,7 +102,7 @@ async function runTests() {
       headers: {
         'Content-Type': 'application/json',
         'x-client-platform': 'ios',
-        'x-user-id': founderUser.id
+        'Authorization': `Bearer ${founderToken}`
       },
       body: JSON.stringify({
         description: 'TestFlight beta testi: Kitaplık filtreleme sorunsuz çalışıyor.',
@@ -114,7 +117,7 @@ async function runTests() {
 
     // Admin/Founder ile listele
     const resList = await fetch(`${BASE_URL}/api/beta/feedback`, {
-      headers: { 'x-user-id': founderUser.id }
+      headers: { 'Authorization': `Bearer ${founderToken}` }
     });
     const list = await resList.json();
     if (!Array.isArray(list) || list.length === 0) throw new Error('Feedback listesi boş');
@@ -122,7 +125,10 @@ async function runTests() {
     // Durum güncelle: cozuldu
     const resPatch = await fetch(`${BASE_URL}/api/beta/feedback/${createdFeedbackId}`, {
       method: 'PATCH',
-      headers: { 'Content-Type': 'application/json', 'x-user-id': founderUser.id },
+      headers: { 
+        'Content-Type': 'application/json', 
+        'Authorization': `Bearer ${founderToken}` 
+      },
       body: JSON.stringify({ status: 'cozuldu' })
     });
     const patchData = await resPatch.json();
@@ -137,7 +143,7 @@ async function runTests() {
       headers: {
         'Content-Type': 'application/json',
         'x-client-platform': 'web',
-        'x-user-id': founderUser.id
+        'Authorization': `Bearer ${founderToken}`
       },
       body: JSON.stringify({
         bookId: 'book-1',
@@ -152,7 +158,10 @@ async function runTests() {
 
     // iOS veya Android'den kontrol et
     const resGetSessions = await fetch(`${BASE_URL}/api/sessions?userId=${founderUser.id}`, {
-      headers: { 'x-client-platform': 'ios' }
+      headers: { 
+        'x-client-platform': 'ios',
+        'Authorization': `Bearer ${founderToken}`
+      }
     });
     const userSessions = await resGetSessions.json();
     const found = userSessions.find(s => s.id === sessionData.session.id);

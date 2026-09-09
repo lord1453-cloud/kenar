@@ -12,11 +12,16 @@ const getBaseUrl = () => {
 export const API_BASE = getBaseUrl();
 const CURRENT_PLATFORM = Platform.OS === 'ios' ? 'ios' : 'android';
 
-let storedUserId = 'user-1'; // Varsayılan kurucu hesap
+let storedUserId = 'user-1'; // Varsayılan hesap
+let storedAuthToken = null;
 let storedBetaInviteCode = 'BETA-KITAP-2026';
 
 export const setStoredUserId = (id) => {
   storedUserId = id;
+};
+
+export const setStoredAuthToken = (token) => {
+  storedAuthToken = token;
 };
 
 export const setStoredBetaInviteCode = (code) => {
@@ -28,8 +33,8 @@ const getHeaders = () => {
     'Content-Type': 'application/json',
     'x-client-platform': CURRENT_PLATFORM
   };
-  if (storedUserId) {
-    headers['x-user-id'] = storedUserId;
+  if (storedAuthToken) {
+    headers['Authorization'] = `Bearer ${storedAuthToken}`;
   }
   if (storedBetaInviteCode) {
     headers['x-beta-invite-code'] = storedBetaInviteCode;
@@ -97,6 +102,9 @@ export const mobileApi = {
       const data = await res.json();
       if (data.success && data.user) {
         storedUserId = data.user.id;
+        if (data.token) {
+          storedAuthToken = data.token;
+        }
       }
       return data;
     } catch (err) {
@@ -115,6 +123,9 @@ export const mobileApi = {
       const data = await res.json();
       if (data.success && data.user) {
         storedUserId = data.user.id;
+        if (data.token) {
+          storedAuthToken = data.token;
+        }
       }
       return data;
     } catch (err) {

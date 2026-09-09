@@ -1,18 +1,32 @@
 /**
  * Kitap Kulübü — Web API Entegrasyon Servisi
- * Ortak backend (http://localhost:5000) ile konuşur.
- * x-client-platform: 'web' başlığını otomatik ekler.
+ * Ortak backend ile konuşur. Dinamik VITE_API_BASE ve kriptografik Bearer token kullanır.
  */
 
-const API_BASE = 'http://localhost:5000/api';
+const API_BASE = (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_API_BASE) 
+  ? import.meta.env.VITE_API_BASE 
+  : 'http://localhost:5000/api';
+
+let activeToken = typeof localStorage !== 'undefined' ? localStorage.getItem('kk_auth_token') : null;
+
+export const setAuthToken = (token) => {
+  activeToken = token;
+  if (typeof localStorage !== 'undefined') {
+    if (token) localStorage.setItem('kk_auth_token', token);
+    else localStorage.removeItem('kk_auth_token');
+  }
+};
+
+export const getAuthToken = () => activeToken;
 
 const getHeaders = (userId = null) => {
   const headers = {
     'Content-Type': 'application/json',
     'x-client-platform': 'web'
   };
-  if (userId) {
-    headers['x-user-id'] = userId;
+  const token = activeToken || (typeof localStorage !== 'undefined' ? localStorage.getItem('kk_auth_token') : null);
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
   }
   return headers;
 };
@@ -178,7 +192,11 @@ export const api = {
         headers: getHeaders(),
         body: JSON.stringify(userData)
       });
-      return await res.json();
+      const data = await res.json();
+      if (data.success && data.token) {
+        setAuthToken(data.token);
+      }
+      return data;
     } catch {
       return { success: false, error: 'Kayıt servisine ulaşılamadı.' };
     }
@@ -192,10 +210,19 @@ export const api = {
         headers: getHeaders(),
         body: JSON.stringify({ email, password })
       });
-      return await res.json();
+      const data = await res.json();
+      if (data.success && data.token) {
+        setAuthToken(data.token);
+      }
+      return data;
     } catch {
       return { success: false, error: 'Giriş yapılamadı.' };
     }
+  },
+
+  // Çıkış Yap
+  logout() {
+    setAuthToken(null);
   },
 
   // Kurucu Hesabı Bilgilerini Güncelle

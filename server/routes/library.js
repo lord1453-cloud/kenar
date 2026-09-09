@@ -17,14 +17,21 @@ router.get('/books/:id', (req, res) => {
   res.json(book);
 });
 
-// Kullanıcının kitaplığını getir (veya belirtilen kullanıcının)
+// Kullanıcının kitaplığını getir (Yalnızca belirtilen kullanıcının herkese açık kitapları veya kendi kitaplığı)
 router.get('/user-books', (req, res) => {
-  const userId = req.query.userId || (req.user ? req.user.id : null);
-  const userBooks = db.get('userBooks');
-  if (userId) {
-    return res.json(userBooks.filter(ub => ub.userId === userId));
+  const targetUserId = req.query.userId || (req.user ? req.user.id : null);
+  if (!targetUserId) {
+    return res.status(400).json({ error: 'Kitaplığı görüntülemek için bir kullanıcı belirtilmeli veya oturum açılmalıdır.' });
   }
-  res.json(userBooks);
+
+  const userBooks = db.get('userBooks');
+  const userList = userBooks.filter(ub => ub.userId === targetUserId);
+
+  // Kendi kitaplığıysa tümünü, başkasının kitaplığıysa yalnızca gizli olmayanları (isPrivate !== true) göster
+  const isOwner = req.user && req.user.id === targetUserId;
+  const filtered = isOwner ? userList : userList.filter(ub => !ub.isPrivate);
+
+  res.json(filtered);
 });
 
 // Kitaplığa kitap ekle veya durumunu güncelle
@@ -136,14 +143,17 @@ router.post('/sessions', requireAuth, (req, res) => {
   res.status(201).json({ success: true, session: newSession });
 });
 
-// Okuma Seanslarını Getir
-router.get('/sessions', (req, res) => {
-  const userId = req.query.userId || (req.user ? req.user.id : null);
-  const sessions = db.get('readingSessions');
-  if (userId) {
-    return res.json(sessions.filter(s => s.userId === userId));
+// Okuma Seanslarını Getir (Yalnızca oturum açmış kullanıcının kendi seansları veya yönetici erişimi)
+router.get('/sessions', requireAuth, (req, res) => {
+  const targetUserId = req.query.userId || req.user.id;
+
+  // Başka birinin seanslarını sadece admin veya kurucu görebilir
+  if (targetUserId !== req.user.id && req.user.role !== 'admin' && req.user.role !== 'founder') {
+    return res.status(403).json({ error: 'Yalnızca kendi okuma seanslarınızı görüntüleyebilirsiniz.' });
   }
-  res.json(sessions);
+
+  const sessions = db.get('readingSessions');
+  res.json(sessions.filter(s => s.userId === targetUserId));
 });
 
 export default router;

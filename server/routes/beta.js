@@ -1,10 +1,22 @@
 import express from 'express';
 import { db } from '../db/database.js';
-import { requireAdmin, requireFounder } from '../middleware/authAndPlatform.js';
+import { 
+  requireAdmin, 
+  requireFounder, 
+  createRateLimiter, 
+  sanitizeInput 
+} from '../middleware/authAndPlatform.js';
 
 const router = express.Router();
 
-// Beta Durum Bilgisi (Herkes erişebilir)
+// Beta denemeleri ve başvuru için hız sınırlayıcı
+const betaLimiter = createRateLimiter({
+  windowMs: 15 * 60 * 1000,
+  max: 20,
+  message: 'Güvenlik uyarısı: Çok fazla istek yapıldı. Lütfen 15 dakika sonra tekrar deneyiniz.'
+});
+
+// Beta Durum Bilgisi (Herkes erişebilir — Özel testçi e-postası gizlenmiştir)
 router.get('/status', (req, res) => {
   const beta = db.getBetaSettings();
   res.json({
@@ -12,13 +24,12 @@ router.get('/status', (req, res) => {
     appVersion: beta.appVersion,
     buildNumber: beta.buildNumber,
     restrictedMode: beta.restrictedMode,
-    designatedTesterEmail: beta.designatedTesterEmail,
     detectedPlatform: req.clientPlatform
   });
 });
 
-// Beta Davet Kodu Doğrulama
-router.post('/verify-code', (req, res) => {
+// Beta Davet Kodu Doğrulama (Hız sınırlaması aktif)
+router.post('/verify-code', betaLimiter, (req, res) => {
   const { inviteCode, email } = req.body;
   const beta = db.getBetaSettings();
 
@@ -70,16 +81,20 @@ router.post('/verify-code', (req, res) => {
   });
 });
 
-// Kapalı Beta Katılım Başvurusu Yap (Herkes başvurabilir)
-router.post('/apply', (req, res) => {
+// Kapalı Beta Katılım Başvurusu Yap (Hız sınırlaması ve girdi temizleme aktif)
+router.post('/apply', betaLimiter, (req, res) => {
   const { email, name, device, note } = req.body;
   const platform = req.clientPlatform || device || 'web';
 
-  if (!email || !email.includes('@')) {
+  const cleanEmail = sanitizeInput(email || '').toLowerCase().trim();
+  if (!cleanEmail || !cleanEmail.includes('@')) {
     return res.status(400).json({ error: 'Geçerli bir e-posta adresi gereklidir.' });
   }
 
-  const existingTester = db.get('betaTesters').find(t => t.email.toLowerCase() === email.toLowerCase().trim());
+  const cleanName = sanitizeInput(name || cleanEmail.split('@')[0]);
+  const cleanNote = sanitizeInput(note || 'Kapalı beta katılım başvurusu.');
+
+  const existingTester = db.get('betaTesters').find(t => t.email.toLowerCase() === cleanEmail);
   if (existingTester) {
     return res.json({
       success: true,
@@ -92,12 +107,12 @@ router.post('/apply', (req, res) => {
     id: `app-${Date.now()}`,
     type: 'beta_application',
     userId: 'applicant',
-    userName: name || email.split('@')[0],
-    userEmail: email.toLowerCase().trim(),
+    userName: cleanName,
+    userEmail: cleanEmail,
     userRole: 'applicant',
     platform: platform.toLowerCase(),
     screen: 'Kapalı Beta Giriş Kapısı',
-    description: `[Beta Başvurusu] Cihaz: ${platform.toUpperCase()} — Not: ${note || 'Kapalı beta katılım başvurusu.'}`,
+    description: `[Beta Başvurusu] Cihaz: ${platform.toUpperCase()} — Not: ${cleanNote}`,
     screenshotUrl: null,
     status: 'yeni',
     createdAt: new Date().toISOString()
