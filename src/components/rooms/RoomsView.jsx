@@ -118,81 +118,64 @@ export const RoomsView = () => {
         </span>
       </div>
 
-      {/* 2x2 Oda Kartları Izgarası: Kesinlikle Basık Olmayan Dik Orijinal Kitap Kapakları (84px × 124px) */}
+      {/* 2x2 Oda Kartları Izgarası (Screenshot 4 Birebir Tasarım) */}
       <div className="room-grid">
-        {allDisplayRooms.map(room => (
-          <div 
-            key={room.id}
-            className="room-card" 
-            style={{ position: 'relative' }}
-          >
-            {/* Dik ve Orantılı 2:3 Kitap Kapağı (84px × 124px) */}
+        {allDisplayRooms.map(room => {
+          const defaultBannerColors = {
+            'room-1': 'linear-gradient(155deg,#8B4A34,#5b3527)',
+            'room-2': 'linear-gradient(155deg,#455C46,#26331f)',
+            'room-3': 'linear-gradient(155deg,#A9832E,#6b551d)',
+            'room-4': 'linear-gradient(155deg,#5C6151,#2f3229)'
+          };
+          const bgBanner = room.bannerColor || defaultBannerColors[room.id] || 'linear-gradient(155deg,#8B4A34,#455C46)';
+
+          return (
             <div 
-              className="rc-cover" 
+              key={room.id}
+              className="room-card"
               onClick={() => openRoom(room)}
-              style={{ cursor: 'pointer' }}
-              title={`${room.title} kapağı`}
+              style={{ cursor: 'pointer', position: 'relative' }}
             >
-              <BookCover 
-                src={room.coverImage || room.cover} 
-                title={room.title}
-                alt={room.title}
-                style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
-              />
-            </div>
-
-            {/* Oda İçeriği ve Aksiyonlar */}
-            <div className="rc-content">
+              {/* Geniş ve Pürüzsüz Renkli Kapak Bannerı (Screenshot 4) */}
               <div 
-                onClick={() => openRoom(room)}
-                style={{ cursor: 'pointer' }}
+                className="rc-cover" 
+                style={{ 
+                  background: bgBanner,
+                  borderRadius: '9px',
+                  height: '120px',
+                  marginBottom: '12px',
+                  position: 'relative',
+                  overflow: 'hidden'
+                }}
               >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <span style={{ fontSize: '1.2rem' }}>{room.icon || '📖'}</span>
-                  <div className="rc-title">{room.title}</div>
-                </div>
-                {room.author && (
-                  <div style={{ fontSize: '0.84rem', color: 'var(--text-muted)', marginTop: '2px' }}>
-                    {room.author}
-                  </div>
-                )}
-                <p style={{ margin: '4px 0 0', fontSize: '0.82rem', color: 'var(--text-dim)', lineHeight: 1.4, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
-                  {room.description}
-                </p>
-                <div className="rc-sub" style={{ marginTop: '6px' }}>
-                  <svg className="icon icon-sm shield" viewBox="0 0 24 24">
-                    <path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"/>
-                  </svg>
-                  <span>{room.sub}</span>
+                <div style={{ position: 'absolute', top: '10px', right: '10px' }}>
+                  <button
+                    className="icon-btn"
+                    style={{ width: '28px', height: '28px', background: 'rgba(0,0,0,0.3)', color: '#fff', border: 'none' }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openCustomizeRoom(room);
+                    }}
+                    title="Odayı Özelleştir"
+                  >
+                    <Sliders size={13} />
+                  </button>
                 </div>
               </div>
 
-              {/* Alt Aksiyon Butonları */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '10px' }}>
-                <button 
-                  className="btn btn-primary btn-sm"
-                  style={{ fontSize: '0.8rem', padding: '5px 12px' }}
-                  onClick={() => openRoom(room)}
-                >
-                  <MessageCircle size={13} />
-                  Odaya Gir
-                </button>
-                <button 
-                  className="btn btn-secondary btn-sm"
-                  style={{ fontSize: '0.8rem', padding: '5px 10px', display: 'inline-flex', alignItems: 'center', gap: '5px' }}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    openCustomizeRoom(room);
-                  }}
-                  title="Oda profilini, kapağını, başlığını ve kurallarını özelleştir"
-                >
-                  <Sliders size={13} />
-                  Özelleştir
-                </button>
+              {/* Başlık ve Üye Bilgisi */}
+              <div className="rc-title" style={{ fontSize: '15.5px', fontWeight: 600 }}>
+                {room.title}
+              </div>
+              <div className="rc-sub" style={{ fontSize: '12.5px', color: 'var(--label-2)', marginTop: '4px', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                <svg className="icon icon-sm shield" viewBox="0 0 24 24" style={{ color: 'var(--green)' }}>
+                  <path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"/>
+                </svg>
+                <span>{room.sub || `${room.members} üye`}</span>
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

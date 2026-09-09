@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Image, TextInput } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useMobile } from '../context/MobileContext';
 import { colors } from '../theme/colors';
@@ -15,6 +15,32 @@ export const HomeScreen = () => {
   } = useMobile();
 
   const isPrivileged = currentUser?.role === 'founder' || currentUser?.role === 'admin';
+
+  const [newThought, setNewThought] = useState('');
+  const [thoughtBookTitle, setThoughtBookTitle] = useState('Dune');
+  const [thoughtPage, setThoughtPage] = useState('');
+
+  const handleShareThought = () => {
+    if (!newThought.trim()) return;
+    const newPost = {
+      id: `p-${Date.now()}`,
+      userName: currentUser?.fullName || 'Kitap Kulübü Okuru',
+      userRole: currentUser?.role || 'user',
+      avatar: currentUser?.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&h=200&q=80',
+      bookTitle: thoughtBookTitle || 'Okuma Notu',
+      bookAuthor: '',
+      content: newThought.trim(),
+      likes: 0,
+      isLiked: false,
+      comments: 0,
+      page: thoughtPage ? parseInt(thoughtPage, 10) : 1,
+      timeAgo: 'Az önce'
+    };
+    setPosts(prev => [newPost, ...prev]);
+    setNewThought('');
+    setThoughtPage('');
+    showToast('Kenar notunuz okur akışında paylaşıldı!');
+  };
 
   const [posts, setPosts] = useState([
     {
@@ -151,6 +177,60 @@ export const HomeScreen = () => {
               <Text style={styles.quickHubBtnDesc}>Kurucu paneli</Text>
             </TouchableOpacity>
           )}
+        </View>
+      </View>
+
+      {/* ÜSTTE DÜŞÜNCE / KENAR NOTU PAYLAŞMA KARTI */}
+      <View style={styles.composerCard}>
+        <View style={styles.composerHeader}>
+          <Image 
+            source={{ uri: currentUser?.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&h=200&q=80' }} 
+            style={styles.composerAvatar} 
+          />
+          <View style={styles.composerMeta}>
+            <Text style={styles.composerTitle}>Kenar Notu veya Düşünce Paylaş</Text>
+            <Text style={styles.composerSubtitle}>{currentUser?.fullName || 'Kitap Kulübü Okuru'}</Text>
+          </View>
+        </View>
+
+        <TextInput
+          style={styles.composerInput}
+          placeholder="Bu satırlarda zihninizde ne belirdi? Okuma notunuzu paylaşın..."
+          placeholderTextColor={colors.textDim}
+          value={newThought}
+          onChangeText={setNewThought}
+          multiline
+          numberOfLines={3}
+        />
+
+        <View style={styles.composerFooter}>
+          <View style={styles.composerMetaInputs}>
+            <TextInput
+              style={styles.composerBookInput}
+              placeholder="Kitap Adı"
+              placeholderTextColor={colors.textDim}
+              value={thoughtBookTitle}
+              onChangeText={setThoughtBookTitle}
+            />
+            <TextInput
+              style={styles.composerPageInput}
+              placeholder="s. no"
+              placeholderTextColor={colors.textDim}
+              value={thoughtPage}
+              onChangeText={setThoughtPage}
+              keyboardType="number-pad"
+            />
+          </View>
+
+          <TouchableOpacity
+            style={[styles.composerShareBtn, !newThought.trim() && { opacity: 0.5 }]}
+            onPress={handleShareThought}
+            disabled={!newThought.trim()}
+            activeOpacity={0.8}
+          >
+            <Ionicons name="send" size={13} color="#fff" />
+            <Text style={styles.composerShareBtnText}>Paylaş</Text>
+          </TouchableOpacity>
         </View>
       </View>
 
@@ -444,5 +524,98 @@ const styles = StyleSheet.create({
     color: colors.textDim,
     marginTop: 2,
     textAlign: 'center'
+  },
+  composerCard: {
+    backgroundColor: colors.bgCard,
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: colors.borderSubtle,
+    padding: 14,
+    marginBottom: 16
+  },
+  composerHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    marginBottom: 10
+  },
+  composerAvatar: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: colors.primary
+  },
+  composerMeta: {
+    flex: 1
+  },
+  composerTitle: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: colors.textMain
+  },
+  composerSubtitle: {
+    fontSize: 11,
+    color: colors.textDim
+  },
+  composerInput: {
+    backgroundColor: colors.bgElevated,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: colors.borderSubtle,
+    padding: 10,
+    fontSize: 13,
+    color: colors.textMain,
+    textAlignVertical: 'top',
+    minHeight: 65,
+    marginBottom: 10
+  },
+  composerFooter: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 8
+  },
+  composerMetaInputs: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    flex: 1
+  },
+  composerBookInput: {
+    flex: 2,
+    backgroundColor: colors.bgElevated,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: colors.borderSubtle,
+    paddingHorizontal: 8,
+    paddingVertical: 5,
+    fontSize: 12,
+    color: colors.textMain
+  },
+  composerPageInput: {
+    flex: 1,
+    backgroundColor: colors.bgElevated,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: colors.borderSubtle,
+    paddingHorizontal: 8,
+    paddingVertical: 5,
+    fontSize: 12,
+    color: colors.textMain,
+    textAlign: 'center'
+  },
+  composerShareBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+    backgroundColor: colors.primary,
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 7
+  },
+  composerShareBtnText: {
+    color: '#fff',
+    fontSize: 12,
+    fontWeight: '700'
   }
 });

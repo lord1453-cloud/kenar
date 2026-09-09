@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { mobileApi, setStoredUserId } from '../api/client';
 
 const MobileContext = createContext();
@@ -87,7 +88,7 @@ const INITIAL_LOCAL_BOOKS = [
 ];
 
 export const MobileProvider = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState(null);
+  const [currentUser, setCurrentUser] = useState(INITIAL_LOCAL_USERS[0]);
   const [users, setUsers] = useState(INITIAL_LOCAL_USERS);
   const [activeTab, setActiveTab] = useState('home'); // 'home' | 'thoughts' | 'live' | 'library' | 'profile'
   
@@ -99,15 +100,39 @@ export const MobileProvider = ({ children }) => {
   const [isProgressOpen, setIsProgressOpen] = useState(false);
   const [selectedBookForProgress, setSelectedBookForProgress] = useState(null);
 
-  // Beta Durumu & Yetkilendirme (Varsayılan olarak kilitli başlar)
-  const [betaAuthorized, setBetaAuthorized] = useState(false);
-  const [isBetaUnlocked, setIsBetaUnlocked] = useState(false);
+  // Beta Durumu & Yetkilendirme (Varsayılan olarak açık başlar, kullanıcıyı kilitlemez)
+  const [betaAuthorized, setBetaAuthorized] = useState(true);
+  const [isBetaUnlocked, setIsBetaUnlocked] = useState(true);
   const [betaInfo, setBetaInfo] = useState({
     version: '0.1.0-beta',
     buildNumber: 1,
     environment: 'beta',
     platform: mobileApi.getPlatform()
   });
+
+  // Oturum ve Kullanıcı Kalıcılığı (Kullanıcı tekrar tekrar giriş yapmak zorunda kalmaz)
+  useEffect(() => {
+    const loadSession = async () => {
+      try {
+        const saved = await AsyncStorage.getItem('kk_mobile_user');
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          setCurrentUser(parsed);
+          setStoredUserId(parsed.id);
+        }
+      } catch (err) {
+        console.error('Failed to load mobile session', err);
+      }
+    };
+    loadSession();
+  }, []);
+
+  useEffect(() => {
+    if (currentUser) {
+      AsyncStorage.setItem('kk_mobile_user', JSON.stringify(currentUser)).catch(() => {});
+      setStoredUserId(currentUser.id);
+    }
+  }, [currentUser]);
 
   // Kitaplık Verisi
   const [userBooks, setUserBooks] = useState([
@@ -215,13 +240,25 @@ export const MobileProvider = ({ children }) => {
     showToast(`Tebrikler! ${Math.floor(duration / 60)} dakika okuma kaydedildi.`);
   };
 
+  // Profil Güncelleme ve Kalıcı Kayıt
+  const updateProfile = (profileData) => {
+    setCurrentUser(prev => {
+      const updated = { ...prev, ...profileData };
+      setUsers(allUsers => allUsers.map(u => u.id === updated.id ? updated : u));
+      AsyncStorage.setItem('kk_mobile_user', JSON.stringify(updated)).catch(() => {});
+      return updated;
+    });
+    showToast('Profiliniz başarıyla kaydedildi.');
+  };
+
   // Oturumu Kapat (Tek Hesap Modeli)
   const logout = () => {
     setCurrentUser(null);
     setStoredUserId(null);
     setBetaAuthorized(false);
     setIsBetaUnlocked(false);
-    showToast('Oturum kapatıldı. Kapalı Beta kapısına dönüldü.');
+    AsyncStorage.removeItem('kk_mobile_user').catch(() => {});
+    showToast('Oturum kapatıldı.');
   };
 
   return (
@@ -229,6 +266,7 @@ export const MobileProvider = ({ children }) => {
       value={{
         currentUser,
         setCurrentUser,
+        updateProfile,
         users,
         logout,
         activeTab,

@@ -6,7 +6,7 @@ import { mobileApi } from '../api/client';
 import { colors } from '../theme/colors';
 
 export const LoginModal = () => {
-  const { isLoginOpen, setIsLoginOpen, users, switchUser, setCurrentUser, showToast } = useMobile();
+  const { isLoginOpen, setIsLoginOpen, users, setCurrentUser, showToast } = useMobile();
 
   const [mode, setMode] = useState('switch'); // 'switch' | 'login'
   const [email, setEmail] = useState('');

@@ -34,7 +34,6 @@ export const ProfileView = () => {
     currentUserId,
     viewingUserId,
     setViewingUserId,
-    switchUser,
     followUser,
     sendFriendRequest,
     setIsFoldersModalOpen, 
@@ -236,15 +235,17 @@ export const ProfileView = () => {
       <div 
         className="cover-banner" 
         style={{
-          background: targetUser?.role === 'founder'
+          background: targetUser?.coverTheme 
+            ? targetUser.coverTheme 
+            : targetUser?.role === 'founder'
             ? 'linear-gradient(135deg, #1C1C1E 0%, #3A2E2B 60%, #8B4A34 100%)'
             : targetUser?.role === 'author'
             ? 'linear-gradient(135deg, #182848 0%, #4b6cb7 100%)'
-            : 'linear-gradient(120deg, #2D3748 0%, #455C46 50%, #8B4A34 100%)',
+            : 'linear-gradient(120deg, #455C46 0%, #8B4A34 100%)',
           position: 'relative'
         }}
       >
-        <div style={{ position: 'absolute', right: '16px', bottom: '12px', fontSize: '0.78rem', color: 'rgba(255,255,255,0.75)', background: 'rgba(0,0,0,0.3)', padding: '4px 10px', borderRadius: 'var(--radius-full)', backdropFilter: 'blur(4px)' }}>
+        <div style={{ position: 'absolute', right: '16px', bottom: '12px', fontSize: '0.78rem', color: 'rgba(255,255,255,0.85)', background: 'rgba(0,0,0,0.35)', padding: '4px 12px', borderRadius: 'var(--radius-full)', backdropFilter: 'blur(4px)' }}>
           Katılım: {targetUser?.joinedDate || 'Ocak 2025'}
         </div>
       </div>
@@ -273,8 +274,18 @@ export const ProfileView = () => {
             <div className="pu" style={{ fontSize: '0.9rem', color: 'var(--text-dim)' }}>
               @{targetUser?.username}
             </div>
+            
+            {/* Okur Mottosu / Edebi Alıntı */}
+            {targetUser?.motto && (
+              <div style={{ margin: '6px 0 2px', fontSize: '0.92rem', fontStyle: 'italic', color: 'var(--label)', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <span style={{ color: 'var(--orange)' }}>“</span>
+                <span>{targetUser.motto}</span>
+                <span style={{ color: 'var(--orange)' }}>”</span>
+              </div>
+            )}
+
             {targetUser?.bio && (
-              <p style={{ margin: '6px 0 0', fontSize: '0.88rem', color: 'var(--text-muted)', maxWidth: '540px', lineHeight: 1.45 }}>
+              <p style={{ margin: '4px 0 0', fontSize: '0.88rem', color: 'var(--text-muted)', maxWidth: '540px', lineHeight: 1.45 }}>
                 {targetUser.bio}
               </p>
             )}
@@ -347,18 +358,6 @@ export const ProfileView = () => {
                 disabled={isFriend}
               >
                 {isFriend ? '🤝 Arkadaşsınız' : 'Arkadaş Ekle'}
-              </button>
-
-              <button
-                className="profile-action-btn"
-                style={{ fontSize: '0.78rem', opacity: 0.85 }}
-                onClick={() => {
-                  switchUser(targetUser.id);
-                  showToast(`${targetUser.fullName} hesabına geçildi!`, '👤');
-                }}
-                title="Beta Testi: Bu kullanıcı olarak giriş yapıp arayüzü onun gözünden deneyimleyin"
-              >
-                Hesaba Geç (Giriş)
               </button>
             </>
           )}

@@ -94,6 +94,19 @@ export const AppProvider = ({ children }) => {
     return localStorage.getItem('kk_current_user_id') || 'user-1';
   });
 
+  // Kullanıcı ve oturum bilgilerini kalıcı olarak sakla (Sayfa yenilendiğinde asla kaybolmaz)
+  useEffect(() => {
+    if (users && users.length > 0) {
+      localStorage.setItem('kk_users', JSON.stringify(users));
+    }
+  }, [users]);
+
+  useEffect(() => {
+    if (currentUserId) {
+      localStorage.setItem('kk_current_user_id', currentUserId);
+    }
+  }, [currentUserId]);
+
   const [books, setBooks] = useState(() => {
     const saved = localStorage.getItem('kk_books');
     let list = saved ? JSON.parse(saved) : INITIAL_BOOKS;
@@ -428,10 +441,15 @@ export const AppProvider = ({ children }) => {
     detectedPlatform: 'web'
   });
   const [isBetaUnlocked, setIsBetaUnlocked] = useState(() => {
-    const saved = localStorage.getItem('kk_beta_unlocked') === 'true';
-    const hasUser = !!localStorage.getItem('kk_current_user_id');
-    return saved && hasUser;
+    const saved = localStorage.getItem('kk_beta_unlocked');
+    if (saved === 'false') return false;
+    // Varsayılan olarak açık: kullanıcılar sayfayı yenilediklerinde veya girdiklerinde hesap açmaya zorlanmaz
+    return true;
   });
+
+  useEffect(() => {
+    localStorage.setItem('kk_beta_unlocked', isBetaUnlocked ? 'true' : 'false');
+  }, [isBetaUnlocked]);
 
   // Beta Durumunu Sunucudan Çek
   useEffect(() => {
@@ -1003,18 +1021,30 @@ export const AppProvider = ({ children }) => {
   // --- PROFİL GÜNCELLEME SİSTEMİ ---
   const updateProfile = (updatedData) => {
     if (!currentUser) return;
-    setUsers(prev => prev.map(u => {
-      if (u.id === currentUserId) {
-        return {
-          ...u,
-          ...updatedData,
-          readingGoal: updatedData.readingGoal !== undefined 
-            ? (parseInt(updatedData.readingGoal, 10) || u.readingGoal) 
-            : u.readingGoal
-        };
-      }
-      return u;
-    }));
+    setUsers(prev => {
+      const updatedList = prev.map(u => {
+        if (u.id === currentUserId) {
+          return {
+            ...u,
+            ...updatedData,
+            readingGoal: updatedData.readingGoal !== undefined 
+              ? (parseInt(updatedData.readingGoal, 10) || u.readingGoal) 
+              : u.readingGoal,
+            id: u.id,
+            role: u.role,
+            email: updatedData.email || u.email
+          };
+        }
+        return u;
+      });
+      localStorage.setItem('kk_users', JSON.stringify(updatedList));
+      return updatedList;
+    });
+
+    if (currentUser?.role === 'founder') {
+      api.updateFounderProfile(updatedData).catch(() => {});
+    }
+
     setIsEditProfileOpen(false);
     showToast('Profil bilgileriniz başarıyla güncellendi.', '✓');
   };

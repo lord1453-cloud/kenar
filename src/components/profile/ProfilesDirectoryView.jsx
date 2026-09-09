@@ -22,7 +22,6 @@ export const ProfilesDirectoryView = () => {
     setViewingUserId, 
     setActiveTab, 
     followUser, 
-    switchUser,
     userBooks,
     showToast 
   } = useApp();
@@ -272,20 +271,6 @@ export const ProfilesDirectoryView = () => {
                           Takip Et
                         </>
                       )}
-                    </button>
-                  )}
-
-                  {!isMe && (
-                    <button
-                      className="btn btn-secondary btn-sm"
-                      style={{ fontSize: '0.75rem', opacity: 0.85, padding: '6px 10px' }}
-                      onClick={() => {
-                        switchUser(user.id);
-                        showToast(`${user.fullName} hesabına geçildi!`, '👤');
-                      }}
-                      title="Beta Test: Bu hesap olarak giriş yap"
-                    >
-                      Giriş
                     </button>
                   )}
                 </div>
