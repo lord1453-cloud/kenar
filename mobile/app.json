@@ -1,0 +1,53 @@
+{
+  "expo": {
+    "name": "Kitap Kulübü",
+    "slug": "kitapkulubu",
+    "version": "0.1.0-beta",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#12141c"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.kitapkulubu.app",
+      "buildNumber": "1",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false,
+        "NSCameraUsageDescription": "Beta test hata bildirimi için fotoğraf eklemenizi sağlar.",
+        "NSPhotoLibraryUsageDescription": "Hata raporuna ekran görüntüsü iliştirmenizi sağlar."
+      }
+    },
+    "android": {
+      "package": "com.kitapkulubu.app",
+      "versionCode": 1,
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#12141c"
+      },
+      "permissions": [
+        "INTERNET"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "environment": "beta",
+      "appVersion": "0.1.0-beta",
+      "buildNumber": 1,
+      "apiUrl": "http://10.0.2.2:5000/api",
+      "productionApiUrl": "https://api.kitapkulubu.com/api"
+    },
+    "plugins": [
+      "expo-asset",
+      "expo-status-bar"
+    ]
+  }
+}

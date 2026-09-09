@@ -1,0 +1,388 @@
+/* Book Detail Modal Styling (Image 1 Orta Ekran Referansı & Doküman Paragraf 5, 13) */
+
+.book-detail-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Top bar with back & share */
+.book-detail-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 4px;
+}
+
+.btn-detail-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.btn-detail-icon:hover {
+  color: var(--text-main);
+  border-color: var(--border-strong);
+  background: var(--bg-surface-hover);
+}
+
+/* Centered Showcase Hero */
+.book-detail-showcase {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 10px 16px 20px;
+}
+
+.book-cover-stage {
+  position: relative;
+  width: 100%;
+  max-width: 260px;
+  height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+  border-radius: var(--radius-xl);
+  background: radial-gradient(circle, rgba(151, 194, 236, 0.35) 0%, rgba(246, 216, 131, 0.2) 60%, transparent 100%);
+  overflow: hidden;
+}
+
+.book-backdrop-glow {
+  position: absolute;
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  background: rgba(246, 216, 131, 0.3);
+  filter: blur(28px);
+}
+
+.book-showcase-cover {
+  width: 130px;
+  height: 190px;
+  border-radius: var(--radius-md);
+  object-fit: cover;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.28);
+  position: relative;
+  z-index: 2;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: transform 0.3s ease;
+}
+
+.book-showcase-cover:hover {
+  transform: scale(1.03);
+}
+
+.book-genre-subtle {
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--text-dim);
+  letter-spacing: 0.4px;
+  text-transform: capitalize;
+  margin-bottom: 4px;
+}
+
+.book-title-large {
+  font-size: 1.55rem;
+  font-weight: 800;
+  color: var(--text-main);
+  letter-spacing: -0.4px;
+  line-height: 1.25;
+  margin: 0 0 4px;
+}
+
+.book-author-text {
+  font-size: 0.92rem;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.book-rating-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.book-stars {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.book-rating-num {
+  font-size: 0.94rem;
+  font-weight: 800;
+  color: var(--text-main);
+}
+
+.book-rating-count {
+  font-size: 0.82rem;
+  color: var(--text-dim);
+}
+
+/* Two Action Buttons: [İstek Listene Ekle] & [Kitabı Puanla] */
+.book-primary-actions-row {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+  max-width: 420px;
+  justify-content: center;
+}
+
+.btn-pill-action {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: var(--radius-full);
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  background: var(--bg-surface-elevated);
+  border: 1.5px solid var(--border-strong);
+  color: var(--text-main);
+  transition: all var(--transition-fast);
+}
+
+.btn-pill-action:hover {
+  background: var(--bg-surface-hover);
+  border-color: var(--color-primary);
+  transform: translateY(-2px);
+}
+
+.btn-pill-action.active {
+  background: var(--color-success-light);
+  border-color: var(--color-success);
+  color: var(--color-success);
+}
+
+.btn-rate-action {
+  background: rgba(246, 216, 131, 0.25);
+  border-color: rgba(245, 158, 11, 0.35);
+  color: var(--text-main);
+}
+
+.btn-rate-action:hover {
+  background: rgba(246, 216, 131, 0.45);
+}
+
+/* Detail Tabs */
+.book-detail-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border-subtle);
+  gap: 20px;
+}
+
+.book-detail-tab-btn {
+  padding: 10px 6px;
+  border: none;
+  background: none;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--text-dim);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all var(--transition-fast);
+}
+
+.book-detail-tab-btn:hover {
+  color: var(--text-main);
+}
+
+.book-detail-tab-btn.active {
+  color: var(--color-primary);
+  border-bottom-color: var(--color-primary);
+}
+
+.book-tab-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-top: 6px;
+}
+
+/* Summary Box */
+.book-summary-box {
+  padding: 18px;
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.summary-badge-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.ai-summary-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: #d97706;
+  background: rgba(245, 158, 11, 0.12);
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+}
+
+.book-description-p {
+  font-size: 0.92rem;
+  line-height: 1.65;
+  color: var(--text-main);
+}
+
+/* Library Status Card */
+.book-library-status-card {
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.book-status-action-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.status-choice-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: var(--radius-md);
+  font-size: 0.84rem;
+  font-weight: 600;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-surface);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.status-choice-btn:hover {
+  border-color: var(--border-strong);
+  color: var(--text-main);
+}
+
+.status-choice-btn.selected {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #fff;
+}
+
+/* Reviews Tab Styling */
+.reviews-top-action {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.review-item-card {
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  position: relative;
+  transition: border-color var(--transition-fast);
+}
+
+.review-item-card.author-review-card {
+  border: 1.5px solid var(--color-author-star);
+  background: rgba(168, 85, 247, 0.04);
+}
+
+.author-review-badge-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 6px;
+  border-bottom: 1px dashed var(--color-author-border);
+}
+
+.review-author-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.review-author-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.review-author-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-full);
+  object-fit: cover;
+}
+
+.review-comment-text {
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--text-main);
+}
+
+/* Spoiler Blur in Reviews (Doküman Paragraf 5) */
+.spoiler-review-container {
+  position: relative;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  margin-top: 4px;
+}
+
+.spoiler-review-content {
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--text-main);
+  transition: filter 0.3s ease;
+}
+
+.spoiler-review-content.blurred {
+  filter: blur(8px);
+  user-select: none;
+  opacity: 0.6;
+}
+
+.spoiler-click-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: rgba(25, 25, 25, 0.4);
+  color: #ffffff;
+  font-size: 0.82rem;
+  font-weight: 700;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  backdrop-filter: blur(2px);
+  padding: 8px;
+}

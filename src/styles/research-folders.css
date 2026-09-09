@@ -1,0 +1,263 @@
+/* Research Folders - Image 6 "Tucked Inside My Folder" Referansı (Doküman Paragraf 29) */
+
+.research-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.research-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.research-ai-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(168, 85, 247, 0.12);
+  color: #9333ea;
+  border: 1px solid rgba(168, 85, 247, 0.25);
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  font-size: 0.76rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.research-title {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--text-main);
+  letter-spacing: -0.4px;
+  margin: 0;
+}
+
+.research-subtitle {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+/* Folders Grid */
+.folders-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 28px 20px;
+  padding: 10px 0 30px;
+}
+
+/* Single Folder Card */
+.folder-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+  transition: transform var(--transition-normal);
+}
+
+.folder-card:hover {
+  transform: translateY(-6px);
+}
+
+/* The physical folder pocket illustration (Image 6) */
+.folder-stage {
+  width: 220px;
+  height: 175px;
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+/* Folder Back Plate */
+.folder-back {
+  position: absolute;
+  top: 15px;
+  width: 210px;
+  height: 155px;
+  background: var(--folder-back-color, #e5e5dc);
+  border-radius: 14px 14px 16px 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* Folder Tab Cutout */
+.folder-tab {
+  position: absolute;
+  top: -12px;
+  left: 12px;
+  width: 75px;
+  height: 20px;
+  background: var(--folder-back-color, #e5e5dc);
+  border-radius: 8px 8px 0 0;
+}
+
+/* Books Tucked Inside the Pocket */
+.folder-tucked-books {
+  position: absolute;
+  top: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 4px;
+  z-index: 5;
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.folder-card:hover .folder-tucked-books {
+  transform: translateY(-16px);
+}
+
+.tucked-book-cover {
+  width: 58px;
+  height: 86px;
+  border-radius: 4px;
+  object-fit: cover;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  transition: transform 0.3s ease;
+}
+
+.tucked-book-cover:nth-child(1) {
+  transform: rotate(-7deg) translateY(4px);
+}
+
+.tucked-book-cover:nth-child(2) {
+  transform: rotate(0deg) translateY(-4px);
+  z-index: 2;
+}
+
+.tucked-book-cover:nth-child(3) {
+  transform: rotate(8deg) translateY(2px);
+}
+
+/* Folder Front Pocket (Covers bottom half of books) */
+.folder-front {
+  position: absolute;
+  bottom: 0;
+  width: 214px;
+  height: 105px;
+  background: var(--folder-front-color, #FCD5D3);
+  border-radius: 0 0 16px 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.folder-front-badge {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: rgba(25, 25, 25, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  background: rgba(255, 255, 255, 0.45);
+}
+
+/* Folder Label underneath (Image 6 typography) */
+.folder-label {
+  margin-top: 12px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  font-family: var(--font-serif);
+  font-style: italic;
+  color: var(--text-main);
+  text-align: center;
+}
+
+.folder-count-text {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  margin-top: 2px;
+}
+
+/* Expanded Folder Drawer / Modal View */
+.expanded-folder-box {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  box-shadow: var(--shadow-md);
+  animation: fadeIn 0.25s ease;
+}
+
+.expanded-folder-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.category-books-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 14px;
+}
+
+.cat-book-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 12px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.cat-book-card:hover {
+  border-color: var(--border-strong);
+  transform: translateY(-2px);
+}
+
+.cat-book-cover {
+  width: 55px;
+  height: 80px;
+  border-radius: 6px;
+  object-fit: cover;
+  flex-shrink: 0;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.cat-book-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.cat-book-title {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--text-main);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cat-book-author {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.cat-book-stats {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.75rem;
+  margin-top: 4px;
+}

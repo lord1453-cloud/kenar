@@ -1,0 +1,71 @@
+{
+  "cli": {
+    "version": ">= 12.0.0",
+    "appVersionSource": "remote"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "env": {
+        "APP_ENV": "development"
+      }
+    },
+    "preview": {
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      },
+      "env": {
+        "APP_ENV": "beta"
+      }
+    },
+    "beta": {
+      "channel": "beta",
+      "env": {
+        "APP_ENV": "beta"
+      },
+      "ios": {
+        "distribution": "store",
+        "simulator": false
+      },
+      "android": {
+        "buildType": "app-bundle"
+      }
+    },
+    "production": {
+      "channel": "production",
+      "env": {
+        "APP_ENV": "production"
+      },
+      "ios": {
+        "distribution": "store"
+      },
+      "android": {
+        "buildType": "app-bundle"
+      }
+    }
+  },
+  "submit": {
+    "beta": {
+      "ios": {
+        "appleId": "apple-dev@kitapkulubu.com",
+        "ascAppId": "YOUR_APP_STORE_CONNECT_ID",
+        "appleTeamId": "YOUR_APPLE_TEAM_ID"
+      },
+      "android": {
+        "serviceAccountKeyPath": "./google-services-key.json",
+        "track": "internal"
+      }
+    },
+    "production": {
+      "ios": {
+        "appleId": "apple-dev@kitapkulubu.com"
+      },
+      "android": {
+        "serviceAccountKeyPath": "./google-services-key.json",
+        "track": "production"
+      }
+    }
+  }
+}

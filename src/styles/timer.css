@@ -1,0 +1,298 @@
+/* Reading Stopwatch & Session Styling */
+
+/* Main Timer Modal / Screen */
+.timer-modal-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 22px;
+  padding: 10px 0;
+}
+
+.timer-book-showcase {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 14px 20px;
+  width: 100%;
+  box-shadow: var(--shadow-sm);
+  position: relative;
+}
+
+/* Bookmark ribbon decor */
+.timer-bookmark-ribbon {
+  position: absolute;
+  top: -6px;
+  right: 20px;
+  width: 18px;
+  height: 36px;
+  background: var(--color-burgundy);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 80%, 0 100%);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
+
+.timer-book-cover {
+  width: 62px;
+  height: 92px;
+  border-radius: var(--radius-xs);
+  object-fit: cover;
+  box-shadow: var(--shadow-md);
+  flex-shrink: 0;
+}
+
+.timer-book-meta {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  gap: 4px;
+  flex: 1;
+}
+
+.timer-book-title {
+  font-family: var(--font-serif);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text-main);
+  line-height: 1.2;
+}
+
+.timer-book-author {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+/* Big Clock Display */
+.timer-clock-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  margin: 10px 0;
+  position: relative;
+}
+
+.timer-clock-circle {
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--bg-surface-elevated) 60%, var(--bg-surface) 100%);
+  border: 4px double var(--color-primary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 35px var(--color-primary-light), inset 0 0 20px rgba(0,0,0,0.2);
+  transition: all var(--transition-normal);
+  position: relative;
+}
+
+.timer-clock-circle.running {
+  border-color: var(--color-gold);
+  animation: pulseGlow 2.5s infinite ease-in-out;
+}
+
+.timer-digits {
+  font-family: var(--font-heading);
+  font-size: 2.75rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: var(--text-main);
+  line-height: 1;
+}
+
+.timer-status-text {
+  font-size: 0.78rem;
+  color: var(--color-primary);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-top: 6px;
+}
+
+/* Live Tiered Quote Card */
+.timer-quote-box {
+  background: var(--bg-surface-elevated);
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-md);
+  padding: 14px 18px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  position: relative;
+}
+
+.timer-quote-tier-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  align-self: center;
+  padding: 2px 10px;
+  border-radius: var(--radius-full);
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.timer-quote-text {
+  font-family: var(--font-serif);
+  font-size: 0.95rem;
+  font-style: italic;
+  line-height: 1.5;
+  color: var(--text-main);
+}
+
+.timer-quote-author {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+/* Controls (Start, Pause, Finish) */
+.timer-controls-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  justify-content: center;
+  width: 100%;
+}
+
+.btn-timer-primary {
+  padding: 14px 34px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: linear-gradient(135deg, var(--color-gold), #9b6c22);
+  color: #fff;
+  box-shadow: 0 4px 18px rgba(200, 150, 62, 0.4);
+  transition: all var(--transition-fast);
+}
+.btn-timer-primary:hover {
+  transform: scale(1.03);
+  box-shadow: 0 6px 24px rgba(200, 150, 62, 0.55);
+}
+
+.btn-timer-secondary {
+  padding: 12px 24px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  border-radius: var(--radius-full);
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-main);
+}
+.btn-timer-secondary:hover {
+  background: var(--bg-surface-hover);
+  border-color: var(--border-strong);
+}
+
+/* Floating Mini-Timer Bar (Persistent across navigation) */
+.floating-timer-bar {
+  position: fixed;
+  bottom: 74px; /* Above mobile bottom nav */
+  left: 16px;
+  right: 16px;
+  background: var(--bg-surface);
+  border: 1px solid var(--color-primary);
+  border-radius: var(--radius-lg);
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+  z-index: 95;
+  cursor: pointer;
+  animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (min-width: 1024px) {
+  .floating-timer-bar {
+    left: auto;
+    right: 28px;
+    bottom: 28px;
+    width: 360px;
+  }
+}
+
+.floating-timer-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  flex: 1;
+}
+
+.floating-timer-cover {
+  width: 34px;
+  height: 48px;
+  border-radius: 4px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.floating-timer-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.floating-timer-title {
+  font-size: 0.88rem;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--text-main);
+}
+
+.floating-timer-digits {
+  font-family: var(--font-heading);
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--color-primary);
+}
+
+/* Session Completion Screen */
+.session-summary-box {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+  text-align: center;
+}
+
+.session-summary-time-badge {
+  font-family: var(--font-heading);
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--color-primary);
+}
+
+.session-rewards-row {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.session-reward-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+  background: var(--color-primary-light);
+  border: 1px solid var(--color-primary);
+  color: var(--color-primary);
+  font-size: 0.82rem;
+  font-weight: 700;
+}

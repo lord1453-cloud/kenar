@@ -1,0 +1,255 @@
+/* Library Styling */
+
+.library-container {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.library-header {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+@media (min-width: 640px) {
+  .library-header {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.library-tabs {
+  display: flex;
+  gap: 8px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 6px;
+  overflow-x: auto;
+}
+
+.library-tab-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  border-radius: var(--radius-md);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.library-tab-btn:hover {
+  color: var(--text-main);
+}
+
+.library-tab-btn.active {
+  background: var(--bg-surface-elevated);
+  color: var(--color-primary);
+  box-shadow: var(--shadow-sm);
+}
+
+.library-count-pill {
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  background: var(--bg-app);
+  font-size: 0.76rem;
+  color: var(--text-dim);
+}
+
+.library-tab-btn.active .library-count-pill {
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+}
+
+/* Filter and Sort Toolbar */
+.library-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.library-search-input {
+  max-width: 260px;
+  font-size: 0.88rem;
+  padding: 8px 14px;
+}
+
+/* Books Grid */
+.books-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+/* Individual Book Item Card */
+.library-book-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  display: flex;
+  gap: 16px;
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
+  position: relative;
+}
+
+.library-book-card:hover {
+  border-color: var(--border-strong);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.book-card-cover-wrap {
+  width: 90px;
+  height: 130px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  flex-shrink: 0;
+  position: relative;
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+}
+
+.book-card-cover {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--transition-normal);
+}
+
+.library-book-card:hover .book-card-cover {
+  transform: scale(1.05);
+}
+
+.book-card-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex: 1;
+  min-width: 0;
+}
+
+.book-card-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.book-card-genre {
+  font-size: 0.72rem;
+  color: var(--color-primary);
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.book-card-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-main);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+
+.book-card-author {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+/* Progress Area in Library Card */
+.book-card-progress {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.progress-pages {
+  color: var(--text-muted);
+}
+
+.progress-percent {
+  color: var(--color-primary);
+}
+
+.progress-track {
+  width: 100%;
+  height: 7px;
+  background: var(--bg-surface-elevated);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #f59e0b, #10b981);
+  border-radius: var(--radius-full);
+  transition: width 0.4s ease;
+}
+
+/* Action buttons in library card */
+.book-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.status-badge-chip {
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.status-badge-chip.reading {
+  background: rgba(245, 158, 11, 0.15);
+  color: #f59e0b;
+}
+
+.status-badge-chip.read {
+  background: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+}
+
+.status-badge-chip.to_read {
+  background: rgba(99, 102, 241, 0.15);
+  color: #818cf8;
+}
+
+/* Progress Quick Update Modal */
+.progress-updater-box {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+  text-align: center;
+}
+
+.progress-big-number {
+  font-size: 3rem;
+  font-family: var(--font-heading);
+  font-weight: 800;
+  color: var(--color-primary);
+  line-height: 1;
+}
+
+.quick-add-buttons {
+  display: flex;
+  gap: 8px;
+}

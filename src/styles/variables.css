@@ -1,0 +1,817 @@
+:root {
+  /* Clean, Calm Typography: Modern Sans Serif & GT Walsheim Pro fallback */
+  --font-serif: 'Merriweather', Georgia, serif;
+  --font-heading: 'GT Walsheim Pro', 'Plus Jakarta Sans', 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-body: 'GT Walsheim Pro', 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* Universal Minimal Spacing & Radii */
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+
+  --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Special Badges & Roles (Doküman Paragraf 5) */
+  --color-author-star: #a855f7;
+  --color-author-bg: rgba(168, 85, 247, 0.12);
+  --color-author-border: rgba(168, 85, 247, 0.25);
+  --color-admin-star: #f59e0b;
+  --color-admin-bg: rgba(245, 158, 11, 0.14);
+  --color-admin-border: rgba(245, 158, 11, 0.28);
+}
+
+/* ===================================================
+   DOKÜMAN & TASARIM TEMA SİSTEMİ (Image 2, 3, 4, 5)
+   =================================================== */
+
+/* 1. ANA TEMA (Image 2: Black, Sunflower, White, Baby Pink) - Varsayılan */
+[data-theme="main"], :root {
+  /* Renkler: #191919 (black), #F6D883 (sunflower), #F3F3EE (white), #FCD5D3 (baby pink) */
+  --bg-app: #f5f5f0;
+  --bg-surface: rgba(255, 255, 255, 0.88);
+  --bg-surface-elevated: #ffffff;
+  --bg-surface-hover: rgba(246, 216, 131, 0.16);
+  --bg-input: #ffffff;
+
+  --border-subtle: rgba(25, 25, 25, 0.08);
+  --border-strong: rgba(25, 25, 25, 0.16);
+  --border-focus: #191919;
+
+  --text-main: #191919;
+  --text-muted: #575653;
+  --text-dim: #8c8983;
+
+  --color-primary: #191919;
+  --color-primary-hover: #333333;
+  --color-primary-light: rgba(246, 216, 131, 0.35);
+
+  --color-sunflower: #F6D883;
+  --color-baby-pink: #FCD5D3;
+  --color-doc-black: #191919;
+  --color-doc-white: #F3F3EE;
+
+  --color-star: #eab308;
+  --color-star-light: rgba(246, 216, 131, 0.35);
+  --color-success: #10b981;
+  --color-success-light: rgba(16, 185, 129, 0.12);
+  --color-danger: #ef4444;
+  --color-danger-light: rgba(239, 68, 68, 0.12);
+
+  --shadow-sm: 0 2px 8px rgba(25, 25, 25, 0.04);
+  --shadow-md: 0 8px 24px rgba(25, 25, 25, 0.08);
+  --shadow-glass: 0 8px 32px 0 rgba(25, 25, 25, 0.06);
+
+  --glass-bg: rgba(255, 255, 255, 0.72);
+  --glass-border: rgba(25, 25, 25, 0.07);
+  --glass-blur: blur(14px);
+
+  --spoiler-blur: blur(8px);
+  --spoiler-bg: rgba(243, 243, 238, 0.94);
+}
+
+/* 2. Apple iPhone Karanlık Mod (iOS Dark Mode - OLED True Black) */
+[data-theme="main_dark"], [data-theme="dark"], [data-theme="ios_dark"] {
+  --bg-app: #000000; /* Apple iPhone True Black OLED */
+  --bg-surface: rgba(28, 28, 30, 0.88); /* Apple Secondary System Background */
+  --bg-surface-elevated: #1C1C1E;
+  --bg-surface-hover: rgba(255, 255, 255, 0.08);
+  --bg-input: #2C2C2E; /* Tertiary System Fill */
+
+  --border-subtle: rgba(255, 255, 255, 0.12);
+  --border-strong: rgba(255, 255, 255, 0.22);
+  --border-focus: #0A84FF;
+
+  --text-main: #FFFFFF;
+  --text-muted: rgba(235, 235, 245, 0.65);
+  --text-dim: #8E8E93;
+
+  --color-primary: #0A84FF; /* Apple iOS Dark System Blue */
+  --color-primary-hover: #409CFF;
+  --color-primary-light: rgba(10, 132, 255, 0.18);
+
+  --apple-secondary-bg: rgba(120, 120, 128, 0.24);
+  --apple-blue: #0A84FF;
+  --apple-orange: #FF9F0A;
+  --apple-indigo: #5E5CE6;
+  --apple-purple: #BF5AF2;
+  --apple-pink: #FF375F;
+  --apple-teal: #40C8E0;
+  --apple-green: #30D158;
+
+  --color-sunflower: #FFD60A;
+  --color-baby-pink: #FF375F;
+  --color-doc-black: #000000;
+  --color-doc-white: #FFFFFF;
+
+  --color-star: #FFD60A;
+  --color-star-light: rgba(255, 214, 10, 0.18);
+  --color-success: #30D158;
+  --color-success-light: rgba(48, 209, 88, 0.16);
+  --color-danger: #FF453A;
+  --color-danger-light: rgba(255, 69, 58, 0.16);
+
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.6);
+  --shadow-glass: 0 8px 32px 0 rgba(0, 0, 0, 0.55);
+
+  --glass-bg: rgba(28, 28, 30, 0.82);
+  --glass-border: rgba(255, 255, 255, 0.12);
+  --glass-blur: blur(20px);
+
+  --spoiler-blur: blur(8px);
+  --spoiler-bg: rgba(28, 28, 30, 0.96);
+}
+
+/* 3. EK PALET 1: GÜNEŞ & MERCAN (Image 3: #F1D007, #DF5940, #FFECCD, #363230) */
+[data-theme="palette_sun_coral"] {
+  --bg-app: #faf5ed;
+  --bg-surface: rgba(255, 251, 245, 0.9);
+  --bg-surface-elevated: #ffffff;
+  --bg-surface-hover: rgba(241, 208, 7, 0.15);
+  --bg-input: #ffffff;
+
+  --border-subtle: rgba(54, 50, 48, 0.1);
+  --border-strong: rgba(54, 50, 48, 0.2);
+  --border-focus: #DF5940;
+
+  --text-main: #363230;
+  --text-muted: #6b6360;
+  --text-dim: #998f8b;
+
+  --color-primary: #DF5940;
+  --color-primary-hover: #c4472f;
+  --color-primary-light: rgba(223, 89, 64, 0.12);
+
+  --color-star: #F1D007;
+  --color-star-light: rgba(241, 208, 7, 0.2);
+  --color-success: #10b981;
+  --color-success-light: rgba(16, 185, 129, 0.12);
+  --color-danger: #DF5940;
+  --color-danger-light: rgba(223, 89, 64, 0.12);
+
+  --shadow-sm: 0 2px 8px rgba(54, 50, 48, 0.05);
+  --shadow-md: 0 8px 24px rgba(54, 50, 48, 0.08);
+
+  --glass-bg: rgba(255, 248, 237, 0.78);
+  --glass-border: rgba(223, 89, 64, 0.12);
+  --glass-blur: blur(14px);
+
+  --spoiler-blur: blur(8px);
+  --spoiler-bg: rgba(255, 236, 205, 0.96);
+}
+
+/* 4. EK PALET 2: PASTEL GÖKYÜZÜ & KUM (Image 4: #97C2EC, #D6D0C2, #1F1F1F, #FFFFFF) */
+[data-theme="palette_sky_sand"] {
+  --bg-app: #f4f6f8;
+  --bg-surface: rgba(255, 255, 255, 0.9);
+  --bg-surface-elevated: #ffffff;
+  --bg-surface-hover: rgba(151, 194, 236, 0.15);
+  --bg-input: #ffffff;
+
+  --border-subtle: rgba(214, 208, 194, 0.6);
+  --border-strong: #D6D0C2;
+  --border-focus: #97C2EC;
+
+  --text-main: #1F1F1F;
+  --text-muted: #5e5c58;
+  --text-dim: #918e87;
+
+  --color-primary: #528fc4;
+  --color-primary-hover: #3d7db5;
+  --color-primary-light: rgba(151, 194, 236, 0.2);
+
+  --color-star: #eab308;
+  --color-star-light: rgba(234, 179, 8, 0.14);
+  --color-success: #10b981;
+  --color-success-light: rgba(16, 185, 129, 0.12);
+  --color-danger: #ef4444;
+  --color-danger-light: rgba(239, 68, 68, 0.12);
+
+  --shadow-sm: 0 2px 8px rgba(31, 31, 31, 0.04);
+  --shadow-md: 0 8px 24px rgba(31, 31, 31, 0.07);
+
+  --glass-bg: rgba(255, 255, 255, 0.78);
+  --glass-border: rgba(151, 194, 236, 0.2);
+  --glass-blur: blur(14px);
+
+  --spoiler-blur: blur(8px);
+  --spoiler-bg: rgba(244, 246, 248, 0.96);
+}
+
+/* 5. EK PALET 3: VİNTAGE EDEBİYAT & TOPRAK (Image 5: #5758A6, #E7C58A, #86B05D, #C77974, #F7E6D4, #4B3535) */
+[data-theme="palette_vintage_earth"] {
+  --bg-app: #f9f5ef;
+  --bg-surface: rgba(247, 230, 212, 0.45);
+  --bg-surface-elevated: #ffffff;
+  --bg-surface-hover: rgba(231, 197, 138, 0.2);
+  --bg-input: #ffffff;
+
+  --border-subtle: rgba(75, 53, 53, 0.1);
+  --border-strong: rgba(75, 53, 53, 0.2);
+  --border-focus: #5758A6;
+
+  --text-main: #4B3535;
+  --text-muted: #745b5b;
+  --text-dim: #9e8787;
+
+  --color-primary: #5758A6;
+  --color-primary-hover: #45468a;
+  --color-primary-light: rgba(87, 88, 166, 0.12);
+
+  --color-star: #E7C58A;
+  --color-star-light: rgba(231, 197, 138, 0.25);
+  --color-success: #86B05D;
+  --color-success-light: rgba(134, 176, 93, 0.15);
+  --color-danger: #C77974;
+  --color-danger-light: rgba(199, 121, 116, 0.15);
+
+  --shadow-sm: 0 2px 8px rgba(75, 53, 53, 0.05);
+  --shadow-md: 0 8px 24px rgba(75, 53, 53, 0.08);
+
+  --glass-bg: rgba(247, 230, 212, 0.65);
+  --glass-border: rgba(87, 88, 166, 0.12);
+  --glass-blur: blur(14px);
+
+  --spoiler-blur: blur(8px);
+  --spoiler-bg: rgba(247, 230, 212, 0.96);
+}
+
+/* 6. Apple iPhone Aydınlık Mod (iOS Light Mode - Cupertino Standartları) */
+[data-theme="light"], [data-theme="ios_light"] {
+  --bg-app: #F2F2F7; /* Apple iOS Grouped System Background */
+  --bg-surface: rgba(255, 255, 255, 0.88);
+  --bg-surface-elevated: #FFFFFF;
+  --bg-surface-hover: rgba(0, 122, 255, 0.08);
+  --bg-input: #FFFFFF;
+
+  --border-subtle: rgba(60, 60, 67, 0.12);
+  --border-strong: rgba(60, 60, 67, 0.22);
+  --border-focus: #007AFF;
+
+  --text-main: #000000;
+  --text-muted: #3C3C43;
+  --text-dim: #8E8E93;
+
+  --color-primary: #007AFF; /* Apple iOS System Blue */
+  --color-primary-hover: #0062CC;
+  --color-primary-light: rgba(0, 122, 255, 0.12);
+
+  --apple-secondary-bg: rgba(120, 120, 128, 0.12);
+  --apple-blue: #007AFF;
+  --apple-orange: #FF9500;
+  --apple-indigo: #5856D6;
+  --apple-purple: #AF52DE;
+  --apple-pink: #FF2D55;
+  --apple-teal: #00C7BE;
+  --apple-green: #34C759;
+
+  --color-star: #FF9500;
+  --color-star-light: rgba(255, 149, 0, 0.14);
+  --color-success: #34C759;
+  --color-success-light: rgba(52, 199, 89, 0.12);
+  --color-danger: #FF3B30;
+  --color-danger-light: rgba(255, 59, 48, 0.12);
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.07);
+  --shadow-glass: 0 8px 30px rgba(0, 0, 0, 0.08);
+
+  --glass-bg: rgba(255, 255, 255, 0.78);
+  --glass-border: rgba(60, 60, 67, 0.12);
+  --glass-blur: blur(20px);
+
+  --spoiler-blur: blur(8px);
+  --spoiler-bg: rgba(255, 255, 255, 0.96);
+}
+
+/* 3. Sepia (Klasik Kitap Sayfası Sıcaklığı) */
+[data-theme="sepia"] {
+  --bg-app: #2c2520;
+  --bg-surface: #362e28;
+  --bg-surface-elevated: #443b34;
+  --bg-surface-hover: #52473f;
+  --bg-input: #231d19;
+
+  --border-subtle: #4e433b;
+  --border-strong: #695b50;
+  --border-focus: #8c7b6d;
+
+  --text-main: #f2e9e1;
+  --text-muted: #bdaea1;
+  --text-dim: #8a7c70;
+
+  --color-primary: #d4a373;
+  --color-primary-hover: #c48c58;
+  --color-primary-light: rgba(212, 163, 115, 0.15);
+
+  --color-star: #e09f3e;
+  --color-star-light: rgba(224, 159, 62, 0.15);
+  --color-success: #588157;
+  --color-success-light: rgba(88, 129, 87, 0.15);
+  --color-danger: #bc4749;
+  --color-danger-light: rgba(188, 71, 73, 0.15);
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+
+  --spoiler-blur: blur(8px);
+  --spoiler-bg: rgba(54, 46, 40, 0.96);
+}
+
+/* 4. Paper (Eski Kitap Kağıdı Açık Tonu) */
+[data-theme="paper"] {
+  --bg-app: #f4eee1;
+  --bg-surface: #faf6ed;
+  --bg-surface-elevated: #ebe3d3;
+  --bg-surface-hover: #e0d7c5;
+  --bg-input: #ffffff;
+
+  --border-subtle: #dbd1be;
+  --border-strong: #c4b9a3;
+  --border-focus: #9e937d;
+
+  --text-main: #332b24;
+  --text-muted: #665b50;
+  --text-dim: #948779;
+
+  --color-primary: #8a5a36;
+  --color-primary-hover: #704728;
+  --color-primary-light: rgba(138, 90, 54, 0.12);
+
+  --color-star: #b45309;
+  --color-star-light: rgba(180, 83, 9, 0.1);
+  --color-success: #366b44;
+  --color-success-light: rgba(54, 107, 68, 0.1);
+  --color-danger: #a82828;
+  --color-danger-light: rgba(168, 40, 40, 0.1);
+
+  --shadow-sm: 0 1px 2px rgba(51, 43, 36, 0.05);
+  --shadow-md: 0 4px 12px rgba(51, 43, 36, 0.06);
+
+  --spoiler-blur: blur(8px);
+  --spoiler-bg: rgba(250, 246, 237, 0.96);
+}
+
+/* 5. Midnight (OLED Gece Siyahı) */
+[data-theme="midnight"] {
+  --bg-app: #000000;
+  --bg-surface: #0a0a0a;
+  --bg-surface-elevated: #141414;
+  --bg-surface-hover: #1f1f1f;
+  --bg-input: #050505;
+
+  --border-subtle: #222222;
+  --border-strong: #333333;
+  --border-focus: #555555;
+
+  --text-main: #e5e5e5;
+  --text-muted: #888888;
+  --text-dim: #555555;
+
+  --color-primary: #ffffff;
+  --color-primary-hover: #cccccc;
+  --color-primary-light: rgba(255, 255, 255, 0.1);
+
+  --color-star: #eab308;
+  --color-star-light: rgba(234, 179, 8, 0.15);
+  --color-success: #10b981;
+  --color-success-light: rgba(16, 185, 129, 0.12);
+  --color-danger: #ef4444;
+  --color-danger-light: rgba(239, 68, 68, 0.12);
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.6);
+
+  --spoiler-blur: blur(8px);
+  --spoiler-bg: rgba(10, 10, 10, 0.98);
+}
+
+/* 6. Forest (Sakin Doğal Orman Yeşili) */
+[data-theme="forest"] {
+  --bg-app: #121c17;
+  --bg-surface: #182620;
+  --bg-surface-elevated: #22332b;
+  --bg-surface-hover: #2b4036;
+  --bg-input: #101915;
+
+  --border-subtle: #293d33;
+  --border-strong: #3b5447;
+  --border-focus: #527362;
+
+  --text-main: #ecf3ef;
+  --text-muted: #9bb0a4;
+  --text-dim: #6c8075;
+
+  --color-primary: #34d399;
+  --color-primary-hover: #10b981;
+  --color-primary-light: rgba(52, 211, 153, 0.12);
+
+  --color-star: #fbbf24;
+  --color-star-light: rgba(251, 191, 36, 0.12);
+  --color-success: #10b981;
+  --color-success-light: rgba(16, 185, 129, 0.12);
+  --color-danger: #f87171;
+  --color-danger-light: rgba(248, 113, 113, 0.12);
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+
+  --spoiler-blur: blur(8px);
+  --spoiler-bg: rgba(24, 38, 32, 0.96);
+}
+
+/* 7. Ocean (Sakin Derin Okyanus Laciverti) */
+[data-theme="ocean"] {
+  --bg-app: #0c1421;
+  --bg-surface: #131e31;
+  --bg-surface-elevated: #1c2b44;
+  --bg-surface-hover: #263957;
+  --bg-input: #0a111c;
+
+  --border-subtle: #233552;
+  --border-strong: #344c74;
+  --border-focus: #4b6b9e;
+
+  --text-main: #edf3fc;
+  --text-muted: #97a9c4;
+  --text-dim: #677994;
+
+  --color-primary: #38bdf8;
+  --color-primary-hover: #0ea5e9;
+  --color-primary-light: rgba(56, 189, 248, 0.12);
+
+  --color-star: #fbbf24;
+  --color-star-light: rgba(251, 191, 36, 0.12);
+  --color-success: #34d399;
+  --color-success-light: rgba(52, 211, 153, 0.12);
+  --color-danger: #f87171;
+  --color-danger-light: rgba(248, 113, 113, 0.12);
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+
+  --spoiler-blur: blur(8px);
+  --spoiler-bg: rgba(19, 30, 49, 0.96);
+}
+
+/* 8. Lavender (Yumuşak Pastel Lavanta) */
+[data-theme="lavender"] {
+  --bg-app: #191624;
+  --bg-surface: #221e31;
+  --bg-surface-elevated: #2d2840;
+  --bg-surface-hover: #38334f;
+  --bg-input: #15131f;
+
+  --border-subtle: #37314d;
+  --border-strong: #4b4369;
+  --border-focus: #675c8e;
+
+  --text-main: #f3f0fa;
+  --text-muted: #aaa2c2;
+  --text-dim: #77708d;
+
+  --color-primary: #a78bfa;
+  --color-primary-hover: #8b5cf6;
+  --color-primary-light: rgba(167, 139, 250, 0.12);
+
+  --color-star: #fbbf24;
+  --color-star-light: rgba(251, 191, 36, 0.12);
+  --color-success: #34d399;
+  --color-success-light: rgba(52, 211, 153, 0.12);
+  --color-danger: #f87171;
+  --color-danger-light: rgba(248, 113, 113, 0.12);
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+
+  --spoiler-blur: blur(8px);
+  --spoiler-bg: rgba(34, 30, 49, 0.96);
+}
+
+/* 9. Rose (Sakin Pastel Gül & Muted Blush) */
+[data-theme="rose"] {
+  --bg-app: #221619;
+  --bg-surface: #2c1d21;
+  --bg-surface-elevated: #3b282c;
+  --bg-surface-hover: #4a3338;
+  --bg-input: #1c1114;
+
+  --border-subtle: #452f34;
+  --border-strong: #5c4046;
+  --border-focus: #7a565e;
+
+  --text-main: #f9f1f2;
+  --text-muted: #bfa7ac;
+  --text-dim: #8c7479;
+
+  --color-primary: #fb7185;
+  --color-primary-hover: #f43f5e;
+  --color-primary-light: rgba(251, 113, 133, 0.12);
+
+  --color-star: #fbbf24;
+  --color-star-light: rgba(251, 191, 36, 0.12);
+  --color-success: #34d399;
+  --color-success-light: rgba(52, 211, 153, 0.12);
+  --color-danger: #f87171;
+  --color-danger-light: rgba(248, 113, 113, 0.12);
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+
+  --spoiler-blur: blur(8px);
+  --spoiler-bg: rgba(44, 29, 33, 0.96);
+}
+
+/* 10. Coffee (Kahve, Krem & Kavrulmuş Ahşap) */
+[data-theme="coffee"] {
+  --bg-app: #1d1815;
+  --bg-surface: #26201c;
+  --bg-surface-elevated: #332b26;
+  --bg-surface-hover: #403731;
+  --bg-input: #171310;
+
+  --border-subtle: #3d332d;
+  --border-strong: #52453d;
+  --border-focus: #6e5e54;
+
+  --text-main: #f5ede6;
+  --text-muted: #b5a498;
+  --text-dim: #827267;
+
+  --color-primary: #d49b6a;
+  --color-primary-hover: #c48852;
+  --color-primary-light: rgba(212, 155, 106, 0.12);
+
+  --color-star: #eab308;
+  --color-star-light: rgba(234, 179, 8, 0.12);
+  --color-success: #4ade80;
+  --color-success-light: rgba(74, 222, 128, 0.12);
+  --color-danger: #f87171;
+  --color-danger-light: rgba(248, 113, 113, 0.12);
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+
+  --spoiler-blur: blur(8px);
+  --spoiler-bg: rgba(38, 32, 28, 0.96);
+}
+
+/* 11. Monochrome (Tam Nötr Siyah-Beyaz-Gri) */
+[data-theme="monochrome"] {
+  --bg-app: #181818;
+  --bg-surface: #222222;
+  --bg-surface-elevated: #2d2d2d;
+  --bg-surface-hover: #383838;
+  --bg-input: #141414;
+
+  --border-subtle: #3a3a3a;
+  --border-strong: #4f4f4f;
+  --border-focus: #707070;
+
+  --text-main: #ffffff;
+  --text-muted: #a3a3a3;
+  --text-dim: #666666;
+
+  --color-primary: #e5e5e5;
+  --color-primary-hover: #cccccc;
+  --color-primary-light: rgba(255, 255, 255, 0.1);
+
+  --color-star: #ffffff;
+  --color-star-light: rgba(255, 255, 255, 0.1);
+  --color-success: #d4d4d4;
+  --color-success-light: rgba(255, 255, 255, 0.1);
+  --color-danger: #ef4444;
+  --color-danger-light: rgba(239, 68, 68, 0.12);
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
+
+  --spoiler-blur: blur(8px);
+  --spoiler-bg: rgba(34, 34, 34, 0.96);
+}
+
+/* 12. High Contrast (Yüksek Kontrast & Erişilebilirlik) */
+[data-theme="high_contrast"] {
+  --bg-app: #000000;
+  --bg-surface: #0a0a0a;
+  --bg-surface-elevated: #141414;
+  --bg-surface-hover: #222222;
+  --bg-input: #000000;
+
+  --border-subtle: #ffffff;
+  --border-strong: #ffff00;
+  --border-focus: #00ffff;
+
+  --text-main: #ffffff;
+  --text-muted: #e6e6e6;
+  --text-dim: #cccccc;
+
+  --color-primary: #ffff00;
+  --color-primary-hover: #e6e600;
+  --color-primary-light: rgba(255, 255, 0, 0.18);
+
+  --color-star: #ffff00;
+  --color-star-light: rgba(255, 255, 0, 0.2);
+  --color-success: #00ff00;
+  --color-success-light: rgba(0, 255, 0, 0.2);
+  --color-danger: #ff3333;
+  --color-danger-light: rgba(255, 51, 51, 0.2);
+
+  --shadow-sm: none;
+  --shadow-md: none;
+
+  --spoiler-blur: blur(10px);
+  --spoiler-bg: #000000;
+}
+
+/* 13. Özel Tema (Kullanıcı Vurgu Rengi ile) */
+[data-theme="custom"] {
+  --bg-app: #121417;
+  --bg-surface: #1a1d21;
+  --bg-surface-elevated: #22262c;
+  --bg-surface-hover: #292e35;
+  --bg-input: #16181c;
+
+  --border-subtle: #2b3038;
+  --border-strong: #3b424d;
+  --border-focus: #4f5866;
+
+  --text-main: #f1f3f5;
+  --text-muted: #9ba3af;
+  --text-dim: #6c7582;
+
+  --color-primary: var(--custom-accent, #3b82f6);
+  --color-primary-hover: var(--custom-accent-hover, #2563eb);
+  --color-primary-light: rgba(59, 130, 246, 0.15);
+
+  --color-star: #eab308;
+  --color-star-light: rgba(234, 179, 8, 0.12);
+  --color-success: #10b981;
+  --color-success-light: rgba(16, 185, 129, 0.12);
+  --color-danger: #ef4444;
+  --color-danger-light: rgba(239, 68, 68, 0.12);
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.35);
+
+  --spoiler-blur: blur(8px);
+  --spoiler-bg: rgba(26, 29, 33, 0.96);
+}
+
+/* ===================================================
+   APPLE IOS HUMAN INTERFACE GELİŞMİŞ TASARIM BİLEŞENLERİ
+   =================================================== */
+
+/* Belirleyici ve Önemli Yazılar İçin Kapsül Pill Rozet (Görsel Referansı: Kehribar/Turuncu Kapsül Rozet) */
+.ios-badge-pill, .badge-amber-glow, .key-highlight-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 9999px;
+  background: rgba(245, 158, 11, 0.12);
+  color: #f59e0b;
+  border: 1px solid rgba(245, 158, 11, 0.28);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 1px 4px rgba(245, 158, 11, 0.08);
+  transition: all var(--transition-fast);
+}
+
+.ios-badge-pill:hover, .badge-amber-glow:hover {
+  background: rgba(245, 158, 11, 0.18);
+  border-color: rgba(245, 158, 11, 0.45);
+}
+
+/* Apple iOS System Blue & Tinted Badge Pills */
+.ios-badge-blue {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 9999px;
+  background: rgba(0, 122, 255, 0.12);
+  color: var(--color-primary);
+  border: 1px solid rgba(0, 122, 255, 0.25);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+
+/* Apple Tarzı Butonlar (Cupertino Pills) */
+.btn-apple-primary {
+  background: var(--color-primary);
+  color: #ffffff !important;
+  border: none;
+  border-radius: 9999px;
+  padding: 8px 18px;
+  font-weight: 600;
+  font-size: 0.88rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 10px rgba(0, 122, 255, 0.25);
+  cursor: pointer;
+  user-select: none;
+}
+
+.btn-apple-primary:hover {
+  transform: scale(1.02);
+  filter: brightness(1.08);
+}
+
+.btn-apple-primary:active {
+  transform: scale(0.97);
+}
+
+.btn-apple-secondary {
+  background: var(--apple-secondary-bg, rgba(120, 120, 128, 0.16));
+  color: var(--text-main);
+  border: 1px solid var(--border-subtle);
+  border-radius: 9999px;
+  padding: 7px 16px;
+  font-weight: 600;
+  font-size: 0.86rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.18s ease;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.btn-apple-secondary:hover {
+  background: var(--border-strong);
+  color: var(--text-main);
+}
+
+.btn-apple-secondary:active {
+  transform: scale(0.97);
+}
+
+/* Header Quick Share Plus Button (Apple Circular Plus) */
+.btn-header-plus {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: var(--color-primary);
+  color: #ffffff !important;
+  border: none;
+  border-radius: 9999px;
+  padding: 6px 14px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px rgba(0, 122, 255, 0.28);
+}
+
+.btn-header-plus:hover {
+  transform: translateY(-1px) scale(1.03);
+  box-shadow: 0 4px 12px rgba(0, 122, 255, 0.38);
+}
+
+.btn-header-plus:active {
+  transform: scale(0.96);
+}
+
+/* iOS Segmented Control & Switches */
+.ios-segmented-control {
+  display: inline-flex;
+  padding: 3px;
+  background: var(--apple-secondary-bg, rgba(120, 120, 128, 0.16));
+  border-radius: 9999px;
+  border: 1px solid var(--border-subtle);
+  gap: 3px;
+}
+
+.ios-segment-btn {
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  padding: 5px 12px;
+  border-radius: 9999px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.ios-segment-btn.active {
+  background: var(--bg-surface-elevated);
+  color: var(--text-main);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+}
+

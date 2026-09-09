@@ -1,0 +1,1216 @@
+{
+  "users": [
+    {
+      "id": "user-1788578865880",
+      "username": "mehmet735",
+      "firstName": "Mehmet",
+      "lastName": "Kaya",
+      "fullName": "Mehmet Kaya",
+      "age": 24,
+      "email": "mehmet.kaya@test.com",
+      "passwordHash": "hash_MTIzNDU2",
+      "role": "user",
+      "isStarUser": false,
+      "roomCredit": 0,
+      "status": "active",
+      "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&h=200&q=80",
+      "bio": "Kitap Kulübü yeni okuru.",
+      "joinedDate": "Eylül 2026",
+      "readingGoal": 20,
+      "streak": 0,
+      "totalReadingSeconds": 0,
+      "todayReadingSeconds": 0,
+      "todayGoalMinutes": 30,
+      "favoriteBookId": null,
+      "favoriteGenre": "Roman",
+      "profileTheme": "dark",
+      "privacySettings": {
+        "isPublic": true,
+        "showReadingTime": true,
+        "showBooks": true,
+        "showActivityStatus": true
+      },
+      "weeklyStreak": [
+        {
+          "day": "Pzt",
+          "name": "Pazartesi",
+          "completed": false,
+          "minutes": 0
+        },
+        {
+          "day": "Sal",
+          "name": "Salı",
+          "completed": false,
+          "minutes": 0
+        },
+        {
+          "day": "Çar",
+          "name": "Çarşamba",
+          "completed": false,
+          "minutes": 0
+        },
+        {
+          "day": "Per",
+          "name": "Perşembe",
+          "completed": false,
+          "minutes": 0
+        },
+        {
+          "day": "Cum",
+          "name": "Cuma",
+          "completed": false,
+          "minutes": 0
+        },
+        {
+          "day": "Cmt",
+          "name": "Cumartesi",
+          "completed": false,
+          "minutes": 0
+        },
+        {
+          "day": "Paz",
+          "name": "Pazar",
+          "completed": false,
+          "minutes": 0
+        }
+      ],
+      "friends": [],
+      "followers": [],
+      "following": [],
+      "registeredPlatform": "web",
+      "lastPlatform": "web",
+      "createdAt": "2026-09-05T03:27:45.881Z"
+    },
+    {
+      "id": "user-1788578822472",
+      "username": "test220",
+      "firstName": "Test",
+      "lastName": "Okur",
+      "fullName": "Test Okur",
+      "age": 25,
+      "email": "testokur@kitapkulubu.com",
+      "passwordHash": "hash_cGFzc3dvcmQxMjM=",
+      "role": "user",
+      "isStarUser": false,
+      "roomCredit": 0,
+      "status": "active",
+      "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&h=200&q=80",
+      "bio": "Kitap Kulübü yeni okuru.",
+      "joinedDate": "Eylül 2026",
+      "readingGoal": 20,
+      "streak": 0,
+      "totalReadingSeconds": 0,
+      "todayReadingSeconds": 0,
+      "todayGoalMinutes": 30,
+      "favoriteBookId": null,
+      "favoriteGenre": "Roman",
+      "profileTheme": "dark",
+      "privacySettings": {
+        "isPublic": true,
+        "showReadingTime": true,
+        "showBooks": true,
+        "showActivityStatus": true
+      },
+      "weeklyStreak": [
+        {
+          "day": "Pzt",
+          "name": "Pazartesi",
+          "completed": false,
+          "minutes": 0
+        },
+        {
+          "day": "Sal",
+          "name": "Salı",
+          "completed": false,
+          "minutes": 0
+        },
+        {
+          "day": "Çar",
+          "name": "Çarşamba",
+          "completed": false,
+          "minutes": 0
+        },
+        {
+          "day": "Per",
+          "name": "Perşembe",
+          "completed": false,
+          "minutes": 0
+        },
+        {
+          "day": "Cum",
+          "name": "Cuma",
+          "completed": false,
+          "minutes": 0
+        },
+        {
+          "day": "Cmt",
+          "name": "Cumartesi",
+          "completed": false,
+          "minutes": 0
+        },
+        {
+          "day": "Paz",
+          "name": "Pazar",
+          "completed": false,
+          "minutes": 0
+        }
+      ],
+      "friends": [],
+      "followers": [],
+      "following": [],
+      "registeredPlatform": "web",
+      "lastPlatform": "web",
+      "createdAt": "2026-09-05T03:27:02.482Z"
+    },
+    {
+      "id": "user-1",
+      "username": "kurucu",
+      "firstName": "Kitap",
+      "lastName": "Kulübü Kurucusu",
+      "fullName": "Kitap Kulübü Kurucusu",
+      "age": 28,
+      "email": "kurucu@kitapkulubu.com",
+      "passwordHash": "hash_sha256_kurucu2026",
+      "role": "founder",
+      "isStarUser": true,
+      "roomCredit": 5,
+      "status": "active",
+      "avatar": "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=200&h=200&q=80",
+      "bio": "Kitap Kulübü Kurucusu & Topluluk Yöneticisi. Derin okumalar ve edebiyat sohbetleri.",
+      "joinedDate": "Ocak 2025",
+      "readingGoal": 36,
+      "streak": 14,
+      "totalReadingSeconds": 180820,
+      "todayReadingSeconds": 7420,
+      "todayGoalMinutes": 30,
+      "favoriteBookId": "book-1",
+      "favoriteGenre": "Bilim Kurgu",
+      "profileTheme": "dark",
+      "privacySettings": {
+        "isPublic": true,
+        "showReadingTime": true,
+        "showBooks": true,
+        "showActivityStatus": true
+      },
+      "weeklyStreak": [
+        {
+          "day": "Pzt",
+          "name": "Pazartesi",
+          "completed": true,
+          "minutes": 45
+        },
+        {
+          "day": "Sal",
+          "name": "Salı",
+          "completed": true,
+          "minutes": 30
+        },
+        {
+          "day": "Çar",
+          "name": "Çarşamba",
+          "completed": true,
+          "minutes": 40
+        },
+        {
+          "day": "Per",
+          "name": "Perşembe",
+          "completed": true,
+          "minutes": 25
+        },
+        {
+          "day": "Cum",
+          "name": "Cuma",
+          "completed": true,
+          "minutes": 50
+        },
+        {
+          "day": "Cmt",
+          "name": "Cumartesi",
+          "completed": true,
+          "minutes": 60
+        },
+        {
+          "day": "Paz",
+          "name": "Pazar",
+          "completed": true,
+          "minutes": 26
+        }
+      ],
+      "friends": [
+        "user-2",
+        "user-3"
+      ],
+      "followers": [
+        "user-2",
+        "user-3",
+        "user-4"
+      ],
+      "following": [
+        "user-2",
+        "user-3"
+      ],
+      "lastPlatform": "web",
+      "lastLoginAt": "2026-09-05T04:15:05.166Z",
+      "updatedAt": "2026-09-05T03:08:34.027Z"
+    },
+    {
+      "id": "user-2",
+      "username": "zeynepd",
+      "firstName": "Zeynep",
+      "lastName": "Demir",
+      "fullName": "Zeynep Demir",
+      "age": 26,
+      "email": "zeynep@kitapkulubu.com",
+      "passwordHash": "hash_sha256_zeynepd26",
+      "role": "admin",
+      "isStarUser": true,
+      "roomCredit": 2,
+      "status": "active",
+      "avatar": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&h=200&q=80",
+      "bio": "Fantastik edebiyat ve polisiye tutkunu. Tolkien & Agatha Christie okumaları.",
+      "joinedDate": "Ocak 2025",
+      "readingGoal": 40,
+      "streak": 21,
+      "totalReadingSeconds": 224400,
+      "todayReadingSeconds": 2400,
+      "todayGoalMinutes": 45,
+      "favoriteBookId": "book-4",
+      "favoriteGenre": "Fantastik",
+      "profileTheme": "warm",
+      "privacySettings": {
+        "isPublic": true,
+        "showReadingTime": true,
+        "showBooks": true,
+        "showActivityStatus": true
+      },
+      "weeklyStreak": [
+        {
+          "day": "Pzt",
+          "name": "Pazartesi",
+          "completed": true,
+          "minutes": 50
+        },
+        {
+          "day": "Sal",
+          "name": "Salı",
+          "completed": true,
+          "minutes": 60
+        },
+        {
+          "day": "Çar",
+          "name": "Çarşamba",
+          "completed": true,
+          "minutes": 45
+        },
+        {
+          "day": "Per",
+          "name": "Perşembe",
+          "completed": true,
+          "minutes": 40
+        },
+        {
+          "day": "Cum",
+          "name": "Cuma",
+          "completed": true,
+          "minutes": 55
+        },
+        {
+          "day": "Cmt",
+          "name": "Cumartesi",
+          "completed": true,
+          "minutes": 80
+        },
+        {
+          "day": "Paz",
+          "name": "Pazar",
+          "completed": true,
+          "minutes": 40
+        }
+      ],
+      "friends": [
+        "user-1"
+      ],
+      "followers": [
+        "user-1",
+        "user-3",
+        "user-5"
+      ],
+      "following": [
+        "user-1",
+        "user-4"
+      ]
+    },
+    {
+      "id": "user-3",
+      "username": "cankaya",
+      "firstName": "Can",
+      "lastName": "Kaya",
+      "fullName": "Can Kaya",
+      "age": 24,
+      "email": "can@kitapkulubu.com",
+      "passwordHash": "hash_sha256_cankaya24",
+      "role": "user",
+      "isStarUser": false,
+      "roomCredit": 0,
+      "status": "active",
+      "avatar": "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&w=200&h=200&q=80",
+      "bio": "Felsefe, varoluşçuluk ve psikoloji okuru. Not tutarak okumayı tercih ederim.",
+      "joinedDate": "Nisan 2025",
+      "readingGoal": 24,
+      "streak": 9,
+      "totalReadingSeconds": 115200,
+      "todayReadingSeconds": 1200,
+      "todayGoalMinutes": 30,
+      "favoriteBookId": "book-2",
+      "favoriteGenre": "Felsefe",
+      "profileTheme": "cool",
+      "privacySettings": {
+        "isPublic": true,
+        "showReadingTime": true,
+        "showBooks": true,
+        "showActivityStatus": true
+      },
+      "weeklyStreak": [
+        {
+          "day": "Pzt",
+          "name": "Pazartesi",
+          "completed": true,
+          "minutes": 30
+        },
+        {
+          "day": "Sal",
+          "name": "Salı",
+          "completed": true,
+          "minutes": 35
+        },
+        {
+          "day": "Çar",
+          "name": "Çarşamba",
+          "completed": true,
+          "minutes": 20
+        },
+        {
+          "day": "Per",
+          "name": "Perşembe",
+          "completed": true,
+          "minutes": 40
+        },
+        {
+          "day": "Cum",
+          "name": "Cuma",
+          "completed": true,
+          "minutes": 45
+        },
+        {
+          "day": "Cmt",
+          "name": "Cumartesi",
+          "completed": true,
+          "minutes": 30
+        },
+        {
+          "day": "Paz",
+          "name": "Pazar",
+          "completed": true,
+          "minutes": 20
+        }
+      ],
+      "friends": [
+        "user-1"
+      ],
+      "followers": [
+        "user-1",
+        "user-2"
+      ],
+      "following": [
+        "user-1"
+      ]
+    },
+    {
+      "id": "user-4",
+      "username": "elifozkan",
+      "firstName": "Elif",
+      "lastName": "Özkan",
+      "fullName": "Elif Özkan",
+      "age": 31,
+      "email": "elif@kitapkulubu.com",
+      "passwordHash": "hash_sha256_elifozkan31",
+      "role": "user",
+      "isStarUser": false,
+      "roomCredit": 0,
+      "status": "active",
+      "avatar": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=200&h=200&q=80",
+      "bio": "Tarihi romanlar ve biyografi tutkunu. Kitap kulüplerinde tartışmayı severim.",
+      "joinedDate": "Şubat 2025",
+      "readingGoal": 30,
+      "streak": 5,
+      "totalReadingSeconds": 98000,
+      "todayReadingSeconds": 0,
+      "todayGoalMinutes": 30,
+      "favoriteBookId": "book-3",
+      "favoriteGenre": "Tarih",
+      "profileTheme": "sepia",
+      "privacySettings": {
+        "isPublic": true,
+        "showReadingTime": true,
+        "showBooks": true,
+        "showActivityStatus": true
+      },
+      "weeklyStreak": [],
+      "friends": [],
+      "followers": [
+        "user-1"
+      ],
+      "following": [
+        "user-2"
+      ]
+    }
+  ],
+  "books": [
+    {
+      "id": "book-1",
+      "title": "Dune",
+      "author": "Frank Herbert",
+      "cover": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=400&h=600&q=80",
+      "pages": 712,
+      "genre": "Bilim Kurgu",
+      "rating": 4.8,
+      "readersCount": 1420,
+      "description": "Modern bilim kurgunun zirve noktası kabul edilen Dune, çöl gezegeni Arrakis ve Paul Atreides'in destansı yolculuğunu anlatır."
+    },
+    {
+      "id": "book-2",
+      "title": "1984",
+      "author": "George Orwell",
+      "cover": "https://images.unsplash.com/photo-1543002588-bfa74002ed7e?auto=format&fit=crop&w=400&h=600&q=80",
+      "pages": 352,
+      "genre": "Distopya",
+      "rating": 4.9,
+      "readersCount": 2840,
+      "description": "Büyük Birader'in gözetimindeki Okyanusya'da hakikati arayan Winston Smith'in unutulmaz hikayesi."
+    },
+    {
+      "id": "book-3",
+      "title": "Saatleri Ayarlama Enstitüsü",
+      "author": "Ahmet Hamdi Tanpınar",
+      "cover": "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=400&h=600&q=80",
+      "pages": 400,
+      "genre": "Klasik",
+      "rating": 4.7,
+      "readersCount": 890,
+      "description": "Doğu ile Batı arasında bocalayan modernleşme maceramızın en derin ve incelikli hicvi."
+    },
+    {
+      "id": "book-4",
+      "title": "Harry Potter ve Felsefe Taşı",
+      "author": "J.K. Rowling",
+      "cover": "https://images.unsplash.com/photo-1618666012174-83b441c0bc76?auto=format&fit=crop&w=400&h=600&q=80",
+      "pages": 276,
+      "genre": "Fantastik",
+      "rating": 4.8,
+      "readersCount": 3410,
+      "description": "Hogwarts Cadılık ve Büyücülük Okulu'na adım atan Harry Potter'ın büyülü dünyadaki ilk yılı."
+    },
+    {
+      "id": "book-5",
+      "title": "Yabancı",
+      "author": "Albert Camus",
+      "cover": "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=400&h=600&q=80",
+      "pages": 110,
+      "genre": "Felsefe",
+      "rating": 4.6,
+      "readersCount": 1650,
+      "description": "Meursault'un cezayir güneşinde işlediği bir cinayet ve ardından gelen absürt yabancılaşma."
+    },
+    {
+      "id": "book-6",
+      "title": "Bilinmeyen Bir Kadının Mektubu",
+      "author": "Stefan Zweig",
+      "cover": "https://images.unsplash.com/photo-1476275466078-4007374efbbe?auto=format&fit=crop&w=400&h=600&q=80",
+      "pages": 64,
+      "genre": "Klasik",
+      "rating": 4.7,
+      "readersCount": 2190,
+      "description": "Bütün bir ömrü tek bir insana adanmış tutkulu ve karşılıksız bir aşkın mektuplarda yankılanışı."
+    }
+  ],
+  "userBooks": [
+    {
+      "id": "ub-1",
+      "userId": "user-1",
+      "bookId": "book-1",
+      "status": "reading",
+      "currentPage": null,
+      "totalReadingSeconds": 31200,
+      "startDate": "2026-08-20",
+      "finishDate": null,
+      "userRating": null,
+      "notes": "Arrakis ekolojisi ve baharat mistisizmi.",
+      "progressPercentage": null,
+      "updatedAt": "2026-09-05T03:26:19.607Z"
+    },
+    {
+      "id": "ub-2",
+      "userId": "user-1",
+      "bookId": "book-2",
+      "status": "read",
+      "currentPage": 352,
+      "totalReadingSeconds": 43200,
+      "startDate": "2026-08-01",
+      "finishDate": "2026-08-14",
+      "userRating": 5,
+      "notes": "Distopya edebiyatının başyapıtı."
+    },
+    {
+      "id": "ub-3",
+      "userId": "user-1",
+      "bookId": "book-3",
+      "status": "to_read",
+      "currentPage": 0,
+      "totalReadingSeconds": 0,
+      "startDate": null,
+      "finishDate": null,
+      "userRating": null,
+      "notes": ""
+    },
+    {
+      "id": "ub-4",
+      "userId": "user-2",
+      "bookId": "book-4",
+      "status": "reading",
+      "currentPage": 195,
+      "totalReadingSeconds": 26400,
+      "startDate": "2026-08-25",
+      "finishDate": null,
+      "userRating": null,
+      "notes": ""
+    }
+  ],
+  "readingSessions": [
+    {
+      "id": "session-1788578762120",
+      "userId": "user-1",
+      "bookId": "book-1",
+      "durationSeconds": 1,
+      "pagesRead": 0,
+      "date": "2026-09-05",
+      "timestamp": "2026-09-05T03:26:02.120Z",
+      "platform": "web",
+      "notes": ""
+    },
+    {
+      "id": "session-1788578655896",
+      "userId": "user-1",
+      "bookId": "book-1",
+      "durationSeconds": 425,
+      "pagesRead": 0,
+      "date": "2026-09-05",
+      "timestamp": "2026-09-05T03:24:15.896Z",
+      "platform": "web",
+      "notes": ""
+    },
+    {
+      "id": "session-1788577906794",
+      "userId": "user-1",
+      "bookId": "book-1",
+      "durationSeconds": 34,
+      "pagesRead": 0,
+      "date": "2026-09-05",
+      "timestamp": "2026-09-05T03:11:46.794Z",
+      "platform": "web",
+      "notes": ""
+    },
+    {
+      "id": "session-1788577703078",
+      "userId": "user-1",
+      "bookId": "book-1",
+      "durationSeconds": 1800,
+      "pagesRead": 30,
+      "date": "2026-09-05",
+      "timestamp": "2026-09-05T03:08:23.078Z",
+      "platform": "web",
+      "notes": "Çapraz platform senkronizasyon testi"
+    },
+    {
+      "id": "session-1788547245925",
+      "userId": "user-1",
+      "bookId": "book-1",
+      "durationSeconds": 1800,
+      "pagesRead": 30,
+      "date": "2026-09-04",
+      "timestamp": "2026-09-04T18:40:45.925Z",
+      "platform": "web",
+      "notes": "Çapraz platform senkronizasyon testi"
+    },
+    {
+      "id": "session-1788543280506",
+      "userId": "user-1",
+      "bookId": "book-1",
+      "durationSeconds": 1800,
+      "pagesRead": 30,
+      "date": "2026-09-04",
+      "timestamp": "2026-09-04T17:34:40.506Z",
+      "platform": "web",
+      "notes": "Çapraz platform senkronizasyon testi"
+    },
+    {
+      "id": "rs-1",
+      "userId": "user-1",
+      "bookId": "book-1",
+      "date": "2026-09-03",
+      "startTime": "16:45",
+      "endTime": "17:20",
+      "durationSeconds": 2100,
+      "startPage": 212,
+      "endPage": 248,
+      "pagesRead": 36,
+      "notes": "Paul'ün baharat vizyonları."
+    },
+    {
+      "id": "rs-2",
+      "userId": "user-1",
+      "bookId": "book-1",
+      "date": "2026-09-02",
+      "startTime": "21:10",
+      "endTime": "21:55",
+      "durationSeconds": 2700,
+      "startPage": 175,
+      "endPage": 212,
+      "pagesRead": 37,
+      "notes": "Kum solucanları ve Fremen sırları."
+    }
+  ],
+  "rooms": [
+    {
+      "id": "room-1",
+      "name": "Bilim Kurgu ve Gelecek",
+      "description": "Dune, Vakıf, Üç Cisim Problemi gibi eserleri derinlemesine tartıştığımız sakin okuma odası.",
+      "icon": "🪐",
+      "adminId": "user-1",
+      "members": [
+        "user-1",
+        "user-2",
+        "user-3"
+      ],
+      "isPrivate": false,
+      "rules": "Saygı çerçevesinde tartışalım. Spoiler içeren mesajlara spoiler etiketi ekleyelim."
+    },
+    {
+      "id": "room-2",
+      "name": "Dünya Klasikleri ve Felsefe",
+      "description": "Camus, Kafka, Dostoyevski ve Tanpınar satırlarında düşünce yolculukları.",
+      "icon": "🏛️",
+      "adminId": "user-1",
+      "members": [
+        "user-1",
+        "user-3",
+        "user-4"
+      ],
+      "isPrivate": false,
+      "rules": "Metin analizi ve düşünce paylaşımı ön plandadır."
+    },
+    {
+      "id": "room-3",
+      "name": "Fantastik Edebiyat Kulübü",
+      "description": "Orta Dünya'dan Büyücülük Dünyası'na uzanan fantastik okuma topluluğu.",
+      "icon": "🧙",
+      "adminId": "user-2",
+      "members": [
+        "user-2",
+        "user-1"
+      ],
+      "isPrivate": false,
+      "rules": "Kitap ve evren lore tartışmaları serbesttir."
+    }
+  ],
+  "messages": [
+    {
+      "id": "msg-1",
+      "roomId": "room-1",
+      "userId": "user-1",
+      "text": "Dune'un ilk 200 sayfasındaki ekolojik tasvirler sizce de muazzam değil mi?",
+      "isSpoiler": false,
+      "spoilerText": "",
+      "timestamp": "16:30"
+    },
+    {
+      "id": "msg-2",
+      "roomId": "room-1",
+      "userId": "user-2",
+      "text": "Kesinlikle! Özellikle su tüccarları ve çölün kutsallığı çok etkileyici.",
+      "isSpoiler": false,
+      "spoilerText": "",
+      "timestamp": "16:34"
+    },
+    {
+      "id": "msg-3",
+      "roomId": "room-1",
+      "userId": "user-3",
+      "text": "300. sayfadan sonra Paul'ün iç monologları çok derinleşiyor.",
+      "isSpoiler": true,
+      "spoilerText": "Paul geleceği gördüğünde kaderin kaçınılmazlığını kabulleniyor.",
+      "timestamp": "16:40"
+    }
+  ],
+  "posts": [
+    {
+      "id": "post-1",
+      "userId": "user-1",
+      "content": "“İnsan, zihninin kapılarını bir kez kitaba açtı mı, bir daha asla eski sınırlarına geri dönemez.” Dune okuması her sayfada felsefi derinliğini hissettiriyor.",
+      "bookId": "book-1",
+      "pageProgress": {
+        "current": 248,
+        "total": 712
+      },
+      "rating": 5,
+      "isSpoiler": false,
+      "spoilerText": "",
+      "imageUrl": null,
+      "timestamp": "1 saat önce",
+      "likes": [
+        "user-2",
+        "user-3"
+      ],
+      "comments": [
+        {
+          "id": "c-1",
+          "userId": "user-2",
+          "text": "Frank Herbert dili gerçekten çok sakin ama güçlü kullanıyor.",
+          "timestamp": "45 dk önce"
+        }
+      ]
+    },
+    {
+      "id": "post-2",
+      "userId": "user-2",
+      "content": "Harry Potter serisini yeniden okumak çocukluğumun sakin pazar günlerine dönmek gibi. Sayfaları çevirdikçe huzur buluyorum.",
+      "bookId": "book-4",
+      "pageProgress": {
+        "current": 195,
+        "total": 276
+      },
+      "rating": 5,
+      "isSpoiler": false,
+      "spoilerText": "",
+      "imageUrl": null,
+      "timestamp": "3 saat önce",
+      "likes": [
+        "user-1"
+      ],
+      "comments": []
+    },
+    {
+      "id": "post-3",
+      "userId": "user-3",
+      "content": "Camus'nün Yabancı romanında Meursault karakteri modern insanın kayıtsızlığını çok çıplak yansıtıyor. Kısa ama çok katmanlı bir eser.",
+      "bookId": "book-5",
+      "pageProgress": {
+        "current": 110,
+        "total": 110
+      },
+      "rating": 4,
+      "isSpoiler": false,
+      "spoilerText": "",
+      "imageUrl": null,
+      "timestamp": "Dün",
+      "likes": [
+        "user-1",
+        "user-4"
+      ],
+      "comments": []
+    }
+  ],
+  "reviews": [
+    {
+      "id": "rev-1",
+      "bookId": "book-1",
+      "userId": "user-1",
+      "rating": 5,
+      "content": "Herbert sadece bir roman değil, dilbilimsel ve ekolojik bir evren inşa etmiş. Mutlaka okunmalı.",
+      "date": "2026-08-25"
+    },
+    {
+      "id": "rev-2",
+      "bookId": "book-2",
+      "userId": "user-1",
+      "rating": 5,
+      "content": "Hakikatin gücünü ve manipülasyonun dehşetini anlatan eşsiz bir klasik.",
+      "date": "2026-08-14"
+    }
+  ],
+  "notifications": [
+    {
+      "id": "notif-1",
+      "userId": "user-1",
+      "actorId": "user-2",
+      "type": "friend_accept",
+      "text": "Zeynep Demir arkadaşlık isteğinizi kabul etti.",
+      "time": "15 dk önce",
+      "read": false
+    },
+    {
+      "id": "notif-2",
+      "userId": "user-1",
+      "actorId": "user-3",
+      "type": "like",
+      "text": "Can Kaya \"Dune\" hakkındaki düşüncenizi beğendi.",
+      "time": "1 saat önce",
+      "read": false
+    }
+  ],
+  "friendRequests": [
+    {
+      "id": "freq-1",
+      "fromUserId": "user-4",
+      "toUserId": "user-1",
+      "status": "pending",
+      "date": "2026-09-03 18:20"
+    }
+  ],
+  "monthlyUserStats": [
+    {
+      "id": "mus-1",
+      "userId": "user-1",
+      "month": "2026-08",
+      "readingMinutes": 1020,
+      "booksCompleted": 3,
+      "consistencyDays": 24,
+      "qualified": true,
+      "roomCreditAwarded": true
+    },
+    {
+      "id": "mus-2",
+      "userId": "user-2",
+      "month": "2026-08",
+      "readingMinutes": 1450,
+      "booksCompleted": 4,
+      "consistencyDays": 28,
+      "qualified": true,
+      "roomCreditAwarded": true
+    },
+    {
+      "id": "mus-3",
+      "userId": "user-3",
+      "month": "2026-08",
+      "readingMinutes": 420,
+      "booksCompleted": 1,
+      "consistencyDays": 11,
+      "qualified": false,
+      "roomCreditAwarded": false
+    }
+  ],
+  "moderationLogs": [
+    {
+      "id": "mod-1",
+      "userId": "user-3",
+      "userName": "Can Kaya",
+      "postContent": "Kitabın 120-135. sayfalarının tamamını fotoğrafladım.",
+      "imageUrl": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c",
+      "reason": "Telif ihlali riski: Kitap sayfalarının tam taranması engellendi.",
+      "status": "blocked",
+      "timestamp": "2026-09-02 14:15",
+      "adminReviewed": false
+    }
+  ],
+  "adminLogs": [
+    {
+      "id": "alog-1",
+      "actorId": "user-1",
+      "actorRole": "founder",
+      "action": "promote_to_admin",
+      "targetUserId": "user-2",
+      "details": "Zeynep Demir hesabı admin olarak yetkilendirildi.",
+      "timestamp": "2026-08-01 10:30"
+    }
+  ],
+  "betaSettings": {
+    "environment": "beta",
+    "appVersion": "0.1.0-beta",
+    "buildNumber": 1,
+    "restrictedMode": true,
+    "designatedTesterEmail": "beta@kitapkulubu.com",
+    "activeInviteCodes": [
+      "BETA-KITAP-2026",
+      "KK-FOUNDER-BETA",
+      "BETA-DT2ZS"
+    ]
+  },
+  "betaTesters": [
+    {
+      "id": "bt-1788578865881",
+      "email": "mehmet.kaya@test.com",
+      "name": "Mehmet Kaya",
+      "device": "web",
+      "status": "active",
+      "invitedAt": "2026-09-05T03:27:45.881Z",
+      "inviteCode": "BETA-KITAP-2026",
+      "platform": "web"
+    },
+    {
+      "id": "bt-1788578822482",
+      "email": "testokur@kitapkulubu.com",
+      "name": "Test Okur",
+      "device": "web",
+      "status": "active",
+      "invitedAt": "2026-09-05T03:27:02.482Z",
+      "inviteCode": "BETA-KITAP-2026",
+      "platform": "web"
+    },
+    {
+      "id": "bt-1",
+      "email": "beta@kitapkulubu.com",
+      "name": "Özel Beta Testçi",
+      "device": "iOS & Android",
+      "status": "active",
+      "invitedAt": "2026-09-04T20:00:00.000Z",
+      "inviteCode": "BETA-KITAP-2026",
+      "platform": "ios"
+    }
+  ],
+  "betaFeedbacks": [
+    {
+      "id": "app-1788577714020",
+      "type": "beta_application",
+      "userId": "applicant",
+      "userName": "Test Okur",
+      "userEmail": "testokur@kitapkulubu.com",
+      "userRole": "applicant",
+      "platform": "web",
+      "screen": "Kapalı Beta Giriş Kapısı",
+      "description": "[Beta Başvurusu] Cihaz: WEB — Not: iOS beta denemek istiyorum",
+      "screenshotUrl": null,
+      "status": "yeni",
+      "createdAt": "2026-09-05T03:08:34.020Z"
+    },
+    {
+      "id": "fb-1788577703046-844",
+      "userId": "user-1",
+      "userName": "Kitap Kulübü Kurucusu",
+      "userEmail": "kurucu@kitapkulubu.com",
+      "userRole": "founder",
+      "platform": "ios",
+      "appVersion": "0.1.0-beta",
+      "buildNumber": 1,
+      "screen": "Kitaplığım",
+      "description": "TestFlight beta testi: Kitaplık filtreleme sorunsuz çalışıyor.",
+      "screenshotUrl": null,
+      "status": "cozuldu",
+      "createdAt": "2026-09-05T03:08:23.046Z",
+      "updatedAt": "2026-09-05T03:08:23.075Z",
+      "reviewedBy": "Kitap Kulübü Kurucusu"
+    },
+    {
+      "id": "fb-1788547245879-830",
+      "userId": "user-1",
+      "userName": "Ahmet Yılmaz",
+      "userEmail": "ahmet@kitapkulubu.com",
+      "userRole": "founder",
+      "platform": "ios",
+      "appVersion": "0.1.0-beta",
+      "buildNumber": 1,
+      "screen": "Kitaplığım",
+      "description": "TestFlight beta testi: Kitaplık filtreleme sorunsuz çalışıyor.",
+      "screenshotUrl": null,
+      "status": "cozuldu",
+      "createdAt": "2026-09-04T18:40:45.879Z",
+      "updatedAt": "2026-09-04T18:40:45.910Z",
+      "reviewedBy": "Kitap Kulübü Kurucusu"
+    },
+    {
+      "id": "fb-1788543280460-652",
+      "userId": "user-1",
+      "userName": "Kitap Kulübü Kurucusu",
+      "userEmail": "kurucu@kitapkulubu.com",
+      "userRole": "founder",
+      "platform": "ios",
+      "appVersion": "0.1.0-beta",
+      "buildNumber": 1,
+      "screen": "Kitaplığım",
+      "description": "TestFlight beta testi: Kitaplık filtreleme sorunsuz çalışıyor.",
+      "screenshotUrl": null,
+      "status": "cozuldu",
+      "createdAt": "2026-09-04T17:34:40.460Z",
+      "updatedAt": "2026-09-04T17:34:40.490Z",
+      "reviewedBy": "Kitap Kulübü Kurucusu"
+    },
+    {
+      "id": "fb-1788542411840-845",
+      "userId": "user-1",
+      "userName": "Kitap Kulübü Kurucusu",
+      "userEmail": "kurucu@kitapkulubu.com",
+      "userRole": "founder",
+      "platform": "android",
+      "appVersion": "0.1.0-beta",
+      "buildNumber": 1,
+      "screen": "Kitaplığım",
+      "description": "Android test: Kitaplık arama filtresi çok hızlı çalışıyor.",
+      "screenshotUrl": null,
+      "status": "yeni",
+      "createdAt": "2026-09-04T17:20:11.840Z"
+    },
+    {
+      "id": "fb-sample-1",
+      "userId": "user-1",
+      "userName": "Kitap Kulübü Kurucusu",
+      "platform": "ios",
+      "appVersion": "0.1.0-beta",
+      "buildNumber": 1,
+      "screen": "Canlı Okuma",
+      "description": "Sayaç duraklatıldığında arka plan rengi hafif sepia tonunda yumuşak geçiş yapıyor, çok iyi.",
+      "screenshotUrl": null,
+      "status": "inceleniyor",
+      "createdAt": "2026-09-04T17:19:39.581Z"
+    }
+  ],
+  "platformLogs": [
+    {
+      "userId": "user-1",
+      "platform": "web",
+      "path": "/api/beta/testers",
+      "timestamp": "2026-09-05T04:15:14.399Z"
+    },
+    {
+      "userId": "user-1",
+      "platform": "web",
+      "path": "/api/beta/testers",
+      "timestamp": "2026-09-05T04:15:14.396Z"
+    },
+    {
+      "userId": "user-1",
+      "platform": "web",
+      "path": "/api/beta/testers",
+      "timestamp": "2026-09-05T04:15:10.815Z"
+    },
+    {
+      "userId": "user-1",
+      "platform": "web",
+      "path": "/api/beta/testers",
+      "timestamp": "2026-09-05T04:14:35.247Z"
+    },
+    {
+      "userId": "user-1",
+      "platform": "web",
+      "path": "/api/user-books/ub-1/progress",
+      "timestamp": "2026-09-05T03:26:19.607Z"
+    },
+    {
+      "userId": "user-1",
+      "platform": "web",
+      "path": "/api/user-books/ub-1/progress",
+      "timestamp": "2026-09-05T03:26:07.645Z"
+    },
+    {
+      "userId": "user-1",
+      "platform": "web",
+      "path": "/api/sessions",
+      "timestamp": "2026-09-05T03:26:02.119Z"
+    },
+    {
+      "userId": "user-1",
+      "platform": "web",
+      "path": "/api/beta/testers",
+      "timestamp": "2026-09-05T03:25:17.546Z"
+    },
+    {
+      "userId": "user-1",
+      "platform": "web",
+      "path": "/api/beta/feedback",
+      "timestamp": "2026-09-05T03:25:17.448Z"
+    },
+    {
+      "userId": "user-1",
+      "platform": "web",
+      "path": "/api/sessions",
+      "timestamp": "2026-09-05T03:24:15.895Z"
+    },
+    {
+      "userId": "user-1",
+      "platform": "web",
+      "path": "/api/sessions",
+      "timestamp": "2026-09-05T03:11:46.793Z"
+    },
+    {
+      "userId": "user-1",
+      "platform": "web",
+      "path": "/api/sessions",
+      "timestamp": "2026-09-05T03:08:23.078Z"
+    },
+    {
+      "userId": "user-1",
+      "platform": "web",
+      "path": "/api/beta/feedback/fb-1788577703046-844",
+      "timestamp": "2026-09-05T03:08:23.075Z"
+    },
+    {
+      "userId": "user-1",
+      "platform": "web",
+      "path": "/api/beta/feedback",
+      "timestamp": "2026-09-05T03:08:23.060Z"
+    },
+    {
+      "userId": "user-1",
+      "platform": "ios",
+      "path": "/api/beta/feedback",
+      "timestamp": "2026-09-05T03:08:23.045Z"
+    },
+    {
+      "userId": "user-1",
+      "platform": "web",
+      "path": "/api/sessions",
+      "timestamp": "2026-09-04T18:40:45.924Z"
+    },
+    {
+      "userId": "user-1",
+      "platform": "web",
+      "path": "/api/beta/feedback/fb-1788547245879-830",
+      "timestamp": "2026-09-04T18:40:45.909Z"
+    },
+    {
+      "userId": "user-1",
+      "platform": "web",
+      "path": "/api/beta/feedback",
+      "timestamp": "2026-09-04T18:40:45.893Z"
+    },
+    {
+      "userId": "user-1",
+      "platform": "ios",
+      "path": "/api/beta/feedback",
+      "timestamp": "2026-09-04T18:40:45.878Z"
+    },
+    {
+      "userId": "user-1",
+      "platform": "web",
+      "path": "/api/sessions",
+      "timestamp": "2026-09-04T17:34:40.505Z"
+    },
+    {
+      "userId": "user-1",
+      "platform": "web",
+      "path": "/api/beta/feedback/fb-1788543280460-652",
+      "timestamp": "2026-09-04T17:34:40.489Z"
+    },
+    {
+      "userId": "user-1",
+      "platform": "web",
+      "path": "/api/beta/feedback",
+      "timestamp": "2026-09-04T17:34:40.474Z"
+    },
+    {
+      "userId": "user-1",
+      "platform": "ios",
+      "path": "/api/beta/feedback",
+      "timestamp": "2026-09-04T17:34:40.459Z"
+    },
+    {
+      "userId": "user-1",
+      "platform": "web",
+      "path": "/api/beta/feedback",
+      "timestamp": "2026-09-04T17:20:15.453Z"
+    },
+    {
+      "userId": "user-1",
+      "platform": "android",
+      "path": "/api/beta/feedback",
+      "timestamp": "2026-09-04T17:20:11.839Z"
+    }
+  ]
+}
