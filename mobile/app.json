@@ -2,7 +2,7 @@
   "expo": {
     "name": "Kitap Kulübü",
     "slug": "kitapkulubu",
-    "version": "0.1.0-beta",
+    "version": "0.1.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
@@ -40,14 +40,23 @@
     },
     "extra": {
       "environment": "beta",
-      "appVersion": "0.1.0-beta",
+      "appVersion": "0.1.0",
       "buildNumber": 1,
       "apiUrl": "http://10.0.2.2:5000/api",
-      "productionApiUrl": "https://api.kitapkulubu.com/api"
+      "productionApiUrl": "https://api.kitapkulubu.com/api",
+      "eas": {
+        "projectId": "4b3e0e69-d7fb-4d6b-92a7-d77536c60e1a"
+      }
     },
     "plugins": [
       "expo-asset",
       "expo-status-bar"
-    ]
+    ],
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/4b3e0e69-d7fb-4d6b-92a7-d77536c60e1a"
+    }
   }
 }

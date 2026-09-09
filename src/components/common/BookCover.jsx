@@ -81,6 +81,13 @@ export const BookCover = ({
     setHasError(true);
   };
 
+  const handleImgLoad = (e) => {
+    // OpenLibrary ve bazı CDN'ler görsel bulunamadığında 1x1 şeffaf GIF döner
+    if (e.currentTarget.naturalWidth <= 2 || e.currentTarget.naturalHeight <= 2) {
+      handleImgError();
+    }
+  };
+
   // Görsel yoksa veya hata verdiyse: Lüks Kitap Mockup'ı + Sadece Kitap İsmi
   if (!activeUrl || hasError) {
     return (
@@ -129,6 +136,7 @@ export const BookCover = ({
       alt={alt || title || 'Kitap Kapağı'}
       className={className}
       style={{ objectFit: 'cover', ...style }}
+      onLoad={handleImgLoad}
       onError={handleImgError}
       onClick={onClick}
       loading={loading}

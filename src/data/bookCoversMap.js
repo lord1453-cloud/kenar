@@ -33,48 +33,7 @@ export const REAL_BOOK_COVERS = {
   'Vahşetin Çağrısı': 'https://covers.openlibrary.org/b/id/8232006-L.jpg',
   'Siddhartha': 'https://covers.openlibrary.org/b/id/8235115-L.jpg',
   'Devlet': 'https://covers.openlibrary.org/b/id/8235118-L.jpg',
-  'Harry Potter ve Felsefe Taşı': 'https://covers.openlibrary.org/b/id/10521270-L.jpg',
-
-  // --- Türk Edebiyatı & Çağdaş Klasikler (Doğrulanmış Yüksek Kalite) ---
-  'Saatleri Ayarlama Enstitüsü': 'https://images.unsplash.com/photo-1506880018603-83d5b814b5a6?auto=format&fit=crop&w=400&h=600&q=80',
-  'Kürk Mantolu Madonna': 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&w=400&h=600&q=80',
-  'İçimizdeki Şeytan': 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=400&h=600&q=80',
-  'Kuyucaklı Yusuf': 'https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=400&h=600&q=80',
-  'Sırça Köşk': 'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=400&h=600&q=80',
-  'Tutunamayanlar': 'https://images.unsplash.com/photo-1495640388908-05fa85288e61?auto=format&fit=crop&w=400&h=600&q=80',
-  'Tehlikeli Oyunlar': 'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?auto=format&fit=crop&w=400&h=600&q=80',
-  'Korkuyu Beklerken': 'https://images.unsplash.com/photo-1476275466038-899583be30f7?auto=format&fit=crop&w=400&h=600&q=80',
-  'Sessiz Ev': 'https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=400&h=600&q=80',
-  'Beyaz Kale': 'https://images.unsplash.com/photo-1543002588-bfa74002ed7e?auto=format&fit=crop&w=400&h=600&q=80',
-  'Kara Kitap': 'https://images.unsplash.com/photo-1506880018603-83d5b814b5a6?auto=format&fit=crop&w=400&h=600&q=80',
-  'Masumiyet Müzesi': 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&w=400&h=600&q=80',
-  'İnce Memed': 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=400&h=600&q=80',
-  'Aylak Adam': 'https://images.unsplash.com/photo-1495640388908-05fa85288e61?auto=format&fit=crop&w=400&h=600&q=80',
-  'Anayurt Oteli': 'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?auto=format&fit=crop&w=400&h=600&q=80',
-  'Puslu Kıtalar Atlası': 'https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=400&h=600&q=80',
-  'Huzur': 'https://images.unsplash.com/photo-1543002588-bfa74002ed7e?auto=format&fit=crop&w=400&h=600&q=80',
-  'Beş Şehir': 'https://images.unsplash.com/photo-1506880018603-83d5b814b5a6?auto=format&fit=crop&w=400&h=600&q=80',
-  'Çalıkuşu': 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&w=400&h=600&q=80',
-  'Acımak': 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=400&h=600&q=80',
-  'Yaprak Dökümü': 'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=400&h=600&q=80',
-  'Yaban': 'https://images.unsplash.com/photo-1495640388908-05fa85288e61?auto=format&fit=crop&w=400&h=600&q=80',
-  'Kiralık Konak': 'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?auto=format&fit=crop&w=400&h=600&q=80',
-  'Dokuzuncu Hariciye Koğuşu': 'https://images.unsplash.com/photo-1543002588-bfa74002ed7e?auto=format&fit=crop&w=400&h=600&q=80',
-  'Fatih-Harbiye': 'https://images.unsplash.com/photo-1506880018603-83d5b814b5a6?auto=format&fit=crop&w=400&h=600&q=80',
-  'Yalnızız': 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&w=400&h=600&q=80',
-  'Semaver': 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=400&h=600&q=80',
-  'Son Kuşlar': 'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=400&h=600&q=80',
-  'Lüzumsuz Adam': 'https://images.unsplash.com/photo-1495640388908-05fa85288e61?auto=format&fit=crop&w=400&h=600&q=80',
-  'Kaplanın Sırtında': 'https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=400&h=600&q=80',
-  'Serenad': 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&w=400&h=600&q=80',
-
-  // --- Popüler Güncel Eserler ---
-  'Gece Yarısı Kütüphanesi': 'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?auto=format&fit=crop&w=400&h=600&q=80',
-  'Atomik Alışkanlıklar': 'https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&w=400&h=600&q=80',
-  'Beden Kayıt Tutar': 'https://images.unsplash.com/photo-1506880018603-83d5b814b5a6?auto=format&fit=crop&w=400&h=600&q=80',
-  'Hayır Diyebilme Sanatı': 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&w=400&h=600&q=80',
-  'The Cholesterol Myth': 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&w=400&h=600&q=80',
-  'The Mapmaker\'s Lament': 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&w=400&h=600&q=80'
+  'Harry Potter ve Felsefe Taşı': 'https://covers.openlibrary.org/b/id/10521270-L.jpg'
 };
 
 // Kitap adına göre birebir orijinal kapağı döner.

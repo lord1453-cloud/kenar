@@ -14,10 +14,10 @@ export const BottomNav = () => {
 
   const navItems = [
     { id: 'feed', label: 'Akış', icon: Home },
+    { id: 'profiles', label: 'Okurlar', icon: Users },
     { id: 'research', label: 'Araştır', icon: BookMarked },
-    { id: 'share_thought', label: 'Paylaş', icon: PenLine },
     { id: 'library', label: 'Kitaplığım', icon: Radio },
-    { id: 'profile', label: 'Profil', icon: User }
+    { id: 'profile', label: 'Profilim', icon: User }
   ];
 
   const handleNav = (id) => {

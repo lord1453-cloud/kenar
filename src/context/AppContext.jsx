@@ -1908,7 +1908,10 @@ export const AppProvider = ({ children }) => {
         betaStatus,
         setBetaStatus,
         toggleRestrictedMode,
-        setUsers
+        setUsers,
+        loginUser,
+        registerUser,
+        logoutUser
       }}
     >
       {children}

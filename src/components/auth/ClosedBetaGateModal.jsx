@@ -582,6 +582,46 @@ export const ClosedBetaGateModal = () => {
                 )}
               </button>
 
+              {/* Hızlı Test & Demo Girişi Butonları */}
+              <div style={{
+                marginTop: '10px',
+                padding: '10px',
+                borderRadius: 'var(--radius-sm)',
+                background: 'rgba(255, 255, 255, 0.03)',
+                border: '1px dashed var(--border-subtle)',
+                textAlign: 'center'
+              }}>
+                <div style={{ fontSize: '0.74rem', color: 'var(--text-dim)', marginBottom: '8px', fontWeight: 600 }}>
+                  ⚡ HIZLI TEST / DEMO GİRİŞİ:
+                </div>
+                <div style={{ display: 'flex', gap: '6px', justifyContent: 'center', flexWrap: 'wrap' }}>
+                  <button
+                    type="button"
+                    onClick={() => { setLoginEmail('kurucu@kitapkulubu.com'); setLoginPassword('123456'); }}
+                    className="badge badge-orange"
+                    style={{ cursor: 'pointer', border: 'none', padding: '5px 9px', fontSize: '0.74rem' }}
+                  >
+                    👑 Kurucu (Ayşe)
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => { setLoginEmail('yasmin@kitapkulubu.com'); setLoginPassword('123456'); }}
+                    className="badge badge-purple"
+                    style={{ cursor: 'pointer', border: 'none', padding: '5px 9px', fontSize: '0.74rem' }}
+                  >
+                    ✍️ Yazar (Yasmin)
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => { setLoginEmail('can@kitapkulubu.com'); setLoginPassword('123456'); }}
+                    className="badge badge-green"
+                    style={{ cursor: 'pointer', border: 'none', padding: '5px 9px', fontSize: '0.74rem' }}
+                  >
+                    📖 Okur (Can)
+                  </button>
+                </div>
+              </div>
+
               <div style={{ textAlign: 'center', fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '4px' }}>
                 Henüz beta hesabınız yok mu?{' '}
                 <button
