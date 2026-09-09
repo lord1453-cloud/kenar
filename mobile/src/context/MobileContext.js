@@ -197,7 +197,7 @@ export const MobileProvider = ({ children }) => {
   const updateBookProgress = (bookId, newPage) => {
     const pageNum = parseInt(newPage, 10) || 0;
     setUserBooks(prev => prev.map(ub => {
-      if (ub.bookId === bookId && ub.userId === currentUser.id) {
+      if (ub.bookId === bookId && ub.userId === currentUser?.id) {
         const isFinished = pageNum >= ub.totalPages;
         const updated = {
           ...ub,

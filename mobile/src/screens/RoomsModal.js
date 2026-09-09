@@ -46,7 +46,7 @@ export const RoomsModal = () => {
     if (!messageText.trim() || !activeRoom) return;
     const newMsg = {
       id: `m-${Date.now()}`,
-      user: currentUser.fullName,
+      user: currentUser?.fullName || 'Kitap Kulübü Okuru',
       text: messageText.trim(),
       time: 'Şimdi'
     };
@@ -122,7 +122,7 @@ export const RoomsModal = () => {
               </View>
 
               {activeRoom.messages.map(m => (
-                <View key={m.id} style={[styles.messageBubble, m.user === currentUser.fullName && styles.myMessageBubble]}>
+                <View key={m.id} style={[styles.messageBubble, currentUser?.fullName && m.user === currentUser.fullName && styles.myMessageBubble]}>
                   <View style={styles.msgHeader}>
                     <Text style={styles.msgUser}>{m.user}</Text>
                     <Text style={styles.msgTime}>{m.time}</Text>
