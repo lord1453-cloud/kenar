@@ -11,6 +11,7 @@
     "create-founder": "node scripts/create-founder.js",
     "server": "node server/server.js",
     "mobile": "npm --prefix mobile start",
+    "mobile:clean": "npm --prefix mobile start -- -c",
     "mobile:android": "npm --prefix mobile run android",
     "mobile:ios": "npm --prefix mobile run ios",
     "build:mobile:android": "npm --prefix mobile run build:android",
