@@ -55,11 +55,11 @@ export const BottomNav = ({ bottomInset = 16 }) => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    backgroundColor: colors.bgCard,
+    backgroundColor: '#FFFFFF',
     borderTopWidth: 1,
-    borderTopColor: colors.borderSubtle,
+    borderTopColor: 'rgba(60, 60, 67, 0.15)',
     paddingVertical: 8,
-    paddingBottom: 22,
+    paddingBottom: 20,
     justifyContent: 'space-around',
     alignItems: 'center'
   },
@@ -69,13 +69,13 @@ const styles = StyleSheet.create({
     flex: 1
   },
   tabLabel: {
-    fontSize: 11,
-    color: colors.textDim,
+    fontSize: 10.5,
+    color: 'rgba(60, 60, 67, 0.5)',
     marginTop: 3,
     fontWeight: '500'
   },
   tabLabelActive: {
-    color: colors.primary,
+    color: '#007AFF',
     fontWeight: '700'
   },
   specialTabItem: {
@@ -85,14 +85,16 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 22,
-    backgroundColor: colors.bgElevated,
-    borderWidth: 1.5,
-    borderColor: colors.primary,
+    backgroundColor: 'rgba(0, 122, 255, 0.12)',
     alignItems: 'center',
     justifyContent: 'center'
   },
   specialIconCircleActive: {
-    backgroundColor: colors.primary,
-    borderColor: '#60a5fa'
+    backgroundColor: '#007AFF',
+    shadowColor: '#007AFF',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.35,
+    shadowRadius: 6,
+    elevation: 4
   }
 });

@@ -3,27 +3,50 @@ import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Image, Modal, Tex
 import { Ionicons } from '@expo/vector-icons';
 import { useMobile } from '../context/MobileContext';
 import { colors } from '../theme/colors';
-import { BookCover } from '../components/common/BookCover';
 
 export const LibraryScreen = () => {
-  const { books, userBooks, updateBookProgress, setActiveTab, setActiveTimerBook, setTimerStartPage } = useMobile();
+  const { 
+    books, 
+    userBooks, 
+    updateBookProgress, 
+    setActiveTab, 
+    setActiveTimerBook, 
+    setTimerStartPage,
+    showToast
+  } = useMobile();
 
-  const [activeShelf, setActiveShelf] = useState('reading'); // 'reading' | 'read' | 'want_to_read'
+  const [searchQuery, setSearchQuery] = useState('');
+  const [activeShelf, setActiveShelf] = useState('all'); // 'all' | 'reading' | 'read' | 'want_to_read'
   const [selectedBook, setSelectedBook] = useState(null);
   const [editPage, setEditPage] = useState('');
 
   const shelves = [
+    { id: 'all', label: 'Tümü' },
     { id: 'reading', label: 'Okunuyor' },
     { id: 'read', label: 'Okundu' },
-    { id: 'want_to_read', label: 'Okunacak' }
+    { id: 'want_to_read', label: 'İstek Listesi' }
   ];
 
-  // Filtrelenen kitaplar
-  const filteredUserBooks = userBooks.filter(ub => ub.status === activeShelf);
+  // Kitap filtreleme
+  const filteredBooks = (books || []).filter(book => {
+    const matchesSearch = !searchQuery.trim() || 
+      book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      book.author.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (book.genre && book.genre.toLowerCase().includes(searchQuery.toLowerCase()));
+
+    if (!matchesSearch) return false;
+    if (activeShelf === 'all') return true;
+
+    const ub = (userBooks || []).find(u => u.bookId === book.id);
+    if (activeShelf === 'reading') return ub && ub.status === 'reading';
+    if (activeShelf === 'read') return ub && ub.status === 'read';
+    if (activeShelf === 'want_to_read') return ub && ub.status === 'want_to_read';
+    return true;
+  });
 
   const openProgressModal = (ub, book) => {
     setSelectedBook({ ub, book });
-    setEditPage(String(ub.currentPage));
+    setEditPage(String(ub?.currentPage || 0));
   };
 
   const handleSaveProgress = () => {
@@ -35,99 +58,135 @@ export const LibraryScreen = () => {
 
   const startReadingThisBook = (book, ub) => {
     setActiveTimerBook(book);
-    setTimerStartPage(ub.currentPage);
+    setTimerStartPage(ub?.currentPage || 0);
     setActiveTab('live');
   };
 
   return (
     <View style={styles.container}>
-      {/* Raf Seçici Sekmeler */}
-      <View style={styles.shelfTabsRow}>
-        {shelves.map(shelf => {
-          const count = userBooks.filter(ub => ub.status === shelf.id).length;
-          const isActive = activeShelf === shelf.id;
-          return (
-            <TouchableOpacity
-              key={shelf.id}
-              style={[styles.shelfTab, isActive && styles.shelfTabActive]}
-              onPress={() => setActiveShelf(shelf.id)}
-            >
-              <Text style={[styles.shelfTabText, isActive && styles.shelfTabTextActive]}>
-                {shelf.label} ({count})
-              </Text>
+      {/* 1. ARAMA VE BAŞLIK ALANI (Prototip Ekran 2) */}
+      <View style={styles.searchHeader}>
+        <View style={styles.searchBar}>
+          <Ionicons name="search" size={17} color="rgba(60, 60, 67, 0.45)" />
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Kitap, yazar veya edebiyat türü ara..."
+            placeholderTextColor="rgba(60, 60, 67, 0.4)"
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+          />
+          {searchQuery.length > 0 && (
+            <TouchableOpacity onPress={() => setSearchQuery('')}>
+              <Ionicons name="close-circle" size={17} color="rgba(60, 60, 67, 0.4)" />
             </TouchableOpacity>
-          );
-        })}
+          )}
+        </View>
+
+        {/* Segment Tabs (Pills) */}
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.segmentRow}>
+          {shelves.map(shelf => {
+            const isActive = activeShelf === shelf.id;
+            return (
+              <TouchableOpacity
+                key={shelf.id}
+                style={[styles.segmentBtn, isActive && styles.segmentBtnActive]}
+                onPress={() => setActiveShelf(shelf.id)}
+                activeOpacity={0.7}
+              >
+                <Text style={[styles.segmentBtnText, isActive && styles.segmentBtnTextActive]}>
+                  {shelf.label}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
+        </ScrollView>
       </View>
 
-      {/* Kitap Listesi */}
+      {/* 2. KİTAP LİSTESİ */}
       <ScrollView contentContainerStyle={styles.listContent}>
-        {filteredUserBooks.length > 0 ? (
-          filteredUserBooks.map(ub => {
-            const book = books.find(b => b.id === ub.bookId) || {
-              title: 'Bilinmeyen Kitap',
-              author: 'Bilinmeyen Yazar',
-              pages: ub.totalPages,
-              coverUrl: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=300&h=450&q=80'
+        {filteredBooks.length > 0 ? (
+          filteredBooks.map(book => {
+            const ub = (userBooks || []).find(u => u.bookId === book.id) || {
+              currentPage: 0,
+              totalPages: book.pages || 350,
+              status: 'want_to_read'
             };
 
-            const progressPct = Math.min(100, Math.round((ub.currentPage / ub.totalPages) * 100));
+            const progressPct = Math.min(100, Math.round(((ub.currentPage || 0) / (ub.totalPages || book.pages || 350)) * 100));
 
             return (
-              <View key={ub.id} style={styles.bookCard}>
-                <BookCover 
-                  uri={book.coverUrl} 
-                  title={book.title} 
-                  author={book.author} 
+              <View key={book.id} style={styles.bookCard}>
+                <Image 
+                  source={{ uri: book.coverUrl || 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=300&h=450&q=80' }} 
                   style={styles.coverImage} 
                 />
 
                 <View style={styles.bookMeta}>
-                  <Text style={styles.bookTitle}>{book.title}</Text>
-                  <Text style={styles.bookAuthor}>{book.author}</Text>
+                  <View style={styles.bookTitleRow}>
+                    <Text style={styles.bookTitle} numberOfLines={1}>{book.title}</Text>
+                    
+                    {/* iOS Status Badge */}
+                    {ub.status === 'reading' && (
+                      <View style={styles.badgeBlue}>
+                        <Text style={styles.badgeBlueText}>Okunuyor</Text>
+                      </View>
+                    )}
+                    {ub.status === 'read' && (
+                      <View style={styles.badgeGreen}>
+                        <Text style={styles.badgeGreenText}>Okundu</Text>
+                      </View>
+                    )}
+                    {ub.status === 'want_to_read' && (
+                      <View style={styles.badgePurple}>
+                        <Text style={styles.badgePurpleText}>İstek</Text>
+                      </View>
+                    )}
+                  </View>
+
+                  <Text style={styles.bookAuthor}>{book.author} • {book.pages || 350} sayfa</Text>
 
                   {/* İlerleme Çubuğu */}
                   <View style={styles.progressSection}>
                     <View style={styles.progressTrack}>
-                      <View style={[styles.progressFill, { width: `${progressPct}%` }]} />
+                      <View style={[styles.progressFill, { width: `${Math.max(4, progressPct)}%` }]} />
                     </View>
                     <View style={styles.progressInfoRow}>
                       <Text style={styles.progressText}>
-                        {ub.currentPage} / {ub.totalPages} sayfa
+                        {ub.currentPage || 0} / {ub.totalPages || book.pages || 350} sayfa
                       </Text>
                       <Text style={styles.progressPctText}>%{progressPct}</Text>
                     </View>
                   </View>
 
                   {/* Butonlar */}
-                  <View style={styles.bookActions}>
+                  <View style={styles.bookCardActions}>
                     <TouchableOpacity
-                      style={styles.updateProgressBtn}
-                      onPress={() => openProgressModal(ub, book)}
+                      style={styles.actionBtnPrimary}
+                      onPress={() => startReadingThisBook(book, ub)}
+                      activeOpacity={0.8}
                     >
-                      <Ionicons name="pencil" size={12} color={colors.textMain} />
-                      <Text style={styles.updateProgressText}>İlerleme</Text>
+                      <Ionicons name="play" size={13} color="#fff" />
+                      <Text style={styles.actionBtnPrimaryText}>Okumaya Başla</Text>
                     </TouchableOpacity>
 
-                    {activeShelf === 'reading' && (
-                      <TouchableOpacity
-                        style={styles.readNowBtn}
-                        onPress={() => startReadingThisBook(book, ub)}
-                      >
-                        <Ionicons name="play" size={11} color="#fff" />
-                        <Text style={styles.readNowText}>Oku</Text>
-                      </TouchableOpacity>
-                    )}
+                    <TouchableOpacity
+                      style={styles.actionBtnSecondary}
+                      onPress={() => openProgressModal(ub, book)}
+                      activeOpacity={0.8}
+                    >
+                      <Ionicons name="bookmark-outline" size={13} color="#007AFF" />
+                      <Text style={styles.actionBtnSecondaryText}>Sayfa Güncelle</Text>
+                    </TouchableOpacity>
                   </View>
                 </View>
               </View>
             );
           })
         ) : (
-          <View style={styles.emptyContainer}>
-            <Ionicons name="library-outline" size={44} color={colors.textDim} style={{ marginBottom: 10 }} />
-            <Text style={styles.emptyTitle}>Bu rafta henüz kitap yok</Text>
-            <Text style={styles.emptyDesc}>Web veya mobilde eklediğiniz tüm kitaplar burada ortak olarak listelenir.</Text>
+          <View style={styles.emptyBox}>
+            <Ionicons name="book-outline" size={44} color="rgba(60,60,67,0.3)" />
+            <Text style={styles.emptyTitle}>Kitap Bulunamadı</Text>
+            <Text style={styles.emptySub}>Arama filtrenizi değiştirerek tekrar deneyebilirsiniz.</Text>
           </View>
         )}
       </ScrollView>
@@ -139,36 +198,34 @@ export const LibraryScreen = () => {
         animationType="fade"
         onRequestClose={() => setSelectedBook(null)}
       >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Sayfa İlerlemesini Güncelle</Text>
-            <Text style={styles.modalSub}>{selectedBook?.book.title}</Text>
+        <View style={styles.progressModalOverlay}>
+          <View style={styles.progressModalCard}>
+            <Text style={styles.progressModalTitle}>İlerlemeyi Güncelle</Text>
+            <Text style={styles.progressModalSub}>
+              {selectedBook?.book.title} kitabında kaçıncı sayfadasınız?
+            </Text>
 
-            <View style={styles.pageInputRow}>
-              <Text style={styles.inputLabel}>Okunan Sayfa:</Text>
-              <TextInput
-                style={styles.textInput}
-                keyboardType="numeric"
-                value={editPage}
-                onChangeText={setEditPage}
-                placeholder="Örn: 240"
-                placeholderTextColor={colors.textDim}
-              />
-              <Text style={styles.maxPagesText}>/ {selectedBook?.ub.totalPages}</Text>
-            </View>
+            <TextInput
+              style={styles.progressInput}
+              keyboardType="number-pad"
+              value={editPage}
+              onChangeText={setEditPage}
+              placeholder="Sayfa numarası"
+              autoFocus
+            />
 
-            <View style={styles.modalButtons}>
-              <TouchableOpacity
-                style={styles.cancelBtn}
+            <View style={styles.progressModalActions}>
+              <TouchableOpacity 
+                style={styles.cancelModalBtn}
                 onPress={() => setSelectedBook(null)}
               >
-                <Text style={styles.cancelBtnText}>Vazgeç</Text>
+                <Text style={styles.cancelModalBtnText}>Vazgeç</Text>
               </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.saveBtn}
+              <TouchableOpacity 
+                style={styles.saveModalBtn}
                 onPress={handleSaveProgress}
               >
-                <Text style={styles.saveBtnText}>Kaydet</Text>
+                <Text style={styles.saveModalBtnText}>Kaydet</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -181,224 +238,291 @@ export const LibraryScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.bgApp
+    backgroundColor: '#F2F2F7'
   },
-  shelfTabsRow: {
-    flexDirection: 'row',
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    gap: 8,
+  searchHeader: {
+    backgroundColor: '#FFFFFF',
+    paddingHorizontal: 14,
+    paddingTop: 10,
+    paddingBottom: 10,
     borderBottomWidth: 1,
-    borderBottomColor: colors.borderSubtle
+    borderBottomColor: 'rgba(60, 60, 67, 0.12)'
   },
-  shelfTab: {
-    paddingHorizontal: 12,
+  searchBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    backgroundColor: 'rgba(120, 120, 128, 0.1)',
+    borderRadius: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    marginBottom: 10
+  },
+  searchInput: {
+    flex: 1,
+    fontSize: 13.5,
+    color: '#000000',
+    padding: 0
+  },
+  segmentRow: {
+    flexDirection: 'row'
+  },
+  segmentBtn: {
+    paddingHorizontal: 14,
     paddingVertical: 6,
-    borderRadius: 16,
-    backgroundColor: colors.bgCard,
-    borderWidth: 1,
-    borderColor: colors.borderSubtle
+    borderRadius: 999,
+    backgroundColor: 'rgba(120, 120, 128, 0.08)',
+    marginRight: 8
   },
-  shelfTabActive: {
-    backgroundColor: colors.primaryLight,
-    borderColor: colors.primary
+  segmentBtnActive: {
+    backgroundColor: '#007AFF'
   },
-  shelfTabText: {
-    fontSize: 12,
+  segmentBtnText: {
+    fontSize: 12.5,
     fontWeight: '600',
-    color: colors.textDim
+    color: 'rgba(60, 60, 67, 0.7)'
   },
-  shelfTabTextActive: {
-    color: colors.primary,
-    fontWeight: '700'
+  segmentBtnTextActive: {
+    color: '#FFFFFF'
   },
+
   listContent: {
-    padding: 16,
+    padding: 14,
     paddingBottom: 40
   },
   bookCard: {
-    backgroundColor: colors.bgCard,
+    flexDirection: 'row',
+    backgroundColor: '#FFFFFF',
     borderRadius: 14,
     borderWidth: 1,
-    borderColor: colors.borderSubtle,
+    borderColor: 'rgba(60, 60, 67, 0.16)',
     padding: 12,
-    flexDirection: 'row',
     marginBottom: 12,
-    gap: 12
+    gap: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1.5 },
+    shadowOpacity: 0.04,
+    shadowRadius: 5,
+    elevation: 2
   },
   coverImage: {
-    width: 65,
-    height: 95,
-    borderRadius: 8,
-    backgroundColor: colors.bgElevated
+    width: 60,
+    height: 88,
+    borderRadius: 6,
+    backgroundColor: '#8B4A34'
   },
   bookMeta: {
     flex: 1,
     justifyContent: 'space-between'
   },
+  bookTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 6
+  },
   bookTitle: {
-    fontSize: 15,
+    fontSize: 14.5,
     fontWeight: '700',
-    color: colors.textMain
+    color: '#000000',
+    flex: 1
   },
   bookAuthor: {
     fontSize: 12,
-    color: colors.textMuted,
+    color: 'rgba(60, 60, 67, 0.6)',
     marginTop: 2
   },
+
+  badgeBlue: {
+    backgroundColor: 'rgba(0, 122, 255, 0.12)',
+    borderColor: 'rgba(0, 122, 255, 0.3)',
+    borderWidth: 1,
+    borderRadius: 999,
+    paddingHorizontal: 8,
+    paddingVertical: 2
+  },
+  badgeBlueText: {
+    color: '#007AFF',
+    fontSize: 10.5,
+    fontWeight: '700'
+  },
+  badgeGreen: {
+    backgroundColor: 'rgba(52, 199, 89, 0.14)',
+    borderColor: 'rgba(52, 199, 89, 0.3)',
+    borderWidth: 1,
+    borderRadius: 999,
+    paddingHorizontal: 8,
+    paddingVertical: 2
+  },
+  badgeGreenText: {
+    color: '#34C759',
+    fontSize: 10.5,
+    fontWeight: '700'
+  },
+  badgePurple: {
+    backgroundColor: 'rgba(175, 82, 222, 0.14)',
+    borderColor: 'rgba(175, 82, 222, 0.3)',
+    borderWidth: 1,
+    borderRadius: 999,
+    paddingHorizontal: 8,
+    paddingVertical: 2
+  },
+  badgePurpleText: {
+    color: '#AF52DE',
+    fontSize: 10.5,
+    fontWeight: '700'
+  },
+
   progressSection: {
     marginVertical: 6
   },
   progressTrack: {
     height: 5,
-    backgroundColor: colors.bgElevated,
+    backgroundColor: 'rgba(120, 120, 128, 0.12)',
     borderRadius: 3,
     overflow: 'hidden'
   },
   progressFill: {
     height: '100%',
-    backgroundColor: colors.primary
+    backgroundColor: '#007AFF',
+    borderRadius: 3
   },
   progressInfoRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 4
+    marginTop: 3
   },
   progressText: {
-    fontSize: 10,
-    color: colors.textDim
+    fontSize: 10.5,
+    color: 'rgba(60, 60, 67, 0.5)'
   },
   progressPctText: {
-    fontSize: 10,
+    fontSize: 10.5,
     fontWeight: '700',
-    color: colors.primary
+    color: '#007AFF'
   },
-  bookActions: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8
-  },
-  updateProgressBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    backgroundColor: colors.bgElevated,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 6
-  },
-  updateProgressText: {
-    fontSize: 11,
-    color: colors.textMain,
-    fontWeight: '600'
-  },
-  readNowBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    backgroundColor: colors.primary,
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 6
-  },
-  readNowText: {
-    fontSize: 11,
-    color: '#fff',
-    fontWeight: '700'
-  },
-  emptyContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 60,
-    paddingHorizontal: 30
-  },
-  emptyTitle: {
-    fontSize: 15,
-    fontWeight: '700',
-    color: colors.textMain,
-    marginBottom: 4
-  },
-  emptyDesc: {
-    fontSize: 12,
-    color: colors.textDim,
-    textAlign: 'center',
-    lineHeight: 18
-  },
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.7)',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 20
-  },
-  modalContent: {
-    width: '100%',
-    maxWidth: 340,
-    backgroundColor: colors.bgCard,
-    borderRadius: 16,
-    padding: 20,
-    borderWidth: 1,
-    borderColor: colors.borderSubtle
-  },
-  modalTitle: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: colors.textMain
-  },
-  modalSub: {
-    fontSize: 12,
-    color: colors.primary,
-    marginBottom: 14
-  },
-  pageInputRow: {
+
+  bookCardActions: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
-    marginBottom: 18
+    marginTop: 4
   },
-  inputLabel: {
-    fontSize: 12,
-    color: colors.textMain,
-    fontWeight: '600'
-  },
-  textInput: {
-    backgroundColor: colors.bgInput,
+  actionBtnPrimary: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    backgroundColor: '#007AFF',
     borderRadius: 8,
-    borderWidth: 1,
-    borderColor: colors.borderSubtle,
     paddingHorizontal: 10,
-    paddingVertical: 6,
-    color: colors.textMain,
-    fontSize: 15,
-    width: 80,
+    paddingVertical: 5
+  },
+  actionBtnPrimaryText: {
+    color: '#FFFFFF',
+    fontSize: 11.5,
+    fontWeight: '700'
+  },
+  actionBtnSecondary: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    backgroundColor: 'rgba(0, 122, 255, 0.1)',
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    paddingVertical: 5
+  },
+  actionBtnSecondaryText: {
+    color: '#007AFF',
+    fontSize: 11.5,
+    fontWeight: '700'
+  },
+
+  emptyBox: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 60
+  },
+  emptyTitle: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#000000',
+    marginTop: 10
+  },
+  emptySub: {
+    fontSize: 12.5,
+    color: 'rgba(60, 60, 67, 0.6)',
+    marginTop: 4,
+    textAlign: 'center',
+    maxWidth: 260
+  },
+
+  // Modal
+  progressModalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20
+  },
+  progressModalCard: {
+    width: '100%',
+    maxWidth: 320,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    padding: 20
+  },
+  progressModalTitle: {
+    fontSize: 16,
+    fontWeight: '800',
+    color: '#000000',
     textAlign: 'center'
   },
-  maxPagesText: {
-    fontSize: 12,
-    color: colors.textDim
+  progressModalSub: {
+    fontSize: 12.5,
+    color: 'rgba(60, 60, 67, 0.6)',
+    textAlign: 'center',
+    marginTop: 6,
+    marginBottom: 16
   },
-  modalButtons: {
+  progressInput: {
+    backgroundColor: 'rgba(120, 120, 128, 0.08)',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: 'rgba(60, 60, 67, 0.15)',
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#000000',
+    textAlign: 'center',
+    marginBottom: 16
+  },
+  progressModalActions: {
     flexDirection: 'row',
-    justifyContent: 'flex-end',
     gap: 10
   },
-  cancelBtn: {
-    paddingVertical: 8,
-    paddingHorizontal: 12
+  cancelModalBtn: {
+    flex: 1,
+    backgroundColor: 'rgba(120, 120, 128, 0.1)',
+    borderRadius: 10,
+    paddingVertical: 10,
+    alignItems: 'center'
   },
-  cancelBtnText: {
-    color: colors.textMuted,
-    fontSize: 13
-  },
-  saveBtn: {
-    backgroundColor: colors.primary,
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderRadius: 8
-  },
-  saveBtnText: {
-    color: '#fff',
+  cancelModalBtnText: {
     fontSize: 13,
-    fontWeight: '700'
+    fontWeight: '600',
+    color: '#000000'
+  },
+  saveModalBtn: {
+    flex: 1,
+    backgroundColor: '#007AFF',
+    borderRadius: 10,
+    paddingVertical: 10,
+    alignItems: 'center'
+  },
+  saveModalBtnText: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: '#FFFFFF'
   }
 });

@@ -43,7 +43,7 @@ const MainNavigator = () => {
 
   return (
     <View style={styles.rootContainer}>
-      <StatusBar barStyle="light-content" translucent backgroundColor="transparent" />
+      <StatusBar barStyle="dark-content" translucent backgroundColor="transparent" />
       
       {/* Toast Notification Banner */}
       {toastMessage && (

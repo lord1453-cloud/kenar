@@ -23,16 +23,8 @@ export const Header = ({ topInset = 28 }) => {
           <Ionicons name="book" size={17} color="#fff" />
         </View>
         <View>
-          <Text style={styles.brandTitle}>Kitap Kulübü</Text>
-          <TouchableOpacity
-            style={styles.betaPill}
-            onPress={() => setIsFeedbackOpen(true)}
-            activeOpacity={0.7}
-            hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-          >
-            <Ionicons name="bug" size={10} color={colors.star} />
-            <Text style={styles.betaPillText}>Beta 0.1.0 • Hata Bildir</Text>
-          </TouchableOpacity>
+          <Text style={styles.brandTitle}>Kenar</Text>
+          <Text style={styles.brandSub}>Kitap Kulübü</Text>
         </View>
       </View>
 
@@ -87,10 +79,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 16,
-    paddingBottom: 14,
-    backgroundColor: colors.bgApp,
+    paddingBottom: 12,
+    backgroundColor: '#FFFFFF',
     borderBottomWidth: 1,
-    borderBottomColor: colors.borderSubtle
+    borderBottomColor: 'rgba(60, 60, 67, 0.15)'
   },
   brandRow: {
     flexDirection: 'row',
@@ -101,20 +93,25 @@ const styles = StyleSheet.create({
     width: 34,
     height: 34,
     borderRadius: 10,
-    backgroundColor: colors.primary,
+    backgroundColor: '#007AFF',
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: colors.primary,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 3
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 2
   },
   brandTitle: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: '800',
-    color: colors.textMain,
-    letterSpacing: -0.4
+    color: '#000000',
+    letterSpacing: -0.5
+  },
+  brandSub: {
+    fontSize: 11,
+    color: 'rgba(60, 60, 67, 0.6)',
+    fontWeight: '600'
   },
   betaPill: {
     flexDirection: 'row',
