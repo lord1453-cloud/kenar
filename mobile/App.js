@@ -1,5 +1,7 @@
 import React from 'react';
-import { View, StyleSheet, StatusBar, Text, Platform } from 'react-native';
+import { View, StyleSheet, StatusBar, Text, Platform, LogBox } from 'react-native';
+
+LogBox.ignoreAllLogs(true);
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MobileProvider, useMobile } from './src/context/MobileContext';
 import { Header } from './src/components/common/Header';

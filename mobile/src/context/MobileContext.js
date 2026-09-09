@@ -117,11 +117,13 @@ export const MobileProvider = ({ children }) => {
         const saved = await AsyncStorage.getItem('kk_mobile_user');
         if (saved) {
           const parsed = JSON.parse(saved);
-          setCurrentUser(parsed);
-          setStoredUserId(parsed.id);
+          if (parsed && parsed.id) {
+            setCurrentUser(parsed);
+            setStoredUserId(parsed.id);
+          }
         }
-      } catch (err) {
-        console.error('Failed to load mobile session', err);
+      } catch {
+        // Oturum hatası durumunda varsayılan yerel kullanıcıyla devam edilir
       }
     };
     loadSession();
