@@ -20,28 +20,6 @@ export const HomeScreen = () => {
   const [thoughtBookTitle, setThoughtBookTitle] = useState('Dune');
   const [thoughtPage, setThoughtPage] = useState('');
 
-  const handleShareThought = () => {
-    if (!newThought.trim()) return;
-    const newPost = {
-      id: `p-${Date.now()}`,
-      userName: currentUser?.fullName || 'Kitap Kulübü Okuru',
-      userRole: currentUser?.role || 'user',
-      avatar: currentUser?.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&h=200&q=80',
-      bookTitle: thoughtBookTitle || 'Okuma Notu',
-      bookAuthor: '',
-      content: newThought.trim(),
-      likes: 0,
-      isLiked: false,
-      comments: 0,
-      page: thoughtPage ? parseInt(thoughtPage, 10) : 1,
-      timeAgo: 'Az önce'
-    };
-    setPosts(prev => [newPost, ...prev]);
-    setNewThought('');
-    setThoughtPage('');
-    showToast('Kenar notunuz okur akışında paylaşıldı!');
-  };
-
   const [posts, setPosts] = useState([
     {
       id: 'p-1',
@@ -99,6 +77,28 @@ export const HomeScreen = () => {
       }
       return p;
     }));
+  };
+
+  const handleShareThought = () => {
+    if (!newThought || !newThought.trim()) return;
+    const newPost = {
+      id: `p-${Date.now()}`,
+      userName: currentUser?.fullName || 'Kitap Kulübü Okuru',
+      userRole: currentUser?.role || 'user',
+      avatar: currentUser?.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&h=200&q=80',
+      bookTitle: thoughtBookTitle || 'Okuma Notu',
+      bookAuthor: '',
+      content: newThought.trim(),
+      likes: 0,
+      isLiked: false,
+      comments: 0,
+      page: thoughtPage ? parseInt(thoughtPage, 10) : 1,
+      timeAgo: 'Az önce'
+    };
+    setPosts(prev => [newPost, ...prev]);
+    setNewThought('');
+    setThoughtPage('');
+    showToast('Kenar notunuz okur akışında paylaşıldı!');
   };
 
   return (
