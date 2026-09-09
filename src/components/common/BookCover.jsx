@@ -22,15 +22,25 @@ const getPaletteForTitle = (title = '') => {
   return COVER_PALETTES[index];
 };
 
+const isBlockedOrBrokenUrl = (url) => {
+  if (!url || typeof url !== 'string') return true;
+  // OpenLibrary Türkiye'de BTK tarafından engellenen archive.org'a yönlendirir, goodreads ise hotlinking engellidir
+  if (url.includes('covers.openlibrary.org') || url.includes('archive.org')) return true;
+  if (url.includes('compressed.photo.goodreads.com')) return true;
+  if (url.includes('books.google.com/books/content')) return true; // Boş/hatalı dönen Google Books parametreleri
+  return false;
+};
+
 /**
  * BookCover:
- * 1. Orijinal 1:1 kitap kapağını görüntüler.
- * 2. Görsel yüklenemezse veya hata verirse zarif bir kitap mockup'ı üzerinde
- *    SADECE kitap ismini gösteren fallback görselini sunar.
+ * 1. Kitapyurdu CDN ve yerel /covers/ klasöründen birebir orijinal kitap kapaklarını kesintisiz görüntüler.
+ * 2. Görsel yüklenemezse veya engelliyse zarif bir klasik cilt mockup'ı üzerinde
+ *    kitap ismini ve yazarını lüks tasarımla sunar.
  */
 export const BookCover = ({
   src,
   title = '',
+  author = '',
   alt,
   className = '',
   style = {},
@@ -38,51 +48,38 @@ export const BookCover = ({
   loading = 'lazy'
 }) => {
   const [hasError, setHasError] = useState(false);
-  const [triedFallback, setTriedFallback] = useState(false);
   const [activeUrl, setActiveUrl] = useState('');
 
   // En iyi görsel kaynağını belirle
   React.useEffect(() => {
     setHasError(false);
-    setTriedFallback(false);
 
-    // 1. Önce doğrudan gelen src geçerliyse ve bozuk goodreads linki değilse
-    if (src && !src.includes('compressed.photo.goodreads.com')) {
-      setActiveUrl(src);
-      return;
-    }
-
-    // 2. Real cover tablosunda doğrulanmış görsel ara
+    // 1. Önce doğrulanmış gerçek kitap kapakları tablosunda ara
     const real = getRealBookCover(title);
-    if (real && !real.includes('compressed.photo.goodreads.com')) {
+    if (real && !isBlockedOrBrokenUrl(real)) {
       setActiveUrl(real);
       return;
     }
 
-    // 3. Varsa orijinal src'yi dene
-    if (src) {
+    // 2. Gelen src geçerliyse ve engelli değilse kullan
+    if (src && !isBlockedOrBrokenUrl(src)) {
       setActiveUrl(src);
-    } else {
-      setHasError(true);
+      return;
     }
+
+    // 3. Geçerli görsel yoksa doğrudan zarif cilt kapağına geç
+    setActiveUrl('');
+    setHasError(true);
   }, [src, title]);
 
   const palette = React.useMemo(() => getPaletteForTitle(title), [title]);
 
   const handleImgError = () => {
-    if (!triedFallback) {
-      setTriedFallback(true);
-      const real = getRealBookCover(title);
-      if (real && real !== activeUrl && !real.includes('compressed.photo.goodreads.com')) {
-        setActiveUrl(real);
-        return;
-      }
-    }
     setHasError(true);
   };
 
   const handleImgLoad = (e) => {
-    // OpenLibrary ve bazı CDN'ler görsel bulunamadığında 1x1 şeffaf GIF döner
+    // Görsel 1x1 veya 2x2 piksel ise (sahte boş yanıt) doğrudan fallback kapağa geç
     if (e.currentTarget.naturalWidth <= 2 || e.currentTarget.naturalHeight <= 2) {
       handleImgError();
     }

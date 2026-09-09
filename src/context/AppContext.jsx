@@ -121,11 +121,14 @@ export const AppProvider = ({ children }) => {
         list.push(cb);
       }
     });
-    // Kitap kapaklarını 1:1 orijinal gerçek kapaklarla senkronize et
+    // Kitap kapaklarını 1:1 orijinal gerçek kapaklarla senkronize et (eski localStorage cache'ini temizle)
     list = list.map(b => {
       const realCover = getRealBookCover(b.title);
       if (realCover) {
         return { ...b, cover: realCover };
+      }
+      if (b.cover && (b.cover.includes('openlibrary.org') || b.cover.includes('archive.org') || b.cover.includes('google.com/books'))) {
+        return { ...b, cover: null };
       }
       return b;
     });
