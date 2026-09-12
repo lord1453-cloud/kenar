@@ -1,8 +1,7 @@
 import React from 'react';
 import { 
   Home, 
-  PenLine, 
-  Radio, 
+  MessagesSquare, 
   Users, 
   BookMarked, 
   User 
@@ -14,9 +13,9 @@ export const BottomNav = () => {
 
   const navItems = [
     { id: 'feed', label: 'Akış', icon: Home },
+    { id: 'rooms', label: 'Odalar', icon: MessagesSquare },
+    { id: 'research', label: 'Kitap Ara', icon: BookMarked },
     { id: 'profiles', label: 'Okurlar', icon: Users },
-    { id: 'research', label: 'Araştır', icon: BookMarked },
-    { id: 'library', label: 'Kitaplığım', icon: Radio },
     { id: 'profile', label: 'Profilim', icon: User }
   ];
 

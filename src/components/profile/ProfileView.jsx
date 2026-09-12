@@ -18,7 +18,9 @@ import {
   Check, 
   Heart,
   ExternalLink,
-  Plus
+  Plus,
+  Trash2,
+  FolderOpen
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { FEATURED_COVERS } from '../../data/featuredBooksCovers';
@@ -26,6 +28,8 @@ import { BookCover } from '../common/BookCover';
 import { ReadingGoalCalendar } from './ReadingGoalCalendar';
 import { FollowListModal } from './FollowListModal';
 import { PostCard } from '../feed/PostCard';
+import { APPLE_FOLDER_COLORS } from './ProfileFoldersModal';
+import '../../styles/research-folders.css';
 
 export const ProfileView = () => {
   const { 
@@ -46,6 +50,8 @@ export const ProfileView = () => {
     setIsEditProfileOpen,
     setIsPrivacyOpen,
     setIsCreatePostOpen,
+    removeUserBook,
+    removeFromWishlist,
     showToast 
   } = useApp();
 
@@ -59,7 +65,28 @@ export const ProfileView = () => {
 
   // Profil Alt Sekmeleri: 'shelves' | 'books' | 'calendar' | 'posts'
   const [activeSubTab, setActiveSubTab] = useState('shelves');
-  const [activeColorDot, setActiveColorDot] = useState('var(--accent)');
+  const [tabHistory, setTabHistory] = useState(['shelves']);
+
+  const handleTabChange = (newTab) => {
+    if (newTab !== activeSubTab) {
+      setTabHistory(prev => [...prev, newTab]);
+      setActiveSubTab(newTab);
+    }
+  };
+
+  const handleGoBack = () => {
+    if (tabHistory.length > 1) {
+      const nextHist = [...tabHistory];
+      nextHist.pop();
+      const prevTab = nextHist[nextHist.length - 1];
+      setTabHistory(nextHist);
+      setActiveSubTab(prevTab);
+    } else if (!isOwnProfile) {
+      setViewingUserId(null);
+    } else {
+      setActiveSubTab('shelves');
+    }
+  };
 
   // Takipçi / Takip Edilen Modalı Durumu
   const [followModal, setFollowModal] = useState({
@@ -79,28 +106,8 @@ export const ProfileView = () => {
     return `${minutes} dk`;
   };
 
-  // Hedef kullanıcının klasörleri
+  // Hedef kullanıcının klasörleri (Yalnızca kullanıcının eklediği klasörler)
   const targetUserFolders = (userFolders || []).filter(f => f.userId === targetUser?.id);
-  
-  // Varsayılan klasör çipleri (kullanıcının özel klasörleri yoksa veya demo için)
-  const defaultChips = [
-    { id: 'fc-1', name: 'Favorilerim', count: '14 kitap', bg: '#F6D3D9' },
-    { id: 'fc-2', name: 'Yeniden Okunacaklar', count: '6 kitap', bg: '#F5DEC0' },
-    { id: 'fc-3', name: 'Yaz Okumaları', count: '9 kitap', bg: '#F5E7B8' },
-    { id: 'fc-4', name: 'Şiir Köşem', count: '5 kitap', bg: '#E7D6F2' }
-  ];
-
-  const customUserChips = targetUserFolders.map(uf => ({
-    id: uf.id,
-    name: uf.name,
-    count: `${uf.bookIds ? uf.bookIds.length : 0} kitap`,
-    bg: uf.color || '#CFE3F2'
-  }));
-
-  const allChips = customUserChips.length > 0 
-    ? [...customUserChips, ...defaultChips].slice(0, 12)
-    : defaultChips;
-  const totalCount = allChips.length;
 
   // Hedef kullanıcının okuduğu / okumakta olduğu kitaplar
   const userReadingRecords = (userBooks || []).filter(ub => ub.userId === targetUser?.id);
@@ -121,18 +128,17 @@ export const ProfileView = () => {
     }))
     .filter(item => Boolean(item.book));
 
+  // İstek Listesi
+  const wishlistItems = userReadingRecords
+    .filter(ub => ub.status === 'to_read')
+    .map(ub => ({
+      ...ub,
+      book: books.find(b => b.id === ub.bookId)
+    }))
+    .filter(item => Boolean(item.book));
+
   // Hedef kullanıcının gönderileri
   const userPosts = (posts || []).filter(p => p.userId === targetUser?.id || p.author?.id === targetUser?.id);
-
-  const colorPalette = [
-    'var(--accent)',
-    'var(--green)',
-    'var(--orange)',
-    'var(--purple)',
-    'var(--red)',
-    '#32ADE6',
-    '#5856D6'
-  ];
 
   const avatarUrl = targetUser?.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&h=300&q=80';
 
@@ -155,7 +161,7 @@ export const ProfileView = () => {
     if (targetUser?.role === 'admin') {
       return (
         <span className="badge badge-purple" style={{ padding: '4px 10px', fontSize: '12px' }}>
-          🛡️ Topluluk Moderatörü
+          🛡️ Topluluk Yöneticisi
         </span>
       );
     }
@@ -172,6 +178,31 @@ export const ProfileView = () => {
       </span>
     );
   };
+
+  // YÖNETİCİ PROFİLİ GİZLİLİĞİ: Yöneticinin yalnızca kendine açık profili var. Kullanıcılar, onu sadece ana akışta, veya bildirilerde görebilir.
+  if ((targetUser?.role === 'admin' || targetUser?.role === 'founder') && !isOwnProfile) {
+    return (
+      <div className="content wide" style={{ maxWidth: '640px', margin: '40px auto', textAlign: 'center', padding: '50px 24px', background: 'var(--bg-surface)', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-subtle)', boxShadow: '0 8px 30px rgba(0,0,0,0.08)' }}>
+        <div style={{ width: '68px', height: '68px', borderRadius: '50%', background: 'rgba(245, 158, 11, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
+          <Shield size={34} color="#f59e0b" />
+        </div>
+        <h3 style={{ fontSize: '1.35rem', fontWeight: 800, margin: '0 0 8px', color: 'var(--text-main)' }}>
+          Yönetici Profili Gizlidir
+        </h3>
+        <p style={{ color: 'var(--text-muted)', fontSize: '0.92rem', maxWidth: '440px', margin: '0 auto 24px', lineHeight: 1.55 }}>
+          Yöneticinin yalnızca kendine açık bir profili bulunmaktadır. Kullanıcılar yöneticileri yalnızca ana akışta ve paylaştıkları resmi bildirilerde görebilir.
+        </p>
+        <button 
+          className="btn btn-primary"
+          onClick={() => setViewingUserId(null)}
+          style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '9px 20px', borderRadius: 'var(--radius-full)' }}
+        >
+          <ArrowLeft size={16} />
+          <span>Kendi Profilime Dön</span>
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="content wide" style={{ maxWidth: '980px', margin: '0 auto', paddingBottom: '60px' }}>
@@ -202,13 +233,23 @@ export const ProfileView = () => {
               <button
                 key={u.id}
                 className={`profile-beta-user-pill ${isCurrentView ? 'active' : ''}`}
-                onClick={() => setViewingUserId(u.id)}
+                onClick={() => {
+                  setViewingUserId(u.id);
+                  setTabHistory(['shelves']);
+                  setActiveSubTab('shelves');
+                }}
                 title={`${u.fullName} profilini incele`}
               >
                 <img 
                   src={u.avatar} 
                   alt={u.fullName} 
-                  style={{ width: '22px', height: '22px', borderRadius: '50%', objectFit: 'cover' }} 
+                  style={{ 
+                    width: '22px', 
+                    height: '22px', 
+                    borderRadius: '50%', 
+                    objectFit: 'cover',
+                    filter: u.isBlurred ? 'blur(4px)' : 'none'
+                  }} 
                 />
                 <span>{u.fullName}</span>
                 {u.role === 'founder' && <span style={{ fontSize: '0.7rem' }}>👑</span>}
@@ -220,213 +261,264 @@ export const ProfileView = () => {
         </div>
       </div>
 
-      {/* Başka bir kullanıcının profili inceleniyorsa: Geri Dön Butonu */}
-      {!isOwnProfile && (
-        <button 
-          className="profile-return-banner" 
-          onClick={() => setViewingUserId(null)}
-        >
-          <ArrowLeft size={15} />
-          <span>Kendi Profilime Dön (<strong>{currentUser?.fullName}</strong>)</span>
-        </button>
-      )}
-
-      {/* 2. PROFİL KAPAK BANNERI */}
-      <div 
-        className="cover-banner" 
-        style={{
-          background: targetUser?.coverTheme 
-            ? targetUser.coverTheme 
-            : targetUser?.role === 'founder'
-            ? 'linear-gradient(135deg, #1C1C1E 0%, #3A2E2B 60%, #8B4A34 100%)'
-            : targetUser?.role === 'author'
-            ? 'linear-gradient(135deg, #182848 0%, #4b6cb7 100%)'
-            : 'linear-gradient(120deg, #455C46 0%, #8B4A34 100%)',
-          position: 'relative'
-        }}
-      >
-        <div style={{ position: 'absolute', right: '16px', bottom: '12px', fontSize: '0.78rem', color: 'rgba(255,255,255,0.85)', background: 'rgba(0,0,0,0.35)', padding: '4px 12px', borderRadius: 'var(--radius-full)', backdropFilter: 'blur(4px)' }}>
-          Katılım: {targetUser?.joinedDate || 'Ocak 2025'}
-        </div>
-      </div>
-
-      {/* 3. PROFİL BAŞLIĞI, AVATAR VE İSİM */}
-      <div className="profile-head" style={{ justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '16px' }}>
-        <div style={{ display: 'flex', alignItems: 'flex-start', gap: '18px' }}>
-          <div 
-            className="avatar" 
-            style={{ 
-              width: '92px', 
-              height: '92px',
-              backgroundImage: `url(${avatarUrl})`,
-              backgroundColor: '#8B4A34',
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              border: '4px solid var(--bg)',
-              boxShadow: '0 8px 24px rgba(0,0,0,0.18)'
-            }} 
-          />
-          <div className="profile-names">
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-              <span className="pn" style={{ fontSize: '1.45rem', fontWeight: 800 }}>{targetUser?.fullName}</span>
-              {getRoleBadge()}
-            </div>
-            <div className="pu" style={{ fontSize: '0.9rem', color: 'var(--text-dim)' }}>
-              @{targetUser?.username}
-            </div>
-            
-            {/* Okur Mottosu / Edebi Alıntı */}
-            {targetUser?.motto && (
-              <div style={{ margin: '6px 0 2px', fontSize: '0.92rem', fontStyle: 'italic', color: 'var(--label)', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <span style={{ color: 'var(--orange)' }}>“</span>
-                <span>{targetUser.motto}</span>
-                <span style={{ color: 'var(--orange)' }}>”</span>
-              </div>
+      {/* GERİ TUŞU: Herhangi bir alt sekmedeyken veya başka profildeyken daima belirir */}
+      {(activeSubTab !== 'shelves' || !isOwnProfile || tabHistory.length > 1) && (
+        <div style={{ marginBottom: '16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px' }}>
+          <button 
+            className="btn btn-secondary profile-back-btn" 
+            onClick={handleGoBack}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px',
+              padding: '8px 18px',
+              borderRadius: 'var(--radius-full)',
+              fontWeight: 700,
+              fontSize: '0.88rem',
+              background: 'var(--bg-surface-elevated)',
+              border: '1px solid var(--border-strong)',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+              cursor: 'pointer'
+            }}
+          >
+            <ArrowLeft size={16} />
+            <span>Geri</span>
+            {activeSubTab !== 'shelves' && (
+              <span style={{ fontSize: '0.78rem', color: 'var(--text-dim)', marginLeft: '4px' }}>
+                ({activeSubTab === 'books' ? 'Okuma Durumu' : activeSubTab === 'calendar' ? 'Takvim' : 'Gönderiler'})
+              </span>
             )}
+          </button>
 
-            {targetUser?.bio && (
-              <p style={{ margin: '4px 0 0', fontSize: '0.88rem', color: 'var(--text-muted)', maxWidth: '540px', lineHeight: 1.45 }}>
-                {targetUser.bio}
-              </p>
-            )}
-            
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: '8px', flexWrap: 'wrap' }}>
-              {targetUser?.favoriteGenre && (
-                <span style={{ fontSize: '0.78rem', color: 'var(--text-dim)', background: 'var(--bg-surface-elevated)', padding: '2px 8px', borderRadius: '4px', border: '1px solid var(--border-subtle)' }}>
-                  📚 Favori Tür: <strong>{targetUser.favoriteGenre}</strong>
-                </span>
-              )}
-              {targetUser?.readingGoal && (
-                <span style={{ fontSize: '0.78rem', color: 'var(--text-dim)', background: 'var(--bg-surface-elevated)', padding: '2px 8px', borderRadius: '4px', border: '1px solid var(--border-subtle)' }}>
-                  🎯 Yıllık Hedef: <strong>{targetUser.readingGoal} Kitap</strong>
-                </span>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Aksiyon Butonları */}
-        <div className="profile-action-group">
-          {isOwnProfile ? (
-            <>
-              <button 
-                className="profile-action-btn primary"
-                onClick={() => setIsEditProfileOpen(true)}
-              >
-                <Edit3 size={14} />
-                Profili Düzenle
-              </button>
-              <button 
-                className="profile-action-btn"
-                onClick={() => setIsPrivacyOpen(true)}
-                title="Gizlilik ve Görünürlük"
-              >
-                <Lock size={14} />
-                Gizlilik
-              </button>
-              <button 
-                className="profile-action-btn"
-                onClick={() => setIsFoldersModalOpen(true)}
-                title="Klasörleri Yönet"
-              >
-                <FolderPlus size={14} />
-                Klasörler
-              </button>
-            </>
-          ) : (
-            <>
-              <button 
-                className={`profile-action-btn ${isFollowing ? '' : 'primary'}`}
-                onClick={() => followUser(targetUser.id)}
-              >
-                {isFollowing ? (
-                  <>
-                    <UserCheck size={14} />
-                    Takip Ediliyor
-                  </>
-                ) : (
-                  <>
-                    <UserPlus size={14} />
-                    Takip Et
-                  </>
-                )}
-              </button>
-
-              <button 
-                className="profile-action-btn"
-                onClick={() => sendFriendRequest(targetUser.id)}
-                disabled={isFriend}
-              >
-                {isFriend ? '🤝 Arkadaşsınız' : 'Arkadaş Ekle'}
-              </button>
-            </>
+          {!isOwnProfile && (
+            <button 
+              className="btn btn-ghost btn-sm"
+              onClick={() => {
+                setViewingUserId(null);
+                setTabHistory(['shelves']);
+                setActiveSubTab('shelves');
+              }}
+              style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}
+            >
+              Kendi Profilime Dön (<strong>{currentUser?.fullName}</strong>)
+            </button>
           )}
         </div>
-      </div>
+      )}
 
-      {/* 4. DİNAMİK İSTATİSTİK SATIRI */}
-      <div className="stat-row" style={{ marginTop: '20px', display: 'flex', gap: '14px', flexWrap: 'wrap' }}>
-        <button 
-          className="profile-stat-interactive"
-          onClick={() => setActiveSubTab('books')} 
-          title="Okunan Kitapları Gör"
-        >
-          <div className="sv" style={{ fontSize: '1.25rem', fontWeight: 800 }}>
-            {completedBooksList.length > 0 ? completedBooksList.length : (targetUser?.readingGoal || 47)}
-          </div>
-          <div className="sl" style={{ fontSize: '0.78rem' }}>okuduğu kitap</div>
-        </button>
+      {/* 2. PROFİL BAŞLIĞI (KAPAK FOTOĞRAFI KALDIRILDI, YALNIZCA ZARİF PROFİL FOTOĞRAFI) */}
+      <div 
+        className="profile-head-clean" 
+        style={{
+          background: 'var(--bg-surface)',
+          borderRadius: 'var(--radius-lg)',
+          border: '1px solid var(--border-subtle)',
+          padding: '24px',
+          boxShadow: '0 4px 20px rgba(0,0,0,0.04)',
+          marginBottom: '20px'
+        }}
+      >
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '20px' }}>
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '20px', flexWrap: 'wrap' }}>
+            <div style={{ position: 'relative' }}>
+              <div 
+                className="avatar" 
+                style={{ 
+                  width: '96px', 
+                  height: '96px',
+                  backgroundImage: `url(${avatarUrl})`,
+                  backgroundColor: '#8B4A34',
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                  borderRadius: '50%',
+                  border: '3px solid var(--color-primary)',
+                  boxShadow: '0 8px 24px rgba(0,0,0,0.12)',
+                  filter: targetUser?.isBlurred ? 'blur(12px)' : 'none',
+                  transition: 'filter 0.3s ease'
+                }} 
+              />
+              {targetUser?.isBlurred && (
+                <div style={{
+                  position: 'absolute',
+                  bottom: '-6px',
+                  left: '50%',
+                  transform: 'translateX(-50%)',
+                  background: 'rgba(234, 179, 8, 0.95)',
+                  color: '#111',
+                  fontSize: '0.66rem',
+                  fontWeight: 800,
+                  padding: '2px 8px',
+                  borderRadius: '999px',
+                  whiteSpace: 'nowrap',
+                  boxShadow: '0 2px 6px rgba(0,0,0,0.2)'
+                }}>
+                  🛡️ Filtrelendi
+                </div>
+              )}
+            </div>
 
-        <button 
-          className="profile-stat-interactive"
-          onClick={() => setFollowModal({
-            isOpen: true,
-            title: `${targetUser?.fullName} — Takipçiler`,
-            userIds: targetUser?.followers || []
-          })}
-          title="Takipçileri İncele"
-        >
-          <div className="sv" style={{ fontSize: '1.25rem', fontWeight: 800, color: '#007AFF' }}>
-            {(targetUser?.followers || []).length}
-          </div>
-          <div className="sl" style={{ fontSize: '0.78rem' }}>takipçi</div>
-        </button>
+            <div className="profile-names" style={{ flex: 1, minWidth: '240px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                <span className="pn" style={{ fontSize: '1.45rem', fontWeight: 800 }}>{targetUser?.fullName}</span>
+                {getRoleBadge()}
+              </div>
+              <div className="pu" style={{ fontSize: '0.9rem', color: 'var(--text-dim)', marginTop: '2px' }}>
+                @{targetUser?.username} • Katılım: {targetUser?.joinedDate || 'Ocak 2025'}
+              </div>
+              
+              {/* Okur Mottosu / Edebi Alıntı */}
+              {targetUser?.motto && (
+                <div style={{ margin: '8px 0 4px', fontSize: '0.92rem', fontStyle: 'italic', color: 'var(--label)', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <span style={{ color: 'var(--orange)' }}>“</span>
+                  <span>{targetUser.motto}</span>
+                  <span style={{ color: 'var(--orange)' }}>”</span>
+                </div>
+              )}
 
-        <button 
-          className="profile-stat-interactive"
-          onClick={() => setFollowModal({
-            isOpen: true,
-            title: `${targetUser?.fullName} — Takip Edilenler`,
-            userIds: targetUser?.following || []
-          })}
-          title="Takip Edilenleri İncele"
-        >
-          <div className="sv" style={{ fontSize: '1.25rem', fontWeight: 800, color: '#007AFF' }}>
-            {(targetUser?.following || []).length}
+              {targetUser?.bio && (
+                <p style={{ margin: '4px 0 0', fontSize: '0.88rem', color: 'var(--text-muted)', maxWidth: '540px', lineHeight: 1.45 }}>
+                  {targetUser.bio}
+                </p>
+              )}
+              
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '10px', flexWrap: 'wrap' }}>
+                {targetUser?.favoriteGenre && (
+                  <span style={{ fontSize: '0.78rem', color: 'var(--text-dim)', background: 'var(--bg-surface-elevated)', padding: '3px 10px', borderRadius: '6px', border: '1px solid var(--border-subtle)' }}>
+                    📚 Favori Tür: <strong>{targetUser.favoriteGenre}</strong>
+                  </span>
+                )}
+                {targetUser?.readingGoal && (
+                  <span style={{ fontSize: '0.78rem', color: 'var(--text-dim)', background: 'var(--bg-surface-elevated)', padding: '3px 10px', borderRadius: '6px', border: '1px solid var(--border-subtle)' }}>
+                    🎯 Yıllık Hedef: <strong>{targetUser.readingGoal} Kitap</strong>
+                  </span>
+                )}
+              </div>
+            </div>
           </div>
-          <div className="sl" style={{ fontSize: '0.78rem' }}>takip edilen</div>
-        </button>
 
-        <div className="profile-stat-interactive" style={{ cursor: 'default' }}>
-          <div className="sv" style={{ fontSize: '1.25rem', fontWeight: 800, color: '#FF9500' }}>
-            {targetUser?.streak || 14} gün 🔥
+          {/* Aksiyon Butonları */}
+          <div className="profile-action-group" style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+            {isOwnProfile ? (
+              <>
+                <button 
+                  className="profile-action-btn primary"
+                  onClick={() => setIsEditProfileOpen(true)}
+                >
+                  <Edit3 size={14} />
+                  Profili Düzenle
+                </button>
+                <button 
+                  className="profile-action-btn"
+                  onClick={() => setIsPrivacyOpen(true)}
+                  title="Gizlilik ve Görünürlük"
+                >
+                  <Lock size={14} />
+                  Gizlilik
+                </button>
+                <button 
+                  className="profile-action-btn"
+                  onClick={() => setIsFoldersModalOpen(true)}
+                  title="Klasörleri Yönet"
+                >
+                  <FolderPlus size={14} />
+                  Klasörler
+                </button>
+              </>
+            ) : (
+              <>
+                <button 
+                  className={`profile-action-btn ${isFollowing ? '' : 'primary'}`}
+                  onClick={() => followUser(targetUser.id)}
+                >
+                  {isFollowing ? (
+                    <>
+                      <UserCheck size={14} />
+                      Takip Ediliyor
+                    </>
+                  ) : (
+                    <>
+                      <UserPlus size={14} />
+                      Takip Et
+                    </>
+                  )}
+                </button>
+
+                <button 
+                  className="profile-action-btn"
+                  onClick={() => sendFriendRequest(targetUser.id)}
+                  disabled={isFriend}
+                >
+                  {isFriend ? '🤝 Arkadaşsınız' : 'Arkadaş Ekle'}
+                </button>
+              </>
+            )}
           </div>
-          <div className="sl" style={{ fontSize: '0.78rem' }}>okuma serisi</div>
         </div>
 
-        <div className="profile-stat-interactive" style={{ cursor: 'default' }}>
-          <div className="sv" style={{ fontSize: '1.25rem', fontWeight: 800, color: '#34C759' }}>
-            {formatReadingDuration(targetUser?.totalReadingSeconds || 174960)}
+        {/* DİNAMİK İSTATİSTİK SATIRI */}
+        <div className="stat-row" style={{ marginTop: '24px', display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+          <button 
+            className="profile-stat-interactive"
+            onClick={() => handleTabChange('books')} 
+            title="Okunan Kitapları Gör"
+          >
+            <div className="sv" style={{ fontSize: '1.25rem', fontWeight: 800 }}>
+              {completedBooksList.length > 0 ? completedBooksList.length : (targetUser?.readingGoal || 47)}
+            </div>
+            <div className="sl" style={{ fontSize: '0.78rem' }}>okuduğu kitap</div>
+          </button>
+
+          <button 
+            className="profile-stat-interactive"
+            onClick={() => setFollowModal({
+              isOpen: true,
+              title: `${targetUser?.fullName} — Takipçiler`,
+              userIds: targetUser?.followers || []
+            })}
+            title="Takipçileri İncele"
+          >
+            <div className="sv" style={{ fontSize: '1.25rem', fontWeight: 800, color: '#007AFF' }}>
+              {targetUser?.followersCount || (targetUser?.followers || []).length}
+            </div>
+            <div className="sl" style={{ fontSize: '0.78rem' }}>takipçi</div>
+          </button>
+
+          <button 
+            className="profile-stat-interactive"
+            onClick={() => setFollowModal({
+              isOpen: true,
+              title: `${targetUser?.fullName} — Takip Edilenler`,
+              userIds: targetUser?.following || []
+            })}
+            title="Takip Edilenleri İncele"
+          >
+            <div className="sv" style={{ fontSize: '1.25rem', fontWeight: 800, color: '#007AFF' }}>
+              {(targetUser?.following || []).length}
+            </div>
+            <div className="sl" style={{ fontSize: '0.78rem' }}>takip edilen</div>
+          </button>
+
+          <div className="profile-stat-interactive" style={{ cursor: 'default' }}>
+            <div className="sv" style={{ fontSize: '1.25rem', fontWeight: 800, color: '#FF9500' }}>
+              {targetUser?.streak || 14} gün 🔥
+            </div>
+            <div className="sl" style={{ fontSize: '0.78rem' }}>okuma serisi</div>
           </div>
-          <div className="sl" style={{ fontSize: '0.78rem' }}>toplam süre</div>
+
+          <div className="profile-stat-interactive" style={{ cursor: 'default' }}>
+            <div className="sv" style={{ fontSize: '1.25rem', fontWeight: 800, color: '#34C759' }}>
+              {formatReadingDuration(targetUser?.totalReadingSeconds || 174960)}
+            </div>
+            <div className="sl" style={{ fontSize: '0.78rem' }}>toplam süre</div>
+          </div>
         </div>
       </div>
 
-      {/* 5. PROFİL İÇİ SEKME BAR'I (APPLE SEGMENTED CONTROLLER) */}
-      <div className="profile-subtabs-row">
+      {/* 3. PROFİL İÇİ SEKME BAR'I (RESPONSIVE SEGMENTED CONTROLLER) */}
+      <div className="profile-subtabs-row" style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
         <button 
           className={`profile-subtab-btn ${activeSubTab === 'shelves' ? 'active' : ''}`}
-          onClick={() => setActiveSubTab('shelves')}
+          onClick={() => handleTabChange('shelves')}
         >
           <Folder size={15} />
           <span>Klasörler & Raflar</span>
@@ -434,7 +526,7 @@ export const ProfileView = () => {
 
         <button 
           className={`profile-subtab-btn ${activeSubTab === 'books' ? 'active' : ''}`}
-          onClick={() => setActiveSubTab('books')}
+          onClick={() => handleTabChange('books')}
         >
           <BookOpen size={15} />
           <span>Okuma Durumu & İstekler</span>
@@ -442,7 +534,7 @@ export const ProfileView = () => {
 
         <button 
           className={`profile-subtab-btn ${activeSubTab === 'calendar' ? 'active' : ''}`}
-          onClick={() => setActiveSubTab('calendar')}
+          onClick={() => handleTabChange('calendar')}
         >
           <CalendarIcon size={15} />
           <span>Okuma Hedefi Takvimi</span>
@@ -450,72 +542,146 @@ export const ProfileView = () => {
 
         <button 
           className={`profile-subtab-btn ${activeSubTab === 'posts' ? 'active' : ''}`}
-          onClick={() => setActiveSubTab('posts')}
+          onClick={() => handleTabChange('posts')}
         >
           <MessageSquare size={15} />
           <span>Gönderiler ({userPosts.length})</span>
         </button>
       </div>
 
-      {/* 6. SEKME İÇERİKLERİ */}
+      {/* 4. SEKME İÇERİKLERİ */}
 
-      {/* SEKME 1: KLASÖRLER */}
+      {/* SEKME 1: KLASÖRLER (YALNIZCA GERÇEK KULLANICI KLASÖRLERİ & 3D CEP İÇİ KİTAPLI TASARIM) */}
       {activeSubTab === 'shelves' && (
-        <div className="profile-section" style={{ marginTop: '10px' }}>
-          <div className="profile-section-title">
-            <h3>Kitap Klasörleri & Özel Raflar</h3>
-            <span className="hint">{totalCount} / 12 klasör</span>
-          </div>
+        <div className="profile-section" style={{ marginTop: '16px' }}>
+          <div className="profile-section-title" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px' }}>
+            <div>
+              <h3 style={{ margin: 0, fontSize: '1.15rem', fontWeight: 800 }}>Kitap Klasörleri & Özel Raflar</h3>
+              <span className="hint" style={{ fontSize: '0.82rem', color: 'var(--text-dim)' }}>
+                {targetUserFolders.length} / 12 Klasör Tanımlı
+              </span>
+            </div>
 
-          <div className="folder-chip-grid" style={{ gap: '16px' }}>
-            {allChips.map(chip => (
+            {isOwnProfile && targetUserFolders.length < 12 && (
               <button 
-                key={chip.id}
-                className="folder-chip" 
-                style={{ background: chip.bg }}
-                onClick={() => openFolder(chip.name)}
-              >
-                <div className="fn">{chip.name}</div>
-                <div className="fc2">{chip.count}</div>
-              </button>
-            ))}
-
-            {isOwnProfile && totalCount < 12 && (
-              <button 
-                className="add-folder"
+                className="btn btn-primary btn-sm"
                 onClick={() => setIsFoldersModalOpen(true)}
+                style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}
               >
-                + Klasör ekle
+                <Plus size={14} />
+                <span>Yeni Klasör Oluştur</span>
               </button>
             )}
           </div>
 
-          {isOwnProfile && (
-            <div className="color-picker-hint" style={{ marginTop: '20px' }}>
-              <span className="hint" style={{ marginRight: '6px' }}>Klasör tema rengi:</span>
-              {colorPalette.map((col, idx) => (
-                <div 
-                  key={idx}
-                  className="color-dot" 
-                  style={{ 
-                    background: col,
-                    outline: activeColorDot === col ? '2px solid var(--label)' : 'none',
-                    outlineOffset: '2px'
-                  }}
-                  onClick={() => {
-                    setActiveColorDot(col);
-                    showToast(`Renk seçildi: ${col}`, '🎨');
-                  }}
-                />
-              ))}
+          {targetUserFolders.length > 0 ? (
+            <div className="folders-grid" style={{ padding: '16px 0', gap: '28px 24px' }}>
+              {targetUserFolders.map((folder, idx) => {
+                const folderColorObj = APPLE_FOLDER_COLORS.find(c => c.hex.toLowerCase() === (folder.color || '').toLowerCase()) || APPLE_FOLDER_COLORS[idx % APPLE_FOLDER_COLORS.length];
+                const folderBooks = (folder.bookIds || []).map(bId => books.find(b => b.id === bId)).filter(Boolean);
+                const topCovers = folderBooks.slice(0, 3);
+
+                return (
+                  <div
+                    key={folder.id}
+                    className="folder-card"
+                    onClick={() => setIsFoldersModalOpen(true)}
+                    style={{
+                      '--folder-front-color': folderColorObj.hex,
+                      '--folder-back-color': folderColorObj.backHex,
+                      cursor: 'pointer'
+                    }}
+                  >
+                    {/* 3D Physical Folder Illustration */}
+                    <div className="folder-stage">
+                      <div className="folder-back">
+                        <div className="folder-tab"></div>
+                      </div>
+
+                      <div className="folder-tucked-books">
+                        {topCovers.map(b => (
+                          <BookCover
+                            key={b.id}
+                            src={b.cover}
+                            title={b.title}
+                            alt={b.title}
+                            className="tucked-book-cover"
+                          />
+                        ))}
+                        {topCovers.length === 0 && (
+                          <div style={{
+                            width: '56px',
+                            height: '84px',
+                            background: 'rgba(255,255,255,0.4)',
+                            borderRadius: '4px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            color: '#666',
+                            fontSize: '0.7rem'
+                          }}>
+                            Boş
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="folder-front">
+                        <span className="folder-front-badge">
+                          {folderBooks.length} Kitap
+                        </span>
+                      </div>
+                    </div>
+
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', marginTop: '12px' }}>
+                      <span className="folder-label" style={{ margin: 0, fontWeight: 700, fontSize: '0.96rem', color: 'var(--text-main)' }}>
+                        {folder.name}
+                      </span>
+                    </div>
+
+                    <span className="folder-count-text" style={{ fontSize: '0.78rem', color: 'var(--text-dim)', marginTop: '4px' }}>
+                      {folderBooks.length} kitap • Düzenlemek için tıkla
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <div style={{
+              textAlign: 'center',
+              padding: '48px 20px',
+              background: 'var(--bg-surface-elevated)',
+              borderRadius: 'var(--radius-lg)',
+              border: '1px dashed var(--border-strong)',
+              marginTop: '16px'
+            }}>
+              <FolderOpen size={40} color="#007AFF" style={{ marginBottom: '12px' }} />
+              <h4 style={{ margin: '0 0 6px', fontSize: '1.1rem', color: 'var(--text-main)' }}>
+                Henüz Kitap Klasörü Oluşturulmamış
+              </h4>
+              <p style={{ fontSize: '0.88rem', color: 'var(--text-muted)', maxWidth: '420px', margin: '0 auto 16px' }}>
+                {isOwnProfile 
+                  ? 'Okuduğunuz veya planladığınız kitapları Apple renk paletiyle cepli 3D klasörlerde organize edin.' 
+                  : `${targetUser?.fullName} henüz özel bir kitap klasörü oluşturmadı.`}
+              </p>
+              {isOwnProfile && (
+                <button 
+                  className="btn btn-primary btn-sm"
+                  onClick={() => setIsFoldersModalOpen(true)}
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+                >
+                  <Plus size={15} />
+                  <span>İlk Klasörünüzü Oluşturun</span>
+                </button>
+              )}
             </div>
           )}
         </div>
       )}
 
-      {/* SEKME 2: OKUMA LİSTESİ & İSTEKLER */}
+      {/* SEKME 2: OKUMA LİSTESİ & İSTEKLER (SİLME SEÇENEĞİ VE DİNAMİK İSTEK LİSTESİ) */}
       {activeSubTab === 'books' && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '28px', marginTop: '10px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '28px', marginTop: '16px' }}>
+          
           {/* Şu Anda Okunan Kitaplar */}
           <div className="profile-section">
             <div className="profile-section-title">
@@ -532,8 +698,9 @@ export const ProfileView = () => {
                       key={item.id} 
                       className="reading-book-card-item"
                       onClick={() => openBook(item.book)}
+                      style={{ position: 'relative' }}
                     >
-                      <div style={{ width: '60px', height: '88px', flexShrink: 0, borderRadius: '4px', overflow: 'hidden', boxShadow: '0 4px 10px rgba(0,0,0,0.15)' }}>
+                      <div style={{ width: '64px', height: '94px', flexShrink: 0, borderRadius: '4px', overflow: 'hidden', boxShadow: '0 4px 10px rgba(0,0,0,0.15)' }}>
                         <BookCover 
                           src={item.book.cover} 
                           title={item.book.title} 
@@ -542,8 +709,25 @@ export const ProfileView = () => {
                         />
                       </div>
                       <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ fontWeight: 700, fontSize: '0.94rem', color: 'var(--text-main)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                          {item.book.title}
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '8px' }}>
+                          <div style={{ fontWeight: 700, fontSize: '0.94rem', color: 'var(--text-main)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                            {item.book.title}
+                          </div>
+                          {isOwnProfile && (
+                            <button
+                              className="btn-ghost btn-sm"
+                              style={{ padding: '2px 6px', color: 'var(--color-danger)' }}
+                              title="Okuma listesinden kaldır"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                if (window.confirm(`"${item.book.title}" kitabını okuma listenizden silmek istiyor musunuz?`)) {
+                                  removeUserBook(item.book.id);
+                                }
+                              }}
+                            >
+                              <Trash2 size={13} />
+                            </button>
+                          )}
                         </div>
                         <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
                           {item.book.author}
@@ -563,123 +747,168 @@ export const ProfileView = () => {
                 })}
               </div>
             ) : (
-              /* Fallback: Dune Okuması */
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '16px' }}>
-                <div 
-                  className="reading-book-card-item"
-                  onClick={() => openBook(FEATURED_COVERS.dune)}
-                >
-                  <div style={{ width: '60px', height: '88px', flexShrink: 0, borderRadius: '4px', overflow: 'hidden', boxShadow: '0 4px 10px rgba(0,0,0,0.15)' }}>
-                    <BookCover 
-                      src={FEATURED_COVERS.dune.cover} 
-                      title={FEATURED_COVERS.dune.title || "Dune"} 
-                      alt="Dune" 
-                      style={{ width: '100%', height: '100%' }} 
-                    />
-                  </div>
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontWeight: 700, fontSize: '0.94rem', color: 'var(--text-main)' }}>
-                      Dune
-                    </div>
-                    <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-                      Frank Herbert
-                    </div>
-                    <div style={{ marginTop: '10px' }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.74rem', color: 'var(--text-dim)', marginBottom: '4px' }}>
-                        <span>%35</span>
-                        <span>248 / 712 sayfa</span>
-                      </div>
-                      <div style={{ width: '100%', height: '5px', background: 'rgba(0,0,0,0.08)', borderRadius: '10px', overflow: 'hidden' }}>
-                        <div style={{ width: '35%', height: '100%', background: '#007AFF', borderRadius: '10px' }} />
-                      </div>
-                    </div>
-                  </div>
-                </div>
+              <div style={{ padding: '24px', textAlign: 'center', background: 'var(--bg-surface-elevated)', borderRadius: 'var(--radius-md)', color: 'var(--text-muted)', fontSize: '0.88rem' }}>
+                Şu an aktif okunan kitap bulunmuyor.
               </div>
             )}
           </div>
 
-          {/* İstek Listem (Orijinal Gerçek Kitap Kapakları) */}
+          {/* Tamamlanan Okunan Kitaplar */}
+          <div className="profile-section">
+            <div className="profile-section-title">
+              <h3>Tamamlanan & Okunmuş Kitaplar</h3>
+              <span className="hint">{completedBooksList.length} kitap</span>
+            </div>
+
+            {completedBooksList.length > 0 ? (
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '16px' }}>
+                {completedBooksList.map(item => (
+                  <div 
+                    key={item.id} 
+                    className="reading-book-card-item"
+                    onClick={() => openBook(item.book)}
+                    style={{ position: 'relative' }}
+                  >
+                    <div style={{ width: '60px', height: '88px', flexShrink: 0, borderRadius: '4px', overflow: 'hidden', boxShadow: '0 4px 10px rgba(0,0,0,0.15)' }}>
+                      <BookCover 
+                        src={item.book.cover} 
+                        title={item.book.title} 
+                        alt={item.book.title} 
+                        style={{ width: '100%', height: '100%' }} 
+                      />
+                    </div>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '8px' }}>
+                        <div style={{ fontWeight: 700, fontSize: '0.94rem', color: 'var(--text-main)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                          {item.book.title}
+                        </div>
+                        {isOwnProfile && (
+                          <button
+                            className="btn-ghost btn-sm"
+                            style={{ padding: '2px 6px', color: 'var(--color-danger)' }}
+                            title="Okunanlar listesinden kaldır"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              if (window.confirm(`"${item.book.title}" kitabını listenizden silmek istiyor musunuz?`)) {
+                                removeUserBook(item.book.id);
+                              }
+                            }}
+                          >
+                            <Trash2 size={13} />
+                          </button>
+                        )}
+                      </div>
+                      <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                        {item.book.author}
+                      </div>
+                      <div style={{ marginTop: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <span className="badge badge-green" style={{ fontSize: '0.72rem', padding: '2px 8px' }}>
+                          ✓ Okundu
+                        </span>
+                        {item.finishDate && (
+                          <span style={{ fontSize: '0.72rem', color: 'var(--text-dim)' }}>
+                            {item.finishDate}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div style={{ padding: '24px', textAlign: 'center', background: 'var(--bg-surface-elevated)', borderRadius: 'var(--radius-md)', color: 'var(--text-muted)', fontSize: '0.88rem' }}>
+                Henüz tamamlanmış kitap kaydı yok.
+              </div>
+            )}
+          </div>
+
+          {/* İstek Listesi & Tavsiyeler (SİLME SEÇENEĞİ İLE) */}
           <div className="profile-section">
             <div className="profile-section-title">
               <h3>İstek Listesi & Tavsiyeler</h3>
-              <span className="hint">1:1 Orijinal Kapaklar</span>
+              <span className="hint">{wishlistItems.length} kitap</span>
             </div>
-            <div className="wishlist-row">
-              {/* Körlük */}
-              <div 
-                className="cv" 
-                onClick={() => openBook(FEATURED_COVERS.korluk)}
-                style={{ cursor: 'pointer', overflow: 'hidden', padding: 0 }} 
-                title="Körlük — José Saramago"
-              >
-                <BookCover 
-                  src={FEATURED_COVERS.korluk.cover} 
-                  title={FEATURED_COVERS.korluk.title || "Körlük"} 
-                  alt="Körlük" 
-                  style={{ width: '100%', height: '100%' }} 
-                />
-              </div>
 
-              {/* Dune */}
-              <div 
-                className="cv" 
-                onClick={() => openBook(FEATURED_COVERS.dune)}
-                style={{ cursor: 'pointer', overflow: 'hidden', padding: 0 }} 
-                title="Dune — Frank Herbert"
-              >
-                <BookCover 
-                  src={FEATURED_COVERS.dune.cover} 
-                  title={FEATURED_COVERS.dune.title || "Dune"} 
-                  alt="Dune" 
-                  style={{ width: '100%', height: '100%' }} 
-                />
-              </div>
+            {wishlistItems.length > 0 ? (
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '16px' }}>
+                {wishlistItems.map(item => (
+                  <div 
+                    key={item.id}
+                    style={{
+                      background: 'var(--bg-surface)',
+                      border: '1px solid var(--border-subtle)',
+                      borderRadius: 'var(--radius-md)',
+                      padding: '12px',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      textAlign: 'center',
+                      position: 'relative',
+                      cursor: 'pointer'
+                    }}
+                    onClick={() => openBook(item.book)}
+                  >
+                    <div style={{ width: '84px', height: '124px', borderRadius: '4px', overflow: 'hidden', boxShadow: '0 4px 12px rgba(0,0,0,0.15)', marginBottom: '10px' }}>
+                      <BookCover 
+                        src={item.book.cover} 
+                        title={item.book.title} 
+                        alt={item.book.title} 
+                        style={{ width: '100%', height: '100%' }} 
+                      />
+                    </div>
+                    <div style={{ fontWeight: 700, fontSize: '0.88rem', color: 'var(--text-main)', maxWidth: '100%', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                      {item.book.title}
+                    </div>
+                    <div style={{ fontSize: '0.78rem', color: 'var(--text-dim)', marginBottom: '10px' }}>
+                      {item.book.author}
+                    </div>
 
-              {/* Dönüşüm */}
-              <div 
-                className="cv" 
-                onClick={() => openBook(FEATURED_COVERS.donusum)}
-                style={{ cursor: 'pointer', overflow: 'hidden', padding: 0 }} 
-                title="Dönüşüm — Franz Kafka"
-              >
-                <BookCover 
-                  src={FEATURED_COVERS.donusum.cover} 
-                  title={FEATURED_COVERS.donusum.title || "Dönüşüm"} 
-                  alt="Dönüşüm" 
-                  style={{ width: '100%', height: '100%' }} 
-                />
+                    {isOwnProfile && (
+                      <button
+                        className="btn btn-ghost btn-sm"
+                        style={{ 
+                          width: '100%', 
+                          fontSize: '0.76rem', 
+                          color: 'var(--color-danger)', 
+                          display: 'inline-flex', 
+                          alignItems: 'center', 
+                          justifyContent: 'center', 
+                          gap: '6px',
+                          borderTop: '1px solid var(--border-subtle)',
+                          paddingTop: '6px'
+                        }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          removeFromWishlist(item.book.id);
+                        }}
+                      >
+                        <Trash2 size={13} />
+                        <span>İsteklerden Sil</span>
+                      </button>
+                    )}
+                  </div>
+                ))}
               </div>
-
-              {/* 1984 */}
-              <div 
-                className="cv" 
-                onClick={() => openBook(FEATURED_COVERS.george_1984)}
-                style={{ cursor: 'pointer', overflow: 'hidden', padding: 0 }} 
-                title="1984 — George Orwell"
-              >
-                <BookCover 
-                  src={FEATURED_COVERS.george_1984.cover} 
-                  title={FEATURED_COVERS.george_1984.title || "1984"} 
-                  alt="1984" 
-                  style={{ width: '100%', height: '100%' }} 
-                />
+            ) : (
+              /* Fallback vitrini */
+              <div style={{ padding: '24px', textAlign: 'center', background: 'var(--bg-surface-elevated)', borderRadius: 'var(--radius-md)', color: 'var(--text-muted)', fontSize: '0.88rem' }}>
+                İstek sepetinizde henüz kitap bulunmuyor. Keşfet bölümündeki veya gönderilerdeki '+' butonuna basarak kitap ekleyebilirsiniz.
               </div>
-            </div>
+            )}
           </div>
         </div>
       )}
 
       {/* SEKME 3: AYLIK OKUMA HEDEFİ TAKVİMİ */}
       {activeSubTab === 'calendar' && (
-        <div style={{ marginTop: '10px' }}>
+        <div style={{ marginTop: '16px' }}>
           <ReadingGoalCalendar user={targetUser} />
         </div>
       )}
 
       {/* SEKME 4: GÖNDERİLER & NOTLAR */}
       {activeSubTab === 'posts' && (
-        <div className="profile-section" style={{ marginTop: '10px' }}>
+        <div className="profile-section" style={{ marginTop: '16px' }}>
           <div className="profile-section-title">
             <h3>{targetUser?.fullName} tarafından paylaşılan gönderiler</h3>
             {isOwnProfile && (
@@ -724,7 +953,7 @@ export const ProfileView = () => {
         </div>
       )}
 
-      {/* 7. TAKİPÇİ & TAKİP EDİLENLER MODALI */}
+      {/* 5. TAKİPÇİ & TAKİP EDİLENLER MODALI */}
       <FollowListModal
         isOpen={followModal.isOpen}
         onClose={() => setFollowModal(prev => ({ ...prev, isOpen: false }))}

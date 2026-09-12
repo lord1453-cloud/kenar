@@ -1361,6 +1361,46 @@ button {
   }
 }
 
+@media (max-width: 640px) {
+  .topbar {
+    padding: 10px 14px;
+  }
+  .screen-title {
+    font-size: 17px;
+  }
+  .topbar-actions {
+    gap: 8px;
+  }
+  .content {
+    padding: 12px 10px;
+  }
+  .room-grid, .folder-grid, .folder-chip-grid {
+    grid-template-columns: 1fr;
+  }
+  .book-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  .profile-head-clean {
+    padding: 16px !important;
+  }
+  .profile-subtabs-row {
+    gap: 6px;
+    padding-bottom: 6px;
+  }
+  .profile-subtab-btn {
+    padding: 8px 12px;
+    font-size: 0.8rem;
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 420px) {
+  .book-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* ===================================================
    GÖRSEL GELİŞTİRMELER, ŞEKİLLER & LOGO EFEKTLERİ
    =================================================== */

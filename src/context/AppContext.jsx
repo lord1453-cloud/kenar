@@ -431,6 +431,28 @@ export const AppProvider = ({ children }) => {
     showToast('Kitap klasörden çıkarıldı.', '🗑️');
   };
 
+  const moveBookToFolder = (fromFolderId, toFolderId, bookId) => {
+    if (!toFolderId || fromFolderId === toFolderId) {
+      showToast('Lütfen farklı bir hedef klasör seçin.', '⚠️');
+      return;
+    }
+    setUserFolders(prev => {
+      const updated = prev.map(f => {
+        if (f.id === fromFolderId) {
+          return { ...f, bookIds: f.bookIds.filter(id => id !== bookId) };
+        }
+        if (f.id === toFolderId) {
+          if (f.bookIds.includes(bookId)) return f;
+          return { ...f, bookIds: [...f.bookIds, bookId] };
+        }
+        return f;
+      });
+      localStorage.setItem('kk_user_folders', JSON.stringify(updated));
+      return updated;
+    });
+    showToast('Kitap başarıyla diğer klasöre taşındı! 📁', '✓');
+  };
+
   // --- ÖZEL BETA TEST SİSTEMİ STATE'LERİ ---
   const [isBetaFeedbackOpen, setIsBetaFeedbackOpen] = useState(false);
   const [isFounderSettingsOpen, setIsFounderSettingsOpen] = useState(false);
@@ -682,6 +704,62 @@ export const AppProvider = ({ children }) => {
     addAdminLog('demote_from_admin', userId, `${target.fullName} hesabından admin yetkisi kaldırıldı.`);
     showToast(`${target.fullName} admin yetkisi kaldırıldı.`, '🛡️');
     return { success: true };
+  };
+
+  // --- YAZAR PROFİLİ YÖNETİMİ (1.000 Otomatik Takipçi) ---
+  const promoteToAuthor = (userId) => {
+    const target = users.find(u => u.id === userId);
+    if (!target) return { success: false, error: 'Kullanıcı bulunamadı.' };
+
+    const autoFollowers = Array.from({ length: 1000 }, (_, i) => `auto-follower-${i + 1}`);
+
+    setUsers(prev => {
+      const updated = prev.map(u => {
+        if (u.id === userId) {
+          return {
+            ...u,
+            role: 'author',
+            followers: autoFollowers,
+            followersCount: 1000
+          };
+        }
+        return u;
+      });
+      localStorage.setItem('kk_users', JSON.stringify(updated));
+      return updated;
+    });
+
+    addAdminLog('promote_author', userId, `"${target.fullName}" kullanıcısına Yazar profili açıldı ve 1.000 takipçi otomatik tanımlandı.`);
+    showToast(`"${target.fullName}" kullanıcısına Yazar profili açıldı ve 1.000 takipçi tanımlandı! ✍️`, '👑');
+    return { success: true };
+  };
+
+  const createAuthorProfile = ({ fullName, username, bio, avatar }) => {
+    const newAuthorId = `author-${Date.now()}`;
+    const autoFollowers = Array.from({ length: 1000 }, (_, i) => `auto-follower-${i + 1}`);
+    const newAuthor = {
+      id: newAuthorId,
+      fullName: fullName.trim(),
+      username: username.trim().toLowerCase().replace(/\s+/g, ''),
+      email: `${username.toLowerCase()}@luku.app`,
+      bio: bio || 'Onaylı Yazar & Edebi Düşünür',
+      role: 'author',
+      avatar: avatar || 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=200&h=200&q=80',
+      followers: autoFollowers,
+      followersCount: 1000,
+      following: [],
+      joinedDate: 'Eylül 2026',
+      status: 'active'
+    };
+
+    setUsers(prev => {
+      const updated = [newAuthor, ...prev];
+      localStorage.setItem('kk_users', JSON.stringify(updated));
+      return updated;
+    });
+    addAdminLog('create_author', newAuthorId, `Yeni Yazar hesabı açıldı: "${fullName}" (1.000 takipçi).`);
+    showToast(`"${fullName}" için yazar hesabı oluşturuldu ve 1.000 takipçi tanımlandı! ✍️`, '✨');
+    return newAuthor;
   };
 
   // Helper: Format seconds to duration
@@ -1207,6 +1285,9 @@ export const AppProvider = ({ children }) => {
       }
     }
 
+    const isAuthor = currentUser?.role === 'author';
+    const isAdmin = currentUser?.role === 'admin' || currentUser?.role === 'founder';
+
     // Gönderiyi oluştur (Yeni gönderiler en üste gelir)
     const newPost = {
       id: `post-${Date.now()}`,
@@ -1219,12 +1300,21 @@ export const AppProvider = ({ children }) => {
       spoilerText,
       imageUrl: imageUrl || null,
       timestamp: 'Az önce',
-      likes: [],
+      isAnnouncement: isAdmin,
+      isAdminNotice: isAdmin,
+      // Yazar gönderilerine otomatik 100 beğeni tanımlanır
+      likes: isAuthor ? Array.from({ length: 100 }, (_, i) => `auto-fan-${i + 1}`) : [],
       comments: []
     };
 
     setPosts(prev => [newPost, ...prev]);
-    showToast('Düşünceniz paylaşıldı.', '✓');
+    if (isAuthor) {
+      showToast('Yazar gönderiniz paylaşıldı ve 100 beğeni otomatik tanımlandı! ✍️', '❤️');
+    } else if (isAdmin) {
+      showToast('Resmi yönetici bildirisi yayınlandı.', '📢');
+    } else {
+      showToast('Düşünceniz paylaşıldı.', '✓');
+    }
     setIsCreatePostOpen(false);
     return { success: true };
   };
@@ -1510,6 +1600,15 @@ export const AppProvider = ({ children }) => {
     showToast('Kitap istek sepetinden çıkarıldı.', '🗑️');
   };
 
+  const removeUserBook = (bookId) => {
+    setUserBooks(prev => {
+      const updated = prev.filter(ub => !(ub.userId === currentUserId && ub.bookId === bookId));
+      localStorage.setItem('kk_user_books', JSON.stringify(updated));
+      return updated;
+    });
+    showToast('Kitap listenizden silindi.', '🗑️');
+  };
+
   const isInWishlist = (bookId) => {
     return userBooks.some(ub => ub.userId === currentUserId && ub.bookId === bookId && ub.status === 'to_read');
   };
@@ -1567,14 +1666,23 @@ export const AppProvider = ({ children }) => {
   };
 
   // --- AYLIK OKUMA HEDEFİ TAKVİMİ (Doküman Paragraf 25) ---
-  const logCalendarReading = ({ date, bookId, pagesRead, note = '' }) => {
+  const logCalendarReading = ({ date, bookId, pagesRead, note = '', customBookTitle = '' }) => {
     setReadingCalendarLogs(prev => {
-      const filtered = prev.filter(item => !(item.date === date && item.bookId === bookId));
-      const updated = [...filtered, { date, bookId, pagesRead: Number(pagesRead) || 0, note }];
+      const filtered = prev.filter(item => !(item.date === date));
+      const updated = [...filtered, { date, bookId, customBookTitle, pagesRead: Number(pagesRead) || 0, note }];
       localStorage.setItem('kk_calendar_logs', JSON.stringify(updated));
       return updated;
     });
     showToast('Okuma günlüğü takviminize işlendi! 📅', '✨');
+  };
+
+  const deleteCalendarReading = (dateStr) => {
+    setReadingCalendarLogs(prev => {
+      const updated = prev.filter(item => item.date !== dateStr);
+      localStorage.setItem('kk_calendar_logs', JSON.stringify(updated));
+      return updated;
+    });
+    showToast('Okuma kaydı takvimden silindi.', '🗑️');
   };
 
   // --- YAPAY ZEKA İLE KAPAK BULUCU (Doküman Paragraf 13) ---
@@ -1807,11 +1915,16 @@ export const AppProvider = ({ children }) => {
         addToWishlist,
         removeFromWishlist,
         isInWishlist,
+        removeUserBook,
         // Aylık Kulüp & Kilitli Oda (Doküman Paragraf 23)
         launchMonthlyBookClub,
         // Aylık Okuma Takvimi (Doküman Paragraf 25)
         readingCalendarLogs,
         logCalendarReading,
+        deleteCalendarReading,
+        // Yazar Yönetimi
+        promoteToAuthor,
+        createAuthorProfile,
         // Yapay Zeka Kapak Bulucu (Doküman Paragraf 13)
         aiSearchBookCover,
         rooms,
@@ -1877,6 +1990,7 @@ export const AppProvider = ({ children }) => {
         deleteUserFolder,
         addBookToUserFolder,
         removeBookFromUserFolder,
+        moveBookToFolder,
         updatingProgressBook,
         setUpdatingProgressBook,
         toasts,

@@ -27,10 +27,16 @@ export const ProfilesDirectoryView = () => {
   } = useApp();
 
   const [searchQuery, setSearchQuery] = useState('');
-  const [filterRole, setFilterRole] = useState('all'); // 'all' | 'author' | 'founder' | 'user'
+  const [filterRole, setFilterRole] = useState('all');
+  const isViewerAdmin = currentUser?.role === 'admin' || currentUser?.role === 'founder';
 
-  // Kullanıcıları filtrele
+  // Kullanıcıları filtrele (Yönetici profili yalnızca kendine açıktır, normal kullanıcılar listede göremez)
   const filteredUsers = (users || []).filter(u => {
+    // Normal kullanıcılar admin veya founder hesaplarını rehberde göremez
+    if (!isViewerAdmin && (u.role === 'admin' || u.role === 'founder')) {
+      return false;
+    }
+
     const matchesSearch = 
       (u.fullName || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
       (u.username || '').toLowerCase().includes(searchQuery.toLowerCase()) ||

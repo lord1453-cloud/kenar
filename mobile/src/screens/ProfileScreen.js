@@ -85,14 +85,7 @@ export const ProfileScreen = () => {
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      {/* 1. ÖZELLEŞTİRİLEBİLİR LÜKS BANNER */}
-      <View style={[styles.coverBanner, { backgroundColor: activeThemeObj.color }]}>
-        <View style={[styles.coverBannerOverlay, { backgroundColor: activeThemeObj.secondary, opacity: 0.6 }]} />
-        <View style={styles.coverGenreBadge}>
-          <Ionicons name="sparkles" size={11} color="#fff" />
-          <Text style={styles.coverGenreText}>{currentUser?.favoriteGenre || 'Edebiyat Tutkunu'}</Text>
-        </View>
-      </View>
+
 
       {/* 2. PROFİL KİMLİK ALANI */}
       <View style={styles.profileCard}>
@@ -413,7 +406,7 @@ const styles = StyleSheet.create({
   profileCard: {
     backgroundColor: '#FFFFFF',
     marginHorizontal: 14,
-    marginTop: -40,
+    marginTop: 16,
     borderRadius: 16,
     padding: 16,
     borderWidth: 1,
@@ -426,13 +419,13 @@ const styles = StyleSheet.create({
   },
   avatarRow: {
     flexDirection: 'row',
-    alignItems: 'flex-end',
+    alignItems: 'center',
     justifyContent: 'space-between',
     marginBottom: 10
   },
   avatarContainer: {
     position: 'relative',
-    marginTop: -36
+    marginTop: 0
   },
   avatar: {
     width: 72,

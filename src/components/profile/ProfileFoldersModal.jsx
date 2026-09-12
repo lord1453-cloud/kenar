@@ -45,6 +45,7 @@ export const ProfileFoldersModal = () => {
     deleteUserFolder, 
     addBookToUserFolder, 
     removeBookFromUserFolder, 
+    moveBookToFolder,
     books, 
     userBooks, 
     setSelectedBookId,
@@ -57,6 +58,7 @@ export const ProfileFoldersModal = () => {
   const [folderName, setFolderName] = useState('');
   const [selectedColor, setSelectedColor] = useState(APPLE_FOLDER_COLORS[0].hex);
   const [isAddBookModalOpen, setIsAddBookModalOpen] = useState(false);
+  const [movingBookId, setMovingBookId] = useState(null);
 
   // Kullanıcının klasörleri
   const myFolders = (userFolders || []).filter(f => f.userId === currentUser.id);
@@ -312,8 +314,19 @@ export const ProfileFoldersModal = () => {
                   className="btn-apple-secondary"
                   onClick={(e) => handleOpenEdit(currentFolder, e)}
                   title="Klasörü Düzenle"
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '0.82rem' }}
                 >
                   <Edit3 size={15} />
+                  <span>Düzenle</span>
+                </button>
+                <button
+                  className="btn-ghost btn-sm"
+                  style={{ color: 'var(--color-danger)', padding: '6px 10px', display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '0.82rem' }}
+                  onClick={(e) => handleDelete(currentFolder.id, currentFolder.name, e)}
+                  title="Klasörü Sil"
+                >
+                  <Trash2 size={15} />
+                  <span>Sil</span>
                 </button>
               </div>
             </div>
@@ -422,13 +435,22 @@ export const ProfileFoldersModal = () => {
                         </span>
                       </div>
 
-                      <div style={{ display: 'flex', gap: '6px', marginTop: '6px' }} onClick={(e) => e.stopPropagation()}>
+                      <div style={{ display: 'flex', gap: '6px', marginTop: '6px', flexWrap: 'wrap' }} onClick={(e) => e.stopPropagation()}>
                         <button
                           className="btn-apple-secondary"
                           style={{ fontSize: '0.74rem', padding: '3px 8px' }}
                           onClick={() => setSelectedBookId(book.id)}
                         >
                           Detay
+                        </button>
+                        <button
+                          className="btn-apple-secondary"
+                          style={{ fontSize: '0.74rem', padding: '3px 8px', display: 'inline-flex', alignItems: 'center', gap: '3px' }}
+                          onClick={() => setMovingBookId(book.id)}
+                          title="Başka bir klasöre taşı"
+                        >
+                          <FolderPlus size={12} />
+                          <span>Taşı</span>
                         </button>
                         <button
                           className="btn-ghost btn-sm"
@@ -588,6 +610,61 @@ export const ProfileFoldersModal = () => {
             )}
           </div>
         )}
+
+      {/* Başka Klasöre Taşıma Seçim Modalı */}
+      {movingBookId && (
+        <div className="modal-overlay" style={{ zIndex: 1200 }} onClick={() => setMovingBookId(null)}>
+          <div className="modal-content" style={{ maxWidth: '420px' }} onClick={e => e.stopPropagation()}>
+            <div className="modal-header">
+              <h4 style={{ margin: 0, fontSize: '1rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <FolderPlus size={18} color="#007AFF" />
+                Kitabı Başka Klasöre Taşı
+              </h4>
+              <button className="btn btn-ghost btn-sm" onClick={() => setMovingBookId(null)}>✕</button>
+            </div>
+            <div className="modal-body" style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              <span style={{ fontSize: '0.84rem', color: 'var(--text-muted)' }}>
+                Bu kitabı aktarmak istediğiniz hedef klasörü seçin:
+              </span>
+              {myFolders.filter(f => f.id !== currentFolder?.id).length > 0 ? (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  {myFolders.filter(f => f.id !== currentFolder?.id).map(f => (
+                    <button
+                      key={f.id}
+                      type="button"
+                      className="btn btn-secondary"
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        padding: '10px 14px',
+                        borderLeft: `5px solid ${f.color || '#007AFF'}`,
+                        textAlign: 'left'
+                      }}
+                      onClick={() => {
+                        moveBookToFolder(currentFolder.id, f.id, movingBookId);
+                        setMovingBookId(null);
+                      }}
+                    >
+                      <span style={{ fontWeight: 600, fontSize: '0.9rem' }}>{f.name}</span>
+                      <span style={{ fontSize: '0.78rem', color: 'var(--text-dim)' }}>
+                        {(f.bookIds || []).length} kitap
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              ) : (
+                <div style={{ padding: '16px', textAlign: 'center', color: 'var(--text-dim)', fontSize: '0.86rem' }}>
+                  Taşınabilecek başka bir klasörünüz bulunmuyor. Önce yeni bir klasör oluşturun.
+                </div>
+              )}
+            </div>
+            <div className="modal-footer" style={{ display: 'flex', justifyContent: 'flex-end', paddingTop: '10px' }}>
+              <button type="button" className="btn btn-secondary" onClick={() => setMovingBookId(null)}>Vazgeç</button>
+            </div>
+          </div>
+        </div>
+      )}
 
       </div>
     </Modal>

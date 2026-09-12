@@ -47,7 +47,14 @@ export const PostCard = ({ post }) => {
   const isLiked = post.likes.includes(currentUser.id);
   const inWishlist = attachedBook ? isInWishlist(attachedBook.id) : false;
 
+  const isAdminAuthor = author.role === 'admin' || author.role === 'founder';
+  const isAdminPost = isAdminAuthor || post.isAdminNotice || post.isAnnouncement;
+
   const handleAuthorClick = () => {
+    if (isAdminAuthor && (!currentUser || currentUser.id !== author.id)) {
+      showToast('Yönetici profili gizlidir. Yöneticiler yalnızca ana akışta ve bildirilerde görünür.', '🛡️');
+      return;
+    }
     setViewingUserId(author.id);
     setActiveTab('profile');
   };
@@ -101,6 +108,7 @@ export const PostCard = ({ post }) => {
             src={author.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&h=200&q=80'} 
             alt={author.fullName} 
             className="post-avatar" 
+            style={{ filter: author.isBlurred ? 'blur(6px)' : 'none' }}
             onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&h=200&q=80'; }}
           />
           <div className="post-author-names">
@@ -250,25 +258,34 @@ export const PostCard = ({ post }) => {
 
       {/* Footer Actions (Like, Comment, Share) */}
       <div className="post-footer">
-        <div className="post-footer-actions">
-          {/* Like Button */}
-          <button 
-            className={`post-stat-btn ${isLiked ? 'liked' : ''}`}
-            onClick={() => toggleLikePost(post.id)}
-          >
-            <Heart size={18} />
-            <span>{post.likes.length}</span>
-          </button>
+        {isAdminPost ? (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-muted)', fontSize: '0.82rem', padding: '4px 0' }}>
+            <span className="badge-admin" style={{ fontSize: '0.74rem', padding: '3px 8px' }}>Resmi Bildiri</span>
+            <span style={{ fontSize: '0.78rem', color: 'var(--text-dim)', fontStyle: 'italic' }}>
+              Bu bildiri yoruma ve beğeniye kapalıdır.
+            </span>
+          </div>
+        ) : (
+          <div className="post-footer-actions">
+            {/* Like Button */}
+            <button 
+              className={`post-stat-btn ${isLiked ? 'liked' : ''}`}
+              onClick={() => toggleLikePost(post.id)}
+            >
+              <Heart size={18} />
+              <span>{post.likes.length}</span>
+            </button>
 
-          {/* Comments Toggle */}
-          <button 
-            className="post-stat-btn"
-            onClick={() => setShowComments(prev => !prev)}
-          >
-            <MessageCircle size={18} />
-            <span>{post.comments.length}</span>
-          </button>
-        </div>
+            {/* Comments Toggle */}
+            <button 
+              className="post-stat-btn"
+              onClick={() => setShowComments(prev => !prev)}
+            >
+              <MessageCircle size={18} />
+              <span>{post.comments.length}</span>
+            </button>
+          </div>
+        )}
 
         {/* Share Button */}
         <button className="post-stat-btn" onClick={handleShare} title="Paylaş">
@@ -276,8 +293,8 @@ export const PostCard = ({ post }) => {
         </button>
       </div>
 
-      {/* Comments Section */}
-      {showComments && (
+      {/* Comments Section (Only for regular interactive posts) */}
+      {!isAdminPost && showComments && (
         <div className="post-comments-container">
           {/* Comment Form */}
           <form className="comment-input-row" onSubmit={handleCommentSubmit}>

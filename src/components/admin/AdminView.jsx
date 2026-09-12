@@ -67,12 +67,16 @@ export const AdminView = () => {
     betaStatus,
     toggleRestrictedMode,
     setIsFounderSettingsOpen,
+    promoteToAuthor,
+    createAuthorProfile,
     showToast
   } = useApp();
 
   const [activeTab, setActiveTab] = useState('users'); // 'users' | 'rooms' | 'monthly_club' | 'moderation' | 'system' | 'admin_mgmt' | 'logs' | 'beta_feedback' | 'beta_testers'
   const [feedbackFilter, setFeedbackFilter] = useState('all');
   const [newTesterEmail, setNewTesterEmail] = useState('');
+  const [isAuthorModalOpen, setIsAuthorModalOpen] = useState(false);
+  const [authorForm, setAuthorForm] = useState({ fullName: '', username: '', bio: '' });
   const [enlargedImage, setEnlargedImage] = useState(null);
 
   // Aylık Kitap Kulübü Form State (Doküman Paragraf 23)
@@ -253,7 +257,24 @@ export const AdminView = () => {
 
         {/* 1. USERS TAB */}
         {activeTab === 'users' && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px' }}>
+              <div>
+                <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 700 }}>Kayıtlı Okurlar ve Yazarlar</h3>
+                <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                  Platformdaki kullanıcı rolleri, yazar atamaları ve üyelik durumları.
+                </span>
+              </div>
+              <button
+                className="btn btn-primary btn-sm"
+                onClick={() => setIsAuthorModalOpen(true)}
+                style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: '#5856D6', borderColor: '#5856D6' }}
+              >
+                <Sparkles size={14} />
+                <span>+ Yeni Yazar Hesabı Aç (1.000 Takipçi)</span>
+              </button>
+            </div>
+
             <div style={{ overflowX: 'auto', background: 'var(--bg-surface)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-subtle)' }}>
               <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.86rem' }}>
                 <thead>
@@ -315,7 +336,24 @@ export const AdminView = () => {
                             </button>
                           )}
                         </td>
-                        <td style={{ padding: '12px 16px', textAlign: 'right' }}>
+                        <td style={{ padding: '12px 16px', textAlign: 'right', whiteSpace: 'nowrap' }}>
+                          {userRole === 'user' && (
+                            <button
+                              className="btn btn-sm btn-secondary"
+                              style={{ 
+                                fontSize: '0.74rem', 
+                                padding: '4px 8px', 
+                                marginRight: '6px', 
+                                color: '#5856D6', 
+                                borderColor: 'rgba(88, 86, 214, 0.4)', 
+                                background: 'rgba(88, 86, 214, 0.1)' 
+                              }}
+                              onClick={() => promoteToAuthor(u.id)}
+                              title="Yazar profili aç (Otomatik 1.000 takipçi eklenir)"
+                            >
+                              ✍️ Yazar Yap
+                            </button>
+                          )}
                           {canModify && (
                             <button
                               className={`btn btn-sm ${u.status === 'suspended' ? 'btn-primary' : 'btn-secondary'}`}
@@ -1372,6 +1410,70 @@ export const AdminView = () => {
             </div>
           </div>
         )}
+
+      {/* Yeni Yazar Hesabı Açma Modalı */}
+      {isAuthorModalOpen && (
+        <div className="modal-overlay" onClick={() => setIsAuthorModalOpen(false)}>
+          <div className="modal-content" style={{ maxWidth: '480px' }} onClick={e => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3 style={{ margin: 0, fontSize: '1.15rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                ✍️ Yeni Yazar Profili Tanımla
+              </h3>
+              <button className="btn btn-ghost btn-sm" onClick={() => setIsAuthorModalOpen(false)}>✕</button>
+            </div>
+            <form onSubmit={(e) => {
+              e.preventDefault();
+              if (!authorForm.fullName.trim()) return;
+              createAuthorProfile({
+                fullName: authorForm.fullName,
+                username: authorForm.username || authorForm.fullName.toLowerCase().replace(/\s+/g, ''),
+                bio: authorForm.bio
+              });
+              setAuthorForm({ fullName: '', username: '', bio: '' });
+              setIsAuthorModalOpen(false);
+            }} className="modal-body" style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              <div style={{ background: 'rgba(88, 86, 214, 0.12)', border: '1px solid rgba(88, 86, 214, 0.35)', borderRadius: 'var(--radius-sm)', padding: '12px', fontSize: '0.82rem', color: '#5856D6', lineHeight: 1.45 }}>
+                ✨ <strong>Otomatik Yazar Ayrıcalıkları:</strong> Yazar profili açıldığında hesaba sistem tarafından anında <strong>1.000 takipçi</strong> eklenecek ve yazarın paylaşacağı her yeni gönderiye <strong>100 beğeni</strong> otomatik atanacaktır.
+              </div>
+              <div>
+                <label style={{ fontSize: '0.84rem', fontWeight: 600, display: 'block', marginBottom: '4px' }}>Yazar Adı Soyadı *</label>
+                <input 
+                  type="text" 
+                  required 
+                  placeholder="Örn: Ahmet Hamdi Tanpınar" 
+                  value={authorForm.fullName} 
+                  onChange={e => setAuthorForm(prev => ({ ...prev, fullName: e.target.value }))}
+                  style={{ width: '100%', padding: '9px 12px', borderRadius: 'var(--radius-sm)' }} 
+                />
+              </div>
+              <div>
+                <label style={{ fontSize: '0.84rem', fontWeight: 600, display: 'block', marginBottom: '4px' }}>Kullanıcı Adı</label>
+                <input 
+                  type="text" 
+                  placeholder="Örn: ahmet_tanpinar" 
+                  value={authorForm.username} 
+                  onChange={e => setAuthorForm(prev => ({ ...prev, username: e.target.value }))}
+                  style={{ width: '100%', padding: '9px 12px', borderRadius: 'var(--radius-sm)' }} 
+                />
+              </div>
+              <div>
+                <label style={{ fontSize: '0.84rem', fontWeight: 600, display: 'block', marginBottom: '4px' }}>Biyografi & Edebi Not</label>
+                <textarea 
+                  rows={2}
+                  placeholder="Yazarın edebi tarzı, odağı ve eserleri..." 
+                  value={authorForm.bio} 
+                  onChange={e => setAuthorForm(prev => ({ ...prev, bio: e.target.value }))}
+                  style={{ width: '100%', padding: '9px 12px', borderRadius: 'var(--radius-sm)' }} 
+                />
+              </div>
+              <div className="modal-footer" style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px', marginTop: '10px' }}>
+                <button type="button" className="btn btn-secondary" onClick={() => setIsAuthorModalOpen(false)}>İptal</button>
+                <button type="submit" className="btn btn-primary" style={{ background: '#5856D6', borderColor: '#5856D6' }}>Yazar Profilini Aç (+1.000 Takipçi)</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
       </div>
     </div>
